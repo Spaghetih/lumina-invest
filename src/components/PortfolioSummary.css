@@ -1,0 +1,140 @@
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+}
+
+.summary-card {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-card {
+    background: linear-gradient(135deg, rgba(10, 132, 255, 0.1), rgba(94, 92, 230, 0.1));
+    border: 1px solid rgba(94, 92, 230, 0.2);
+}
+
+.hero-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(10, 132, 255, 0.2) 0%, transparent 70%);
+    border-radius: 50%;
+    filter: blur(30px);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-icon-wrapper {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(10, 132, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-wrapper-green {
+    background: rgba(48, 209, 88, 0.12);
+}
+
+.icon-wrapper-red {
+    background: rgba(255, 69, 58, 0.12);
+}
+
+.icon-blue {
+    color: var(--accent-blue);
+}
+
+.icon-green {
+    color: #30D158;
+}
+
+.icon-red {
+    color: #FF453A;
+}
+
+.card-title {
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.status-badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.up-badge {
+    background: var(--status-up-bg);
+    color: var(--status-up);
+}
+
+.down-badge {
+    background: var(--status-down-bg);
+    color: var(--status-down);
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.card-value {
+    font-size: 1.6rem;
+    letter-spacing: -0.03em;
+    font-weight: 700;
+}
+
+.hero-value {
+    font-size: 2.2rem;
+    background: var(--text-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.card-date {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+.text-up {
+    color: var(--status-up);
+}
+
+.text-down {
+    color: var(--status-down);
+}
+
+@media (max-width: 1200px) {
+    .summary-cards {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .summary-cards {
+        grid-template-columns: 1fr;
+    }
+}

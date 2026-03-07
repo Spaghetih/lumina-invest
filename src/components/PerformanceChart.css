@@ -1,0 +1,78 @@
+.chart-card {
+    padding: 24px;
+    height: 100%;
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+}
+
+.chart-actions {
+    display: flex;
+    gap: 8px;
+    background: var(--bg-tertiary);
+    padding: 4px;
+    border-radius: var(--radius-sm);
+}
+
+.time-btn {
+    background: transparent;
+    color: var(--text-secondary);
+    border: none;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.time-btn:hover {
+    color: var(--text-primary);
+}
+
+.time-btn.active {
+    background: var(--glass-bg);
+    color: var(--text-primary);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+}
+
+.chart-container {
+    margin-top: 16px;
+}
+
+.chart-tooltip {
+    padding: 12px 16px;
+    min-width: 120px;
+}
+
+.tooltip-date {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+}
+
+.tooltip-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Recharts Legend Customization */
+.recharts-legend-item-text {
+    color: var(--text-secondary) !important;
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    margin-left: 4px;
+}
+
+@media (max-width: 768px) {
+    .chart-header {
+        flex-direction: column;
+        gap: 16px;
+    }
+}

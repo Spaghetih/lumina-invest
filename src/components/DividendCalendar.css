@@ -1,0 +1,300 @@
+/* ─── Dividend Calendar Styles ─── */
+.dividend-calendar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: 100%;
+}
+
+.empty-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+    gap: 16px;
+    color: var(--text-muted);
+}
+
+.empty-message h3 {
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    margin: 0;
+}
+
+/* ─── Hero Metrics Banner ─── */
+.dividend-hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 32px;
+    background: linear-gradient(135deg, rgba(191, 90, 242, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%);
+    border: 1px solid rgba(191, 90, 242, 0.2);
+    box-shadow: 0 4px 24px rgba(191, 90, 242, 0.05);
+    flex-wrap: wrap;
+    gap: 24px;
+}
+
+.hero-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background: rgba(191, 90, 242, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.hero-content {
+    flex: 1;
+    min-width: 250px;
+}
+
+.hero-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.hero-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+    color: #BF5AF2 !important;
+    /* Override text-up for styling */
+    text-shadow: 0 0 20px rgba(191, 90, 242, 0.3);
+}
+
+.hero-stats {
+    display: flex;
+    gap: 32px;
+    padding-left: 32px;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-block {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.stat-val {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* ─── Dividend Table ─── */
+.div-table-container {
+    padding: 24px;
+}
+
+.div-table-container .section-title {
+    margin: 0 0 16px 0;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+
+.div-table-wrapper {
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+}
+
+.div-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.div-table thead th {
+    text-align: left;
+    padding: 12px 14px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border-color);
+    white-space: nowrap;
+}
+
+.div-table tbody tr {
+    transition: background var(--transition-fast);
+}
+
+.div-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.div-table tbody td {
+    padding: 14px;
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    white-space: nowrap;
+}
+
+/* Row highlights */
+.row-upcoming td {
+    opacity: 1;
+}
+
+.row-past td {
+    opacity: 0.6;
+}
+
+.div-asset {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.asset-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.7rem;
+    color: var(--text-primary);
+    overflow: hidden;
+}
+
+.asset-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #ffffff;
+    padding: 3px;
+}
+
+.date-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.badge-future {
+    background: rgba(191, 90, 242, 0.15);
+    color: #D388F8;
+}
+
+.badge-past {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-muted);
+}
+
+/* ─── Custom Tooltip ─── */
+.tooltip-container {
+    position: relative;
+    cursor: help;
+}
+
+.info-icon {
+    opacity: 0.5;
+    transition: opacity var(--transition-fast), color var(--transition-fast);
+}
+
+.tooltip-container:hover .info-icon {
+    opacity: 1;
+    color: #BF5AF2;
+}
+
+.custom-tooltip {
+    position: absolute;
+    top: calc(100% + 12px);
+    bottom: auto;
+    left: 50%;
+    transform: translateX(-50%) translateY(-10px);
+    background: rgba(20, 20, 25, 0.95);
+    border: 1px solid rgba(191, 90, 242, 0.3);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 12px 14px;
+    border-radius: 8px;
+    width: 220px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 15px rgba(191, 90, 242, 0.15);
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: normal;
+    white-space: normal;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 100;
+}
+
+.custom-tooltip::after {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    top: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: transparent transparent rgba(191, 90, 242, 0.3) transparent;
+}
+
+.tooltip-container:hover .custom-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+.custom-tooltip strong {
+    display: block;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    font-size: 0.8rem;
+}
+
+.custom-tooltip p {
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* ─── Mobile Responsiveness ─── */
+@media (max-width: 768px) {
+    .dividend-hero {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 20px;
+    }
+
+    .hero-stats {
+        padding-left: 0;
+        border-left: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 20px;
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .hero-value {
+        font-size: 2rem;
+    }
+}
