@@ -1,5 +1,9 @@
 # 💎 Lumina Invest Dashboard
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Spaghetih/lumina-invest/main/docs/lumina_hero_dashboard_1772919370291.png" alt="Lumina Invest Hero Banner" width="800">
+</p>
+
 Welcome to the source code of **Lumina Invest**, a modern, premium stock portfolio tracking application designed with a sleek Glassmorphism UI, smooth animations, and a cohesive dark mode experience.
 
 ### ✨ Key Features
