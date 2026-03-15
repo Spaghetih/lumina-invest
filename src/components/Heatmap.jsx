@@ -59,10 +59,11 @@ const HeatmapContent = (props) => {
                     fill="#ffffff"
                     fontSize={tickerSize}
                     fontFamily="JetBrains Mono, monospace"
-                    fontWeight="700"
+                    fontWeight="800"
                     paintOrder="stroke"
-                    stroke="rgba(0,0,0,0.5)"
-                    strokeWidth={1}
+                    stroke="#000000"
+                    strokeWidth={3}
+                    style={{ textShadow: '0 0 6px rgba(0,0,0,0.9), 0 1px 3px rgba(0,0,0,0.8)' }}
                 >
                     {name}
                 </text>
@@ -76,10 +77,11 @@ const HeatmapContent = (props) => {
                     fill="#ffffff"
                     fontSize={pctSize}
                     fontFamily="JetBrains Mono, monospace"
-                    fontWeight="600"
+                    fontWeight="700"
                     paintOrder="stroke"
-                    stroke="rgba(0,0,0,0.5)"
-                    strokeWidth={1}
+                    stroke="#000000"
+                    strokeWidth={3}
+                    style={{ textShadow: '0 0 6px rgba(0,0,0,0.9), 0 1px 3px rgba(0,0,0,0.8)' }}
                 >
                     {changePct >= 0 ? '+' : ''}{changePct?.toFixed(2)}%
                 </text>

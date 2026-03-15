@@ -4,7 +4,15 @@
 
 **Terminal-grade portfolio intelligence for the modern investor**
 
-<img src="https://raw.githubusercontent.com/Spaghetih/lumina-invest/main/docs/lumina_dashboard_3m_final_demo_1772920833293.webp" alt="Lumina Invest" width="820">
+<img src="docs/dashboard.png" alt="Lumina Invest — Dashboard" width="820">
+
+<br>
+
+<img src="docs/light-mode.png" alt="Lumina Invest — Light Mode" width="820">
+
+<br>
+
+<img src="docs/charts.png" alt="Lumina Invest — Charts & News" width="820">
 
 [![React](https://img.shields.io/badge/React-19.2-61DAFB?style=flat-square&logo=react&logoColor=white)](https://react.dev)
 [![Vite](https://img.shields.io/badge/Vite-7.3-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vite.dev)

@@ -274,6 +274,27 @@ body {
   background: var(--bg-tertiary) !important;
 }
 
+:root[data-theme="light"] .news-feed {
+  background: var(--bg-secondary) !important;
+  border-color: var(--border) !important;
+}
+
+:root[data-theme="light"] .news-header {
+  border-color: var(--border) !important;
+}
+
+:root[data-theme="light"] .news-item {
+  border-color: var(--border) !important;
+}
+
+:root[data-theme="light"] .news-item:hover {
+  background: var(--bg-tertiary) !important;
+}
+
+:root[data-theme="light"] .news-item-title {
+  color: var(--text-primary) !important;
+}
+
 /* Modal Styles */
 .modal-overlay {
   position: fixed;
