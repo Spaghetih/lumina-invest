@@ -1,0 +1,101 @@
+.heatmap-container {
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 2px;
+    padding: 16px;
+}
+
+.hm-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.hm-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    margin: 0;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.hm-legend-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.hm-legend-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-weight: 600;
+}
+
+.hm-gradient {
+    width: 100px;
+    height: 10px;
+    border-radius: 2px;
+    background: linear-gradient(to right, #ff3333, #3c3c3c, #00c841);
+}
+
+.hm-chart-wrapper {
+    width: 100%;
+    min-height: 360px;
+}
+
+/* Tooltip */
+.hm-tooltip {
+    padding: 10px 14px;
+    background: #141414;
+    border: 1px solid #444;
+    border-radius: 2px;
+    min-width: 160px;
+}
+
+.hm-tooltip-name {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    font-family: var(--font-mono);
+}
+
+.hm-tooltip-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    font-size: 0.78rem;
+    font-family: var(--font-mono);
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+.hm-tooltip-row span:first-child {
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.hm-up {
+    color: #00ff41 !important;
+}
+
+.hm-down {
+    color: #ff3333 !important;
+}
+
+/* Empty State */
+.hm-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+}

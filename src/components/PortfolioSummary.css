@@ -1,33 +1,37 @@
+/* Dense horizontal stat strip — Bloomberg style */
 .summary-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 16px;
+    display: flex;
+    gap: 0;
+    border: 1px solid #333;
+    background: #111;
+    border-radius: 2px;
 }
 
 .summary-card {
-    padding: 20px;
+    padding: 10px 16px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 6px;
     position: relative;
     overflow: hidden;
+    flex: 1;
+    min-width: 0;
+    border-right: 1px solid #333;
+    background: transparent;
+    border-radius: 0;
+}
+
+.summary-card:last-child {
+    border-right: none;
 }
 
 .hero-card {
-    background: linear-gradient(135deg, rgba(10, 132, 255, 0.1), rgba(94, 92, 230, 0.1));
-    border: 1px solid rgba(94, 92, 230, 0.2);
+    background: transparent;
+    border: none;
 }
 
 .hero-card::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -50%;
-    width: 200px;
-    height: 200px;
-    background: radial-gradient(circle, rgba(10, 132, 255, 0.2) 0%, transparent 70%);
-    border-radius: 50%;
-    filter: blur(30px);
+    display: none;
 }
 
 .card-header {
@@ -37,49 +41,52 @@
 }
 
 .card-icon-wrapper {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    background: rgba(10, 132, 255, 0.15);
+    width: 24px;
+    height: 24px;
+    border-radius: 2px;
+    background: rgba(255, 153, 0, 0.12);
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .icon-wrapper-green {
-    background: rgba(48, 209, 88, 0.12);
+    background: rgba(0, 255, 65, 0.12);
 }
 
 .icon-wrapper-red {
-    background: rgba(255, 69, 58, 0.12);
+    background: rgba(255, 51, 51, 0.12);
 }
 
 .icon-blue {
-    color: var(--accent-blue);
+    color: #ff9900;
 }
 
 .icon-green {
-    color: #30D158;
+    color: #00ff41;
 }
 
 .icon-red {
-    color: #FF453A;
+    color: #ff3333;
 }
 
 .card-title {
-    color: var(--text-secondary);
-    font-weight: 500;
-    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .status-badge {
     display: flex;
     align-items: center;
-    gap: 4px;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.8rem;
+    gap: 3px;
+    padding: 2px 6px;
+    border-radius: 2px;
+    font-size: 0.7rem;
     font-weight: 600;
+    font-family: var(--font-mono);
 }
 
 .up-badge {
@@ -95,28 +102,31 @@
 .card-body {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
 }
 
 .card-value {
-    font-size: 1.6rem;
-    letter-spacing: -0.03em;
-    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: -0.01em;
+    font-weight: 600;
+    font-family: var(--font-mono);
 }
 
 .hero-value {
-    font-size: 2.2rem;
-    background: var(--text-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    font-size: 1.3rem;
+    color: var(--text-primary);
+    background: none;
+    -webkit-background-clip: unset;
+    -webkit-text-fill-color: unset;
+    background-clip: unset;
 }
 
 .card-date {
-    font-size: 0.75rem;
+    font-size: 0.68rem;
     color: var(--text-muted);
     font-weight: 500;
     letter-spacing: 0.3px;
+    font-family: var(--font-mono);
 }
 
 .text-up {
@@ -129,12 +139,22 @@
 
 @media (max-width: 1200px) {
     .summary-cards {
-        grid-template-columns: repeat(3, 1fr);
+        flex-wrap: wrap;
+    }
+    .summary-card {
+        min-width: 140px;
     }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 768px) {
     .summary-cards {
-        grid-template-columns: 1fr;
+        flex-direction: column;
+    }
+    .summary-card {
+        border-right: none;
+        border-bottom: 1px solid #333;
+    }
+    .summary-card:last-child {
+        border-bottom: none;
     }
 }

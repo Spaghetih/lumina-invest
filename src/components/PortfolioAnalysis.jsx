@@ -1,8 +1,24 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
-import { TrendingUp, TrendingDown, DollarSign, BarChart3, Calendar, ChevronUp, ChevronDown } from 'lucide-react';
+import { TrendingUp, TrendingDown, DollarSign, BarChart3, Calendar, ChevronUp, ChevronDown, Download } from 'lucide-react';
 import { useCurrency } from '../contexts/CurrencyContext';
+import { exportPortfolioCSV } from '../services/exportService';
 import './PortfolioAnalysis.css';
+
+const TARGETS_KEY = 'lumina_targets';
+
+const loadTargets = () => {
+    try {
+        const raw = localStorage.getItem(TARGETS_KEY);
+        return raw ? JSON.parse(raw) : {};
+    } catch {
+        return {};
+    }
+};
+
+const saveTargets = (targets) => {
+    localStorage.setItem(TARGETS_KEY, JSON.stringify(targets));
+};
 
 const COLORS = ['#0A84FF', '#5E5CE6', '#30D158', '#FF9F0A', '#FF453A', '#BF5AF2', '#64D2FF', '#FFD60A'];
 
@@ -22,6 +38,37 @@ const CustomPieTooltip = ({ active, payload, format }) => {
 
 const PortfolioAnalysis = ({ stocks }) => {
     const { format, symbol: currSymbol, hideBalances } = useCurrency();
+    const [targets, setTargets] = useState(loadTargets);
+    const [editingTarget, setEditingTarget] = useState(null);
+    const [editValue, setEditValue] = useState('');
+
+    const handleTargetClick = useCallback((ticker, currentTarget) => {
+        setEditingTarget(ticker);
+        setEditValue(currentTarget !== undefined ? currentTarget.toString() : '');
+    }, []);
+
+    const handleTargetSave = useCallback((ticker) => {
+        const parsed = parseFloat(editValue);
+        const next = { ...targets };
+        if (!isNaN(parsed) && parsed > 0) {
+            next[ticker] = parsed;
+        } else {
+            delete next[ticker];
+        }
+        setTargets(next);
+        saveTargets(next);
+        setEditingTarget(null);
+        setEditValue('');
+    }, [editValue, targets]);
+
+    const handleTargetKeyDown = useCallback((e, ticker) => {
+        if (e.key === 'Enter') {
+            handleTargetSave(ticker);
+        } else if (e.key === 'Escape') {
+            setEditingTarget(null);
+            setEditValue('');
+        }
+    }, [handleTargetSave]);
 
     if (!stocks || stocks.length === 0) {
         return (
@@ -80,6 +127,7 @@ const PortfolioAnalysis = ({ stocks }) => {
                 case 'shares': aVal = a.shares; bVal = b.shares; break;
                 case 'avgPrice': aVal = a.avgPrice || a.prevClose; bVal = b.avgPrice || b.prevClose; break;
                 case 'price': aVal = a.price; bVal = b.price; break;
+                case 'target': aVal = targets[a.id] || 0; bVal = targets[b.id] || 0; break;
                 case 'currentValue': aVal = a.currentValue; bVal = b.currentValue; break;
                 case 'pnl': aVal = a.pnl; bVal = b.pnl; break;
                 case 'todayChange': aVal = a.todayChange; bVal = b.todayChange; break;
@@ -120,6 +168,15 @@ const PortfolioAnalysis = ({ stocks }) => {
 
     return (
         <div className="portfolio-analysis fade-in">
+            {/* Header with Export */}
+            <div className="pa-header-row">
+                <h2 className="pa-page-title">Portfolio Analysis</h2>
+                <button className="btn-secondary" onClick={() => exportPortfolioCSV(stocks)}>
+                    <Download size={14} />
+                    Export CSV
+                </button>
+            </div>
+
             {/* Top Stats Row */}
             <div className="pa-stats-row">
                 <div className="pa-stat-card glass-panel">
@@ -211,6 +268,7 @@ const PortfolioAnalysis = ({ stocks }) => {
                                     <th onClick={() => handleSort('shares')} className="sortable-th">Shares {getSortIcon('shares')}</th>
                                     <th onClick={() => handleSort('avgPrice')} className="sortable-th">Avg Cost {getSortIcon('avgPrice')}</th>
                                     <th onClick={() => handleSort('price')} className="sortable-th">Price {getSortIcon('price')}</th>
+                                    <th onClick={() => handleSort('target')} className="sortable-th">Target {getSortIcon('target')}</th>
                                     <th onClick={() => handleSort('currentValue')} className="sortable-th">Value {getSortIcon('currentValue')}</th>
                                     <th onClick={() => handleSort('pnl')} className="sortable-th">PNL {getSortIcon('pnl')}</th>
                                     <th onClick={() => handleSort('todayChange')} className="sortable-th">Today {getSortIcon('todayChange')}</th>
@@ -232,6 +290,44 @@ const PortfolioAnalysis = ({ stocks }) => {
                                         <td>{hideBalances ? '•••' : p.shares}</td>
                                         <td>{format(p.avgPrice || p.prevClose, p.qc)}</td>
                                         <td>{format(p.price, p.qc)}</td>
+                                        <td className="pa-target-cell">
+                                            {editingTarget === p.id ? (
+                                                <input
+                                                    type="number"
+                                                    className="pa-target-input"
+                                                    value={editValue}
+                                                    onChange={e => setEditValue(e.target.value)}
+                                                    onKeyDown={e => handleTargetKeyDown(e, p.id)}
+                                                    onBlur={() => handleTargetSave(p.id)}
+                                                    autoFocus
+                                                    min="0"
+                                                    step="0.01"
+                                                />
+                                            ) : (
+                                                <span
+                                                    className="pa-target-display"
+                                                    onClick={() => handleTargetClick(p.id, targets[p.id])}
+                                                    title="Click to set target"
+                                                >
+                                                    {targets[p.id] !== undefined ? (
+                                                        <>
+                                                            {format(targets[p.id], p.qc)}
+                                                            {(() => {
+                                                                const dist = ((targets[p.id] - p.price) / p.price) * 100;
+                                                                const isPositive = dist >= 0;
+                                                                return (
+                                                                    <span className={`pa-target-badge ${isPositive ? 'badge-up' : 'badge-down'}`}>
+                                                                        {isPositive ? '+' : ''}{dist.toFixed(1)}%
+                                                                    </span>
+                                                                );
+                                                            })()}
+                                                        </>
+                                                    ) : (
+                                                        <span className="pa-target-placeholder">Set</span>
+                                                    )}
+                                                </span>
+                                            )}
+                                        </td>
                                         <td className="pa-value-cell">{format(p.currentValue, p.qc)}</td>
                                         <td className={p.pnl >= 0 ? 'text-up' : 'text-down'}>
                                             {p.pnl >= 0 ? '+' : ''}{format(p.pnl, p.qc)}

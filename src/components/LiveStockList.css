@@ -1,39 +1,45 @@
+/* Dense terminal table — Bloomberg style */
 .live-stocks-card {
-    padding: 24px;
+    padding: 0;
     height: 100%;
-    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.card-header {
+.live-stocks-card .card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 0;
+    padding: 8px 12px;
+    border-bottom: 1px solid #333;
+    background: #0d0d0d;
 }
 
 .card-title {
-    font-size: 1.1rem;
+    font-size: 0.85rem;
     font-weight: 600;
     color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .live-indicator {
     display: flex;
     align-items: center;
-    gap: 6px;
-    font-size: 0.8rem;
+    gap: 5px;
+    font-size: 0.68rem;
     font-weight: 600;
     color: var(--status-up);
-    padding: 4px 12px;
+    padding: 2px 6px;
     background: var(--status-up-bg);
-    border-radius: 20px;
+    border-radius: 2px;
     letter-spacing: 0.5px;
     text-transform: uppercase;
+    font-family: var(--font-mono);
 }
 
 .live-dot {
-    width: 6px;
-    height: 6px;
+    width: 5px;
+    height: 5px;
     border-radius: 50%;
     background-color: var(--status-up);
     animation: pulse-dot 1.5s infinite;
@@ -42,30 +48,28 @@
 @keyframes pulse-dot {
     0% {
         transform: scale(0.95);
-        box-shadow: 0 0 0 0 rgba(48, 209, 88, 0.7);
+        box-shadow: 0 0 0 0 rgba(0, 255, 65, 0.7);
     }
-
     70% {
         transform: scale(1);
-        box-shadow: 0 0 0 6px rgba(48, 209, 88, 0);
+        box-shadow: 0 0 0 4px rgba(0, 255, 65, 0);
     }
-
     100% {
         transform: scale(0.95);
-        box-shadow: 0 0 0 0 rgba(48, 209, 88, 0);
+        box-shadow: 0 0 0 0 rgba(0, 255, 65, 0);
     }
 }
 
-/* ─── List Header ─── */
+/* List Header */
 .list-header {
     display: grid;
     grid-template-columns: 1fr auto auto 140px 36px;
     align-items: center;
     gap: 12px;
-    padding: 0 12px 10px 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    margin-bottom: 10px;
-    font-size: 0.75rem;
+    padding: 4px 12px;
+    border-bottom: 1px solid #444;
+    background: #0d0d0d;
+    font-size: 0.68rem;
     color: var(--text-muted);
     font-weight: 600;
     text-transform: uppercase;
@@ -78,14 +82,14 @@
     gap: 4px;
     cursor: pointer;
     user-select: none;
-    transition: color 0.2s;
+    transition: color 0.1s;
 }
 
 .header-col:hover {
     color: var(--text-primary);
 }
 
-/* ─── Stock List ─── */
+/* Stock List */
 .stocks-list {
     display: flex;
     flex-direction: column;
@@ -97,81 +101,82 @@
     grid-template-columns: 1fr auto auto 140px 36px;
     align-items: center;
     gap: 12px;
-    padding: 14px 12px;
-    border-radius: 12px;
-    transition: all 0.2s ease;
+    padding: 6px 12px;
+    border-radius: 0;
+    transition: background 0.1s ease;
     position: relative;
+    border-bottom: 1px solid #1a1a1a;
+}
+
+.stock-row:last-child {
+    border-bottom: none;
 }
 
 .stock-row::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 12px;
-    right: 12px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.04) 20%, rgba(255, 255, 255, 0.04) 80%, transparent);
-}
-
-.stock-row:last-child::after {
     display: none;
 }
 
-.stock-row:hover {
-    background: rgba(255, 255, 255, 0.03);
+.stock-row:nth-child(even) {
+    background: #0a0a0a;
 }
 
-/* ─── Stock Info (Left) ─── */
+.stock-row:hover {
+    background: #1a1a1a;
+}
+
+/* Stock Info */
 .stock-info {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     min-width: 0;
 }
 
 .stock-avatar {
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
+    width: 28px;
+    height: 28px;
+    border-radius: 2px;
     flex-shrink: 0;
 }
 
 .stock-avatar-img {
     object-fit: contain;
     background: #ffffff;
-    padding: 4px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 3px;
+    border: 1px solid #333;
 }
 
 .stock-avatar-text {
-    background: linear-gradient(135deg, rgba(10, 132, 255, 0.15), rgba(94, 92, 230, 0.15));
-    border: 1px solid rgba(10, 132, 255, 0.12);
+    background: rgba(255, 153, 0, 0.12);
+    border: 1px solid rgba(255, 153, 0, 0.2);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.7rem;
+    font-size: 0.6rem;
     font-weight: 700;
-    color: #0A84FF;
+    color: #ff9900;
     letter-spacing: 0.5px;
     text-transform: uppercase;
+    font-family: var(--font-mono);
 }
 
 .stock-text {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 1px;
     min-width: 0;
 }
 
 .stock-symbol {
     font-weight: 600;
     color: var(--text-primary);
-    font-size: 0.95rem;
-    letter-spacing: 0.3px;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    font-family: var(--font-mono);
 }
 
 .stock-name {
-    font-size: 0.78rem;
+    font-size: 0.7rem;
     color: var(--text-muted);
     white-space: nowrap;
     overflow: hidden;
@@ -179,7 +184,7 @@
     max-width: 150px;
 }
 
-/* ─── Shares (Center) ─── */
+/* Shares */
 .stock-shares-col {
     display: flex;
     flex-direction: column;
@@ -189,20 +194,21 @@
 }
 
 .stock-shares-count {
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     font-weight: 500;
     color: var(--text-secondary);
+    font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
 }
 
 .stock-shares-label {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
-/* ─── PNL Column ─── */
+/* PNL Column */
 .stock-pnl-col {
     display: flex;
     flex-direction: column;
@@ -212,46 +218,48 @@
 }
 
 .stock-pnl-value {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 600;
+    font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
 }
 
 .stock-pnl-pct {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     font-weight: 500;
+    font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
     opacity: 0.8;
 }
 
-/* ─── Price + Change (Right) ─── */
+/* Price + Change */
 .stock-price-col {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 5px;
+    gap: 3px;
 }
 
 .stock-price {
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
+    font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
     color: var(--text-primary);
-    padding: 2px 0;
-    transition: color 0.3s ease, text-shadow 0.3s ease;
+    padding: 1px 0;
+    transition: color 0.15s ease;
     white-space: nowrap;
 }
 
-/* Flash animations — subtle glow instead of background */
 .stock-price.flash-up {
-    color: #30D158;
-    text-shadow: 0 0 8px rgba(48, 209, 88, 0.3);
+    color: #00ff41;
+    text-shadow: 0 0 6px rgba(0, 255, 65, 0.3);
 }
 
 .stock-price.flash-down {
-    color: #FF453A;
-    text-shadow: 0 0 8px rgba(255, 69, 58, 0.3);
+    color: #ff3333;
+    text-shadow: 0 0 6px rgba(255, 51, 51, 0.3);
 }
 
 /* Badge for change % */
@@ -259,39 +267,40 @@
     display: inline-flex;
     align-items: center;
     gap: 3px;
-    font-size: 0.72rem;
+    font-size: 0.68rem;
     font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 6px;
+    padding: 1px 6px;
+    border-radius: 2px;
+    font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
     letter-spacing: 0.2px;
 }
 
 .stock-change-badge.badge-up {
-    color: #30D158;
-    background: rgba(48, 209, 88, 0.1);
+    color: #00ff41;
+    background: rgba(0, 255, 65, 0.1);
 }
 
 .stock-change-badge.badge-down {
-    color: #FF453A;
-    background: rgba(255, 69, 58, 0.1);
+    color: #ff3333;
+    background: rgba(255, 51, 51, 0.1);
 }
 
-/* ─── Delete Button ─── */
+/* Delete Button */
 .delete-stock-btn {
     background: transparent;
     border: none;
     color: var(--text-muted);
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
+    width: 28px;
+    height: 28px;
+    border-radius: 2px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     opacity: 0;
-    transition: all 0.2s ease;
+    transition: all 0.1s ease;
     flex-shrink: 0;
 }
 
@@ -301,44 +310,40 @@
 
 .delete-stock-btn:hover {
     opacity: 1 !important;
-    color: #FF453A;
-    background: rgba(255, 69, 58, 0.1);
+    color: #ff3333;
+    background: rgba(255, 51, 51, 0.1);
 }
 
-/* ─── Empty State ─── */
+/* Empty State */
 .empty-stocks {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 40px;
+    padding: 32px;
     color: var(--text-muted);
-    font-size: 0.9rem;
+    font-size: 0.82rem;
 }
 
-/* =========================================
-   Mobile Responsiveness (Max Width: 768px)
-   ========================================= */
+/* Mobile */
 @media (max-width: 768px) {
     .live-stocks-card {
-        padding: 16px;
+        padding: 0;
     }
 
     .stocks-list {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
-        padding-bottom: 8px;
-        /* Room for scrollbar */
+        padding-bottom: 4px;
     }
 
     .stock-row,
     .list-header {
         min-width: 600px;
-        /* Ensure table doesn't squash too much */
     }
 
-    .card-header {
+    .live-stocks-card .card-header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 12px;
+        gap: 8px;
     }
 }

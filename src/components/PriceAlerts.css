@@ -1,0 +1,208 @@
+.price-alerts {
+    margin-top: 4px;
+}
+
+.price-alerts-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.price-alerts-header h4 {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+.price-alerts-count {
+    font-size: 0.68rem;
+    color: #ff9900;
+    font-family: var(--font-mono);
+    background: rgba(255, 153, 0, 0.1);
+    padding: 1px 6px;
+    border-radius: 2px;
+}
+
+/* Add Alert Form */
+.pa-add-form {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.pa-add-form input,
+.pa-add-form select {
+    background: #0a0a0a;
+    border: 1px solid #333;
+    color: var(--text-primary);
+    padding: 6px 8px;
+    border-radius: 2px;
+    font-size: 0.78rem;
+    font-family: var(--font-mono);
+    outline: none;
+    transition: border-color 0.15s ease;
+}
+
+.pa-add-form input:focus,
+.pa-add-form select:focus {
+    border-color: #ff9900;
+}
+
+.pa-add-form input.pa-ticker-input {
+    width: 72px;
+    text-transform: uppercase;
+}
+
+.pa-add-form select.pa-condition-select {
+    width: 80px;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding-right: 4px;
+}
+
+.pa-add-form input.pa-price-input {
+    width: 90px;
+}
+
+.pa-add-btn {
+    background: rgba(255, 153, 0, 0.15);
+    border: 1px solid #ff9900;
+    color: #ff9900;
+    padding: 6px 12px;
+    border-radius: 2px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    transition: background 0.15s ease;
+    font-family: var(--font-mono);
+}
+
+.pa-add-btn:hover {
+    background: rgba(255, 153, 0, 0.25);
+}
+
+/* Alerts Table */
+.pa-alerts-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.75rem;
+}
+
+.pa-alerts-table thead th {
+    text-align: left;
+    padding: 5px 8px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #333;
+    white-space: nowrap;
+}
+
+.pa-alerts-table tbody tr {
+    transition: background 0.1s ease;
+}
+
+.pa-alerts-table tbody tr:nth-child(even) {
+    background: #0a0a0a;
+}
+
+.pa-alerts-table tbody tr:hover {
+    background: #1a1a1a;
+}
+
+.pa-alerts-table tbody td {
+    padding: 5px 8px;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    border-bottom: 1px solid #1a1a1a;
+    white-space: nowrap;
+}
+
+.pa-alert-ticker {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.pa-alert-condition {
+    font-size: 0.7rem;
+    padding: 1px 5px;
+    border-radius: 2px;
+    font-weight: 500;
+}
+
+.pa-alert-condition.above {
+    color: #00ff41;
+    background: rgba(0, 255, 65, 0.08);
+}
+
+.pa-alert-condition.below {
+    color: #ff3333;
+    background: rgba(255, 51, 51, 0.08);
+}
+
+.pa-alert-price {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.pa-alert-current {
+    color: var(--text-secondary);
+}
+
+.pa-alert-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.68rem;
+    padding: 1px 6px;
+    border-radius: 2px;
+    font-weight: 600;
+}
+
+.pa-alert-status.active {
+    color: #ff9900;
+    background: rgba(255, 153, 0, 0.1);
+}
+
+.pa-alert-status.triggered {
+    color: #00ff41;
+    background: rgba(0, 255, 65, 0.1);
+}
+
+.pa-alert-delete {
+    background: none;
+    border: 1px solid transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    transition: all 0.15s ease;
+}
+
+.pa-alert-delete:hover {
+    color: #ff3333;
+    border-color: #ff3333;
+    background: rgba(255, 51, 51, 0.08);
+}
+
+.pa-alerts-empty {
+    text-align: center;
+    padding: 16px 8px;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+}

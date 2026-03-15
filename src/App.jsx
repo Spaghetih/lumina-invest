@@ -10,7 +10,15 @@ import DividendCalendar from './components/DividendCalendar';
 import ImportModal from './components/ImportModal';
 import Settings from './components/Settings';
 import AIAssistant from './components/AIAssistant';
-import { loadPortfolio, savePortfolio, subscribeToMarketUpdates, calculatePortfolioMetrics, generateHistoricalData } from './services/mockData';
+import StockChart from './components/StockChart';
+import Watchlist from './components/Watchlist';
+import Screener from './components/Screener';
+import Backtesting from './components/Backtesting';
+import Heatmap from './components/Heatmap';
+import TransactionHistory, { logTransaction } from './components/TransactionHistory';
+import CorrelationMatrix from './components/CorrelationMatrix';
+import NewsFeed from './components/NewsFeed';
+import { loadPortfolio, savePortfolio, subscribeToMarketUpdates, calculatePortfolioMetrics, generateHistoricalData, listPortfolios, createPortfolio, deletePortfolio, renamePortfolio } from './services/mockData';
 
 function App() {
   const [stocks, setStocks] = useState([]);
@@ -23,6 +31,10 @@ function App() {
   const [initialSearchTicker, setInitialSearchTicker] = useState('');
   const [stockVersion, setStockVersion] = useState(0); // bumped on every portfolio change to force re-subscription
 
+  // Multi-portfolio state
+  const [portfolios, setPortfolios] = useState([]);
+  const [activePortfolioId, setActivePortfolioId] = useState(localStorage.getItem('lumina_active_portfolio') || 'default');
+
   const handleSearch = (query) => {
     setInitialSearchTicker(query.toUpperCase());
     setIsAddModalOpen(true);
@@ -30,12 +42,42 @@ function App() {
 
   useEffect(() => {
     const initPortfolio = async () => {
-      const data = await loadPortfolio();
+      const [data, pList] = await Promise.all([
+        loadPortfolio(activePortfolioId),
+        listPortfolios()
+      ]);
       setStocks(data);
+      setPortfolios(pList);
       setIsLoaded(true);
     };
     initPortfolio();
-  }, []);
+  }, [activePortfolioId]);
+
+  const handleSwitchPortfolio = async (id) => {
+    setIsLoaded(false);
+    setActivePortfolioId(id);
+    localStorage.setItem('lumina_active_portfolio', id);
+  };
+
+  const handleCreatePortfolio = async (name) => {
+    const newP = await createPortfolio(name);
+    setPortfolios(prev => [...prev, newP]);
+    handleSwitchPortfolio(newP.id);
+  };
+
+  const handleDeletePortfolio = async (id) => {
+    await deletePortfolio(id);
+    setPortfolios(prev => prev.filter(p => p.id !== id));
+    if (activePortfolioId === id) {
+      const remaining = portfolios.filter(p => p.id !== id);
+      handleSwitchPortfolio(remaining[0]?.id || 'default');
+    }
+  };
+
+  const handleRenamePortfolio = async (id, name) => {
+    await renamePortfolio(id, name);
+    setPortfolios(prev => prev.map(p => p.id === id ? { ...p, name } : p));
+  };
 
   useEffect(() => {
     if (!isLoaded) return;
@@ -105,20 +147,25 @@ function App() {
 
       // Save and update chart outside the state updater
       setTimeout(() => {
-        savePortfolio(updatedStocks);
+        savePortfolio(updatedStocks, activePortfolioId);
         const newMetrics = calculatePortfolioMetrics(updatedStocks);
         setHistoricalData(generateHistoricalData(newMetrics.totalBalance, newMetrics.todayPnl, updatedStocks));
       }, 0);
 
       return updatedStocks;
     });
+    logTransaction('BUY', newStock.id, newStock.shares, newStock.avgPrice || newStock.price || newStock.prevClose, newStock.quoteCurrency || 'USD');
     setStockVersion(v => v + 1);
   };
 
   const handleDeleteStock = (id) => {
+    const deletedStock = stocks.find(s => s.id === id);
+    if (deletedStock) {
+      logTransaction('SELL', deletedStock.id, deletedStock.shares, deletedStock.price, deletedStock.quoteCurrency || 'USD');
+    }
     const updatedStocks = stocks.filter(s => s.id !== id);
     setStocks(updatedStocks);
-    savePortfolio(updatedStocks);
+    savePortfolio(updatedStocks, activePortfolioId);
     setStockVersion(v => v + 1); // force re-subscription with fresh data
 
     // Auto-update historical chart math
@@ -147,13 +194,19 @@ function App() {
       }}
       onImportClick={() => setIsImportModalOpen(true)}
       onSearch={handleSearch}
+      portfolios={portfolios}
+      activePortfolioId={activePortfolioId}
+      onSwitchPortfolio={handleSwitchPortfolio}
+      onCreatePortfolio={handleCreatePortfolio}
+      onDeletePortfolio={handleDeletePortfolio}
+      onRenamePortfolio={handleRenamePortfolio}
     >
       {activeTab === 'Dashboard' && (
         <div className="dashboard-content fade-in">
           <PortfolioSummary metrics={metrics} historicalData={historicalData} />
 
           <div className="main-grid">
-            <div className="chart-container glass-panel">
+            <div className="chart-container">
               <PerformanceChart
                 data={historicalData}
                 activeTimeframe={timeframe}
@@ -161,31 +214,58 @@ function App() {
                 metrics={metrics}
               />
             </div>
-            <div className="live-list-container glass-panel">
+            <div className="live-list-container">
               <LiveStockList stocks={stocks} onDeleteStock={handleDeleteStock} />
             </div>
           </div>
+          {stocks.length > 0 && <Heatmap stocks={stocks} />}
         </div>
       )}
 
       {activeTab === 'Markets' && (
         <div className="fade-in">
           <h2>Live Markets</h2>
-          <div className="glass-panel" style={{ marginTop: '1rem', padding: '1rem' }}>
+          <div style={{ marginTop: '0.5rem', border: '1px solid #333', background: '#111' }}>
             <LiveStockList stocks={stocks} onDeleteStock={handleDeleteStock} />
           </div>
+        </div>
+      )}
+
+      {activeTab === 'Charts' && (
+        <div className="fade-in">
+          <StockChart stocks={stocks} />
+        </div>
+      )}
+
+      {activeTab === 'Watchlist' && (
+        <div className="fade-in">
+          <Watchlist />
+        </div>
+      )}
+
+      {activeTab === 'Screener' && (
+        <div className="fade-in">
+          <Screener onViewChart={(sym) => { setActiveTab('Charts'); }} />
         </div>
       )}
 
       {activeTab === 'Portfolio' && (
         <div className="fade-in">
           <PortfolioAnalysis stocks={stocks} />
+          <TransactionHistory />
+        </div>
+      )}
+
+      {activeTab === 'Backtest' && (
+        <div className="fade-in">
+          <Backtesting />
         </div>
       )}
 
       {activeTab === 'Insights' && (
         <div className="fade-in">
           <Insights stocks={stocks} />
+          <CorrelationMatrix stocks={stocks} />
         </div>
       )}
 

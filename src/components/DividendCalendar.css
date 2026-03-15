@@ -2,7 +2,7 @@
 .dividend-calendar {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 1px;
     height: 100%;
 }
 
@@ -11,16 +11,18 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 60px 20px;
+    padding: 40px 16px;
     text-align: center;
-    gap: 16px;
+    gap: 10px;
     color: var(--text-muted);
 }
 
 .empty-message h3 {
     color: var(--text-primary);
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 /* ─── Hero Metrics Banner ─── */
@@ -28,19 +30,18 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 24px 32px;
-    background: linear-gradient(135deg, rgba(191, 90, 242, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%);
-    border: 1px solid rgba(191, 90, 242, 0.2);
-    box-shadow: 0 4px 24px rgba(191, 90, 242, 0.05);
+    padding: 16px 20px;
+    background: #111;
+    border: 1px solid #333;
     flex-wrap: wrap;
-    gap: 24px;
+    gap: 16px;
 }
 
 .hero-icon {
-    width: 64px;
-    height: 64px;
-    border-radius: 16px;
-    background: rgba(191, 90, 242, 0.15);
+    width: 48px;
+    height: 48px;
+    border-radius: 2px;
+    background: rgba(255, 153, 0, 0.15);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -53,58 +54,64 @@
 }
 
 .hero-label {
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     font-weight: 500;
     color: var(--text-secondary);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 4px;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
 }
 
 .hero-value {
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 700;
     letter-spacing: -1px;
-    color: #BF5AF2 !important;
-    /* Override text-up for styling */
-    text-shadow: 0 0 20px rgba(191, 90, 242, 0.3);
+    color: #ff9900 !important;
+    font-family: var(--font-mono);
 }
 
 .hero-stats {
     display: flex;
-    gap: 32px;
-    padding-left: 32px;
-    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    gap: 24px;
+    padding-left: 24px;
+    border-left: 1px solid #333;
 }
 
 .stat-block {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
 }
 
 .stat-label {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .stat-val {
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     font-weight: 600;
     color: var(--text-primary);
+    font-family: var(--font-mono);
 }
 
 /* ─── Dividend Table ─── */
 .div-table-container {
-    padding: 24px;
+    padding: 16px;
+    background: #111;
+    border: 1px solid #333;
 }
 
 .div-table-container .section-title {
-    margin: 0 0 16px 0;
-    padding-bottom: 16px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    font-size: 1.1rem;
+    margin: 0 0 12px 0;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #333;
+    font-size: 0.85rem;
     color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .div-table-wrapper {
@@ -116,34 +123,39 @@
 .div-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
 }
 
 .div-table thead th {
     text-align: left;
-    padding: 12px 14px;
-    font-size: 0.75rem;
+    padding: 8px 12px;
+    font-size: 0.68rem;
     font-weight: 600;
     color: var(--text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border-bottom: 1px solid var(--border-color);
+    letter-spacing: 1px;
+    border-bottom: 1px solid #333;
     white-space: nowrap;
 }
 
 .div-table tbody tr {
-    transition: background var(--transition-fast);
+    transition: background 0.1s ease;
+}
+
+.div-table tbody tr:nth-child(even) {
+    background: #0a0a0a;
 }
 
 .div-table tbody tr:hover {
-    background: rgba(255, 255, 255, 0.03);
+    background: #1a1a1a;
 }
 
 .div-table tbody td {
-    padding: 14px;
+    padding: 8px 12px;
     color: var(--text-secondary);
+    font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid #1a1a1a;
     white-space: nowrap;
 }
 
@@ -159,14 +171,14 @@
 .div-asset {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .asset-icon {
     width: 28px;
     height: 28px;
-    border-radius: 6px;
-    background: rgba(255, 255, 255, 0.05);
+    border-radius: 2px;
+    background: #1a1a1a;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -187,20 +199,21 @@
 .date-badge {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 4px 8px;
-    border-radius: 6px;
-    font-size: 0.75rem;
+    gap: 4px;
+    padding: 2px 6px;
+    border-radius: 2px;
+    font-size: 0.7rem;
     font-weight: 500;
+    font-family: var(--font-mono);
 }
 
 .badge-future {
-    background: rgba(191, 90, 242, 0.15);
-    color: #D388F8;
+    background: rgba(255, 153, 0, 0.15);
+    color: #ff9900;
 }
 
 .badge-past {
-    background: rgba(255, 255, 255, 0.05);
+    background: #1a1a1a;
     color: var(--text-muted);
 }
 
@@ -212,12 +225,12 @@
 
 .info-icon {
     opacity: 0.5;
-    transition: opacity var(--transition-fast), color var(--transition-fast);
+    transition: opacity 0.1s ease, color 0.1s ease;
 }
 
 .tooltip-container:hover .info-icon {
     opacity: 1;
-    color: #BF5AF2;
+    color: #ff9900;
 }
 
 .custom-tooltip {
@@ -226,16 +239,13 @@
     bottom: auto;
     left: 50%;
     transform: translateX(-50%) translateY(-10px);
-    background: rgba(20, 20, 25, 0.95);
-    border: 1px solid rgba(191, 90, 242, 0.3);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    padding: 12px 14px;
-    border-radius: 8px;
+    background: #141414;
+    border: 1px solid #444;
+    padding: 8px 10px;
+    border-radius: 2px;
     width: 220px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 15px rgba(191, 90, 242, 0.15);
     color: var(--text-secondary);
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 400;
     text-transform: none;
     letter-spacing: normal;
@@ -243,7 +253,7 @@
     pointer-events: none;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.1s ease;
     z-index: 100;
 }
 
@@ -256,7 +266,7 @@
     transform: translateX(-50%);
     border-width: 6px;
     border-style: solid;
-    border-color: transparent transparent rgba(191, 90, 242, 0.3) transparent;
+    border-color: transparent transparent #444 transparent;
 }
 
 .tooltip-container:hover .custom-tooltip {
@@ -268,8 +278,8 @@
 .custom-tooltip strong {
     display: block;
     color: var(--text-primary);
-    margin-bottom: 4px;
-    font-size: 0.8rem;
+    margin-bottom: 2px;
+    font-size: 0.75rem;
 }
 
 .custom-tooltip p {
@@ -282,19 +292,19 @@
     .dividend-hero {
         flex-direction: column;
         align-items: flex-start;
-        padding: 20px;
+        padding: 12px 16px;
     }
 
     .hero-stats {
         padding-left: 0;
         border-left: none;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        padding-top: 20px;
+        border-top: 1px solid #333;
+        padding-top: 12px;
         width: 100%;
         justify-content: space-between;
     }
 
     .hero-value {
-        font-size: 2rem;
+        font-size: 1.6rem;
     }
 }

@@ -1,0 +1,220 @@
+/* Screener — Bloomberg terminal style */
+.screener-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #111;
+    border-radius: 2px;
+}
+
+.screener-header {
+    padding: 8px 12px;
+    border-bottom: 1px solid #333;
+    background: #0d0d0d;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.screener-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.screener-icon {
+    color: #ff9900;
+}
+
+.screener-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0;
+}
+
+/* Preset Buttons */
+.screener-presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.preset-btn {
+    padding: 4px 10px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+    background: #0a0a0a;
+    border: 1px solid #333;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+}
+
+.preset-btn:hover {
+    background: #1a1a1a;
+    color: var(--text-primary);
+    border-color: #555;
+}
+
+.preset-btn.preset-active {
+    background: #ff9900;
+    color: #000;
+    border-color: #ff9900;
+}
+
+/* Body */
+.screener-body {
+    flex: 1;
+    overflow: auto;
+}
+
+/* Loading */
+.screener-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 48px 24px;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    font-family: var(--font-mono);
+}
+
+.screener-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Error / Empty */
+.screener-error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+    color: #ff3333;
+    font-size: 0.82rem;
+    font-family: var(--font-mono);
+}
+
+.screener-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+}
+
+/* Table */
+.screener-table-wrap {
+    overflow: auto;
+}
+
+.screener-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+}
+
+.screener-table thead th {
+    position: sticky;
+    top: 0;
+    background: #0d0d0d;
+    padding: 5px 10px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #444;
+    white-space: nowrap;
+    z-index: 1;
+}
+
+.screener-table tbody td {
+    padding: 6px 10px;
+    border-bottom: 1px solid #1a1a1a;
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.screener-row:nth-child(even) {
+    background: #0a0a0a;
+}
+
+.screener-row:hover {
+    background: #1a1a1a;
+}
+
+.screener-row.clickable {
+    cursor: pointer;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.cell-ticker {
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: 0.5px;
+}
+
+.cell-name {
+    color: var(--text-muted);
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: inherit;
+}
+
+.cell-price {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.text-up {
+    color: #00ff41;
+}
+
+.text-down {
+    color: #ff3333;
+}
+
+.cell-mcap,
+.cell-volume,
+.cell-pe {
+    color: var(--text-muted);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .screener-table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .screener-table {
+        min-width: 650px;
+    }
+
+    .screener-presets {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 4px;
+    }
+}

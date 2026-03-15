@@ -1,0 +1,331 @@
+/* Watchlist — Bloomberg terminal style */
+.watchlist-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #111;
+    border-radius: 2px;
+}
+
+.watchlist-header {
+    padding: 8px 12px;
+    border-bottom: 1px solid #333;
+    background: #0d0d0d;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.watchlist-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.watchlist-icon {
+    color: #ff9900;
+}
+
+.watchlist-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0;
+}
+
+.watchlist-count {
+    margin-left: auto;
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Search */
+.watchlist-search {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.watchlist-search .search-icon {
+    position: absolute;
+    left: 8px;
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.watchlist-search-input {
+    width: 100%;
+    padding: 6px 8px 6px 28px;
+    background: #0a0a0a;
+    border: 1px solid #333;
+    border-radius: 2px;
+    color: var(--text-primary);
+    font-size: 0.78rem;
+    font-family: var(--font-mono);
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+.watchlist-search-input::placeholder {
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+}
+
+.watchlist-search-input:focus {
+    border-color: #ff9900;
+}
+
+.search-spinner {
+    position: absolute;
+    right: 8px;
+    width: 12px;
+    height: 12px;
+    border: 2px solid #333;
+    border-top-color: #ff9900;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Search Dropdown */
+.search-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #111;
+    border: 1px solid #333;
+    border-top: none;
+    border-radius: 0 0 2px 2px;
+    z-index: 100;
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.search-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: background 0.1s;
+    border-bottom: 1px solid #1a1a1a;
+}
+
+.search-dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.search-dropdown-item:hover {
+    background: #1a1a1a;
+}
+
+.search-dropdown-item.already-added {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.dropdown-symbol {
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: #ff9900;
+    font-family: var(--font-mono);
+    min-width: 60px;
+}
+
+.dropdown-name {
+    flex: 1;
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dropdown-type {
+    font-size: 0.62rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: var(--font-mono);
+}
+
+.dropdown-added {
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: var(--font-mono);
+}
+
+/* Table */
+.watchlist-table-wrap {
+    flex: 1;
+    overflow: auto;
+}
+
+.watchlist-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+}
+
+.watchlist-table thead th {
+    position: sticky;
+    top: 0;
+    background: #0d0d0d;
+    padding: 5px 10px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #444;
+    white-space: nowrap;
+    z-index: 1;
+}
+
+.watchlist-table tbody td {
+    padding: 6px 10px;
+    border-bottom: 1px solid #1a1a1a;
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.watchlist-row:nth-child(even) {
+    background: #0a0a0a;
+}
+
+.watchlist-row:hover {
+    background: #1a1a1a;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.cell-ticker {
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: 0.5px;
+}
+
+.cell-name {
+    color: var(--text-muted);
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: inherit;
+}
+
+.cell-price {
+    color: var(--text-primary);
+    font-weight: 600;
+    transition: color 0.15s ease;
+}
+
+.cell-price.flash-up {
+    color: #00ff41;
+    text-shadow: 0 0 6px rgba(0, 255, 65, 0.3);
+}
+
+.cell-price.flash-down {
+    color: #ff3333;
+    text-shadow: 0 0 6px rgba(255, 51, 51, 0.3);
+}
+
+.text-up {
+    color: #00ff41;
+}
+
+.text-down {
+    color: #ff3333;
+}
+
+.cell-volume,
+.cell-52h,
+.cell-52l {
+    color: var(--text-muted);
+}
+
+.cell-actions {
+    width: 36px;
+    text-align: center;
+}
+
+.watchlist-remove-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    width: 28px;
+    height: 28px;
+    border-radius: 2px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all 0.1s ease;
+}
+
+.watchlist-row:hover .watchlist-remove-btn {
+    opacity: 0.6;
+}
+
+.watchlist-remove-btn:hover {
+    opacity: 1 !important;
+    color: #ff3333;
+    background: rgba(255, 51, 51, 0.1);
+}
+
+/* Empty State */
+.watchlist-empty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+    color: var(--text-muted);
+    text-align: center;
+    gap: 4px;
+}
+
+.watchlist-empty .empty-icon {
+    color: #333;
+    margin-bottom: 12px;
+}
+
+.watchlist-empty p {
+    margin: 0;
+    font-size: 0.85rem;
+}
+
+.watchlist-empty .empty-hint {
+    font-size: 0.72rem;
+    color: #555;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .watchlist-table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .watchlist-table {
+        min-width: 700px;
+    }
+}

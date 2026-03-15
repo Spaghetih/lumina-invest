@@ -4,35 +4,35 @@
 
 /* Drop Zone */
 .import-dropzone {
-    border: 2px dashed var(--border);
-    border-radius: var(--radius-md);
-    padding: 48px 24px;
+    border: 2px dashed #333;
+    border-radius: 2px;
+    padding: 32px 16px;
     text-align: center;
     cursor: pointer;
-    transition: all 0.3s ease;
-    background: rgba(255, 255, 255, 0.02);
-    margin-bottom: 16px;
+    transition: all 0.1s ease;
+    background: #111;
+    margin-bottom: 12px;
 }
 
 .import-dropzone:hover,
 .import-dropzone.active {
-    border-color: var(--accent-blue);
-    background: rgba(10, 132, 255, 0.06);
+    border-color: #ff9900;
+    background: #141414;
 }
 
 .import-dropzone.active {
-    transform: scale(1.01);
+    transform: none;
 }
 
 .import-upload-icon {
     color: var(--text-muted);
-    margin-bottom: 16px;
-    transition: color 0.3s;
+    margin-bottom: 12px;
+    transition: color 0.1s;
 }
 
 .import-dropzone:hover .import-upload-icon,
 .import-dropzone.active .import-upload-icon {
-    color: var(--accent-blue);
+    color: #ff9900;
 }
 
 .import-drop-title {
@@ -51,13 +51,13 @@
 .import-help {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     font-size: 0.78rem;
     color: var(--text-muted);
-    padding: 12px 16px;
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border-color);
+    padding: 8px 12px;
+    background: #111;
+    border-radius: 2px;
+    border: 1px solid #333;
     margin-top: 8px;
 }
 
@@ -66,12 +66,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 24px;
-    padding: 20px;
-    background: rgba(10, 132, 255, 0.06);
-    border: 1px solid rgba(10, 132, 255, 0.15);
-    border-radius: var(--radius-sm);
-    margin-bottom: 16px;
+    gap: 20px;
+    padding: 14px;
+    background: #141414;
+    border: 1px solid #333;
+    border-radius: 2px;
+    margin-bottom: 12px;
 }
 
 .import-summary-stat {
@@ -84,8 +84,9 @@
 .import-stat-number {
     font-size: 1.8rem;
     font-weight: 700;
-    color: var(--accent-blue);
+    color: #ff9900;
     line-height: 1;
+    font-family: var(--font-mono);
 }
 
 .import-stat-label {
@@ -112,14 +113,14 @@
 .import-warning {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 12px 16px;
-    background: rgba(255, 159, 10, 0.08);
-    border: 1px solid rgba(255, 159, 10, 0.2);
-    border-radius: var(--radius-sm);
-    margin-bottom: 16px;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #141414;
+    border: 1px solid #ff9900;
+    border-radius: 2px;
+    margin-bottom: 12px;
     font-size: 0.82rem;
-    color: #FF9F0A;
+    color: #ff9900;
     line-height: 1.4;
 }
 
@@ -127,9 +128,9 @@
 .import-preview-list {
     max-height: 320px;
     overflow-y: auto;
-    margin-bottom: 16px;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-sm);
+    margin-bottom: 12px;
+    border: 1px solid #333;
+    border-radius: 2px;
 }
 
 .import-table {
@@ -140,44 +141,46 @@
 
 .import-table thead th {
     text-align: left;
-    padding: 10px 12px;
+    padding: 6px 10px;
     font-size: 0.72rem;
     font-weight: 600;
     color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    border-bottom: 1px solid var(--border-color);
-    background: rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid #333;
+    background: #0a0a0a;
     position: sticky;
     top: 0;
 }
 
 .import-table tbody td {
-    padding: 10px 12px;
+    padding: 6px 10px;
     color: var(--text-secondary);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid #1a1a1a;
     font-variant-numeric: tabular-nums;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
 }
 
 .import-table tbody tr:hover {
-    background: rgba(255, 255, 255, 0.03);
+    background: #1a1a1a;
 }
 
 .import-row-invalid {
-    background: rgba(255, 69, 58, 0.04);
+    background: #1a0a0a;
 }
 
 .import-row-invalid:hover {
-    background: rgba(255, 69, 58, 0.08) !important;
+    background: #1f0e0e !important;
 }
 
 /* Status Icons */
 .import-status-ok {
-    color: #30D158;
+    color: #00ff41;
 }
 
 .import-status-err {
-    color: #FF453A;
+    color: #ff3333;
 }
 
 .import-status-pending {
@@ -204,7 +207,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
+    gap: 6px;
 }
 
 .import-ticker {
@@ -223,27 +226,27 @@
 .import-yahoo-name {
     display: block;
     font-size: 0.7rem;
-    color: var(--accent-blue);
+    color: #ff9900;
     font-weight: 400;
 }
 
 .import-edit-btn {
     background: none;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
+    border: 1px solid #333;
+    border-radius: 2px;
     color: var(--text-muted);
     cursor: pointer;
     padding: 4px;
     display: flex;
     align-items: center;
-    transition: all 0.2s;
+    transition: all 0.1s ease;
     flex-shrink: 0;
 }
 
 .import-edit-btn:hover {
-    color: var(--accent-blue);
-    border-color: var(--accent-blue);
-    background: rgba(10, 132, 255, 0.1);
+    color: #ff9900;
+    border-color: #ff9900;
+    background: #1a1a1a;
 }
 
 /* Edit Row */
@@ -254,13 +257,14 @@
 }
 
 .import-edit-input {
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid var(--accent-blue);
-    border-radius: 6px;
+    background: #0a0a0a;
+    border: 1px solid #ff9900;
+    border-radius: 2px;
     color: var(--text-primary);
     padding: 4px 8px;
     font-size: 0.82rem;
     font-weight: 600;
+    font-family: var(--font-mono);
     width: 90px;
     outline: none;
     text-transform: uppercase;
@@ -273,15 +277,15 @@
 }
 
 .import-edit-ok {
-    background: var(--accent-blue);
+    background: #ff9900;
     border: none;
-    border-radius: 6px;
-    color: white;
+    border-radius: 2px;
+    color: #000;
     cursor: pointer;
     padding: 4px;
     display: flex;
     align-items: center;
-    transition: opacity 0.2s;
+    transition: opacity 0.1s ease;
 }
 
 .import-edit-ok:hover {
@@ -296,13 +300,13 @@
 /* Actions */
 .import-actions {
     display: flex;
-    gap: 12px;
+    gap: 10px;
     justify-content: flex-end;
 }
 
 .import-actions .btn-secondary {
     flex: 0;
-    padding: 0.6rem 1rem;
+    padding: 0.4rem 0.8rem;
     font-size: 0.85rem;
 }
 
@@ -321,8 +325,8 @@
 @media (max-width: 768px) {
     .import-summary {
         flex-direction: column;
-        gap: 12px;
-        padding: 16px;
+        gap: 10px;
+        padding: 12px;
     }
 
     .import-arrow {

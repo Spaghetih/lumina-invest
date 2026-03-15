@@ -6,6 +6,8 @@ import {
     Trash2, RefreshCw, Database, Shield, Moon, Sun, Clock,
     ChevronRight, AlertTriangle, Check, Info, MessageSquare, Send
 } from 'lucide-react';
+import PriceAlerts from './PriceAlerts';
+import { exportPortfolioCSV } from '../services/exportService';
 import './Settings.css';
 
 const Settings = ({ stocks, onImportClick, onClearData }) => {
@@ -344,6 +346,12 @@ const Settings = ({ stocks, onImportClick, onClearData }) => {
                             </div>
                         </div>
                     )}
+
+                    {priceAlerts && (
+                        <div className="setting-row fade-in" style={{ display: 'block', padding: '12px 16px' }}>
+                            <PriceAlerts stocks={stocks} />
+                        </div>
+                    )}
                 </div>
 
                 {/* ─── Portfolio Management ─── */}
@@ -386,6 +394,10 @@ const Settings = ({ stocks, onImportClick, onClearData }) => {
                         <button className="setting-action-btn export-action" onClick={handleExport}>
                             <Download size={16} />
                             Export Portfolio (JSON)
+                        </button>
+                        <button className="btn-secondary" onClick={() => exportPortfolioCSV(stocks)}>
+                            <Download size={16} />
+                            Export CSV
                         </button>
                     </div>
                 </div>

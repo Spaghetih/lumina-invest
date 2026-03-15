@@ -164,7 +164,7 @@ const LiveStockList = ({ stocks, onDeleteStock }) => {
     };
 
     return (
-        <div className="live-stocks-card glass-panel">
+        <div className="live-stocks-card">
             <div className="card-header">
                 <h3 className="card-title">Live Markets</h3>
                 <span className="live-indicator">

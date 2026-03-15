@@ -7,7 +7,7 @@ const CustomTooltip = ({ active, payload, label, formatFn }) => {
     if (active && payload && payload.length) {
         const value = payload[0].value;
         return (
-            <div className="chart-tooltip glass-panel">
+            <div className="chart-tooltip">
                 <p className="tooltip-date">{label}</p>
                 <p className="tooltip-value">
                     {formatFn ? formatFn(value, 'EUR') : `€${value.toFixed(2)}`}
@@ -48,7 +48,7 @@ const PerformanceChart = ({ data, metrics, activeTimeframe, onTimeframeChange })
     const isUp = pnl >= 0;
 
     return (
-        <div className="chart-card glass-panel">
+        <div className="chart-card">
             <div className="chart-header">
                 <div>
                     <h3 className="card-title">Portfolio Performance</h3>
@@ -77,16 +77,16 @@ const PerformanceChart = ({ data, metrics, activeTimeframe, onTimeframeChange })
                     >
                         <defs>
                             <linearGradient id="colorBalance" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#0A84FF" stopOpacity={0.4} />
-                                <stop offset="95%" stopColor="#0A84FF" stopOpacity={0} />
+                                <stop offset="5%" stopColor={isUp ? '#00ff41' : '#ff3333'} stopOpacity={0.3} />
+                                <stop offset="95%" stopColor={isUp ? '#00ff41' : '#ff3333'} stopOpacity={0} />
                             </linearGradient>
                         </defs>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+                        <CartesianGrid vertical={false} stroke="#222" />
                         <XAxis
                             dataKey="date"
                             axisLine={false}
                             tickLine={false}
-                            tick={{ fill: '#a0a0ab', fontSize: 12 }}
+                            tick={{ fill: '#666', fontSize: 11, fontFamily: 'JetBrains Mono, monospace' }}
                             dy={10}
                             minTickGap={30}
                         />
@@ -95,7 +95,7 @@ const PerformanceChart = ({ data, metrics, activeTimeframe, onTimeframeChange })
                             domain={['auto', 'auto']}
                             axisLine={false}
                             tickLine={false}
-                            tick={{ fill: '#a0a0ab', fontSize: 12 }}
+                            tick={{ fill: '#666', fontSize: 11, fontFamily: 'JetBrains Mono, monospace' }}
                             tickFormatter={(val) => format(val, 'EUR').replace(/\.\d+/, '')}
                             width={80}
                             orientation="right"
@@ -106,11 +106,11 @@ const PerformanceChart = ({ data, metrics, activeTimeframe, onTimeframeChange })
                             type="monotone"
                             dataKey="balance"
                             name="Portfolio Balance"
-                            stroke="#0A84FF"
-                            strokeWidth={3}
+                            stroke={isUp ? '#00ff41' : '#ff3333'}
+                            strokeWidth={1.5}
                             fillOpacity={1}
                             fill="url(#colorBalance)"
-                            animationDuration={1500}
+                            animationDuration={500}
                         />
                     </AreaChart>
                 </ResponsiveContainer>

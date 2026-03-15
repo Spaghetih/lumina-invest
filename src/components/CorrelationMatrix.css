@@ -1,0 +1,88 @@
+.corr-matrix {
+    background: #111;
+    border: 1px solid #333;
+    margin-top: 1px;
+}
+
+.corr-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    border-bottom: 1px solid #333;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.corr-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+.corr-legend {
+    display: flex;
+    gap: 16px;
+    font-size: 0.68rem;
+    font-family: var(--font-mono);
+}
+
+.corr-table-wrapper {
+    overflow-x: auto;
+    padding: 8px;
+}
+
+.corr-table {
+    border-collapse: collapse;
+    font-size: 0.78rem;
+    font-family: var(--font-mono);
+}
+
+.corr-table thead th {
+    padding: 6px 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #ff9900;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.corr-row-label {
+    padding: 6px 12px;
+    font-weight: 600;
+    color: #ff9900;
+    white-space: nowrap;
+}
+
+.corr-cell {
+    padding: 8px 12px;
+    text-align: center;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    border: 1px solid #222;
+    transition: all 0.1s ease;
+    min-width: 60px;
+}
+
+.corr-cell:hover {
+    background: #1a1a1a !important;
+}
+
+.corr-loading,
+.corr-empty {
+    padding: 24px 16px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-family: var(--font-mono);
+}
+
+.corr-loading {
+    color: #ff9900;
+}

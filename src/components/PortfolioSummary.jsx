@@ -29,7 +29,7 @@ const PortfolioSummary = ({ metrics, historicalData }) => {
     return (
         <div className="summary-cards">
             {/* Total Balance Card */}
-            <div className="summary-card glass-panel hero-card">
+            <div className="summary-card hero-card">
                 <div className="card-header">
                     <div className="card-icon-wrapper">
                         <Wallet size={24} className="icon-blue" />
@@ -42,7 +42,7 @@ const PortfolioSummary = ({ metrics, historicalData }) => {
             </div>
 
             {/* Total Invested Card */}
-            <div className="summary-card glass-panel">
+            <div className="summary-card">
                 <div className="card-header">
                     <div className="card-icon-wrapper icon-wrapper-purple">
                         <PiggyBank size={18} className="icon-purple" style={{ color: 'var(--accent-purple)' }} />
@@ -55,7 +55,7 @@ const PortfolioSummary = ({ metrics, historicalData }) => {
             </div>
 
             {/* Today's PNL Card */}
-            <div className="summary-card glass-panel">
+            <div className="summary-card">
                 <div className="card-header">
                     <span className="card-title">Today's PNL</span>
                     <span className={`status-badge ${metrics.todayPnl >= 0 ? 'up-badge' : 'down-badge'}`}>
@@ -71,7 +71,7 @@ const PortfolioSummary = ({ metrics, historicalData }) => {
             </div>
 
             {/* Total PNL Card */}
-            <div className="summary-card glass-panel">
+            <div className="summary-card">
                 <div className="card-header">
                     <span className="card-title">Total PNL</span>
                     <span className={`status-badge ${metrics.totalPnl >= 0 ? 'up-badge' : 'down-badge'}`}>
@@ -87,7 +87,7 @@ const PortfolioSummary = ({ metrics, historicalData }) => {
             </div>
 
             {/* ATH Card */}
-            <div className="summary-card glass-panel">
+            <div className="summary-card">
                 <div className="card-header">
                     <div className="card-icon-wrapper icon-wrapper-green">
                         <TrendingUp size={18} className="icon-green" />
@@ -101,7 +101,7 @@ const PortfolioSummary = ({ metrics, historicalData }) => {
             </div>
 
             {/* ATL Card */}
-            <div className="summary-card glass-panel">
+            <div className="summary-card">
                 <div className="card-header">
                     <div className="card-icon-wrapper icon-wrapper-red">
                         <TrendingDown size={18} className="icon-red" />

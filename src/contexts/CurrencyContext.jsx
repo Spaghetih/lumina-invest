@@ -8,6 +8,17 @@ export const CurrencyProvider = ({ children }) => {
     const [currency, setCurrency] = useState(localStorage.getItem('preferredCurrency') || 'EUR');
     const [fxRate, setFxRate] = useState(parseFloat(localStorage.getItem('fxRate')) || 1.08);
     const [hideBalances, setHideBalances] = useState(localStorage.getItem('hideBalances') === 'true');
+    const [theme, setTheme] = useState(localStorage.getItem('lumina_theme') || 'dark');
+
+    // Apply theme to document root
+    useEffect(() => {
+        if (theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+        } else {
+            document.documentElement.removeAttribute('data-theme');
+        }
+    }, [theme]);
+
     // fxRate = EURUSD rate, i.e. 1 EUR = fxRate USD (e.g. 1.08)
 
     useEffect(() => {
@@ -40,6 +51,12 @@ export const CurrencyProvider = ({ children }) => {
         localStorage.setItem('hideBalances', next.toString());
     };
 
+    const toggleTheme = () => {
+        const next = theme === 'dark' ? 'light' : 'dark';
+        setTheme(next);
+        localStorage.setItem('lumina_theme', next);
+    };
+
     // Convert a value from its source currency to the display currency
     // fromCurrency: the currency of the input value ('USD' or 'EUR')
     const convertFrom = (value, fromCurrency = 'USD') => {
@@ -70,7 +87,7 @@ export const CurrencyProvider = ({ children }) => {
     const symbol = currency === 'EUR' ? '€' : '$';
 
     return (
-        <CurrencyContext.Provider value={{ currency, fxRate, toggleCurrency, convertFrom, toUSD, format, symbol, hideBalances, toggleHideBalances }}>
+        <CurrencyContext.Provider value={{ currency, fxRate, toggleCurrency, convertFrom, toUSD, format, symbol, hideBalances, toggleHideBalances, theme, toggleTheme }}>
             {children}
         </CurrencyContext.Provider>
     );

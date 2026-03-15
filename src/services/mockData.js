@@ -2,13 +2,13 @@
 
 const DEFAULT_STOCKS = [];
 
-export const loadPortfolio = async () => {
+export const loadPortfolio = async (portfolioId = 'default') => {
   try {
-    const response = await fetch('http://localhost:3001/api/portfolio');
+    const response = await fetch(`http://localhost:3001/api/portfolio?id=${portfolioId}`);
     if (response.ok) {
       const data = await response.json();
       if (Array.isArray(data) && data.length > 0) {
-        localStorage.setItem('lumina_portfolio', JSON.stringify(data));
+        localStorage.setItem(`lumina_portfolio_${portfolioId}`, JSON.stringify(data));
         return data;
       }
     }
@@ -16,7 +16,7 @@ export const loadPortfolio = async () => {
     console.error("Failed to load portfolio from backend", e);
   }
 
-  const saved = localStorage.getItem('lumina_portfolio');
+  const saved = localStorage.getItem(`lumina_portfolio_${portfolioId}`) || localStorage.getItem('lumina_portfolio');
   if (saved) {
     try {
       return JSON.parse(saved);
@@ -27,10 +27,10 @@ export const loadPortfolio = async () => {
   return DEFAULT_STOCKS;
 };
 
-export const savePortfolio = async (stocks) => {
-  localStorage.setItem('lumina_portfolio', JSON.stringify(stocks));
+export const savePortfolio = async (stocks, portfolioId = 'default') => {
+  localStorage.setItem(`lumina_portfolio_${portfolioId}`, JSON.stringify(stocks));
   try {
-    await fetch('http://localhost:3001/api/portfolio', {
+    await fetch(`http://localhost:3001/api/portfolio?id=${portfolioId}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(stocks)
@@ -38,6 +38,40 @@ export const savePortfolio = async (stocks) => {
   } catch (e) {
     console.error("Failed to save portfolio to backend", e);
   }
+};
+
+// Portfolio management helpers
+export const listPortfolios = async () => {
+  try {
+    const res = await fetch('http://localhost:3001/api/portfolios');
+    if (res.ok) return await res.json();
+  } catch (e) {
+    console.error("Failed to list portfolios", e);
+  }
+  return [{ id: 'default', name: 'Main Portfolio' }];
+};
+
+export const createPortfolio = async (name) => {
+  const res = await fetch('http://localhost:3001/api/portfolios', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name })
+  });
+  return await res.json();
+};
+
+export const renamePortfolio = async (id, name) => {
+  const res = await fetch(`http://localhost:3001/api/portfolios/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name })
+  });
+  return await res.json();
+};
+
+export const deletePortfolio = async (id) => {
+  const res = await fetch(`http://localhost:3001/api/portfolios/${id}`, { method: 'DELETE' });
+  return await res.json();
 };
 
 export const generateHistoricalData = (initialBalance = 0, todayPnl = 0, stocks = []) => {

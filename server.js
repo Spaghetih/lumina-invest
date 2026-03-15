@@ -4,28 +4,105 @@ import fs from 'fs';
 import path from 'path';
 import yahooFinanceLib from 'yahoo-finance2';
 
-const yahooFinance = new yahooFinanceLib();
+const yahooFinance = new yahooFinanceLib({ validation: { logErrors: false } });
 const app = express();
 const PORT = 3001;
 
 app.use(cors());
 app.use(express.json());
 
-const DB_FILE = path.join(process.cwd(), 'portfolio.json');
+const PORTFOLIOS_DIR = path.join(process.cwd(), 'portfolios');
+const DB_FILE = path.join(process.cwd(), 'portfolio.json'); // legacy
+const META_FILE = path.join(PORTFOLIOS_DIR, '_meta.json');
 
-// Get saved portfolio
+// Ensure portfolios directory exists
+if (!fs.existsSync(PORTFOLIOS_DIR)) {
+    fs.mkdirSync(PORTFOLIOS_DIR, { recursive: true });
+}
+
+// Migrate legacy single portfolio.json to multi-portfolio
+if (fs.existsSync(DB_FILE) && !fs.existsSync(path.join(PORTFOLIOS_DIR, 'default.json'))) {
+    fs.copyFileSync(DB_FILE, path.join(PORTFOLIOS_DIR, 'default.json'));
+}
+
+// Initialize meta if needed
+const loadMeta = () => {
+    if (fs.existsSync(META_FILE)) {
+        return JSON.parse(fs.readFileSync(META_FILE, 'utf8'));
+    }
+    const meta = { portfolios: [{ id: 'default', name: 'Main Portfolio' }] };
+    fs.writeFileSync(META_FILE, JSON.stringify(meta, null, 2));
+    return meta;
+};
+
+const saveMeta = (meta) => {
+    fs.writeFileSync(META_FILE, JSON.stringify(meta, null, 2));
+};
+
+const getPortfolioPath = (id) => path.join(PORTFOLIOS_DIR, `${id}.json`);
+
+// List all portfolios
+app.get('/api/portfolios', (req, res) => {
+    const meta = loadMeta();
+    res.json(meta.portfolios);
+});
+
+// Create a new portfolio
+app.post('/api/portfolios', (req, res) => {
+    const { name } = req.body;
+    if (!name) return res.status(400).json({ error: 'Name required' });
+    const meta = loadMeta();
+    const id = name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').substring(0, 30) + '-' + Date.now().toString(36);
+    meta.portfolios.push({ id, name });
+    saveMeta(meta);
+    fs.writeFileSync(getPortfolioPath(id), '[]');
+    res.json({ id, name });
+});
+
+// Rename a portfolio
+app.put('/api/portfolios/:id', (req, res) => {
+    const { name } = req.body;
+    const meta = loadMeta();
+    const p = meta.portfolios.find(p => p.id === req.params.id);
+    if (!p) return res.status(404).json({ error: 'Not found' });
+    p.name = name;
+    saveMeta(meta);
+    res.json(p);
+});
+
+// Delete a portfolio
+app.delete('/api/portfolios/:id', (req, res) => {
+    const meta = loadMeta();
+    if (meta.portfolios.length <= 1) return res.status(400).json({ error: 'Cannot delete last portfolio' });
+    meta.portfolios = meta.portfolios.filter(p => p.id !== req.params.id);
+    saveMeta(meta);
+    const fp = getPortfolioPath(req.params.id);
+    if (fs.existsSync(fp)) fs.unlinkSync(fp);
+    res.json({ success: true });
+});
+
+// Get saved portfolio (supports ?id= for multi-portfolio)
 app.get('/api/portfolio', (req, res) => {
-    if (fs.existsSync(DB_FILE)) {
+    const id = req.query.id || 'default';
+    const fp = getPortfolioPath(id);
+    if (fs.existsSync(fp)) {
+        res.sendFile(fp);
+    } else if (fs.existsSync(DB_FILE)) {
         res.sendFile(DB_FILE);
     } else {
         res.json([]);
     }
 });
 
-// Save portfolio
+// Save portfolio (supports ?id= for multi-portfolio)
 app.post('/api/portfolio', (req, res) => {
     try {
-        fs.writeFileSync(DB_FILE, JSON.stringify(req.body, null, 2));
+        const id = req.query.id || 'default';
+        fs.writeFileSync(getPortfolioPath(id), JSON.stringify(req.body, null, 2));
+        // Also save to legacy file if default
+        if (id === 'default') {
+            fs.writeFileSync(DB_FILE, JSON.stringify(req.body, null, 2));
+        }
         res.json({ success: true });
     } catch (e) {
         console.error('Error saving portfolio:', e);
@@ -93,10 +170,35 @@ app.get('/api/dividends', async (req, res) => {
 app.get('/api/historical/:symbol', async (req, res) => {
     try {
         const { symbol } = req.params;
-        const queryOptions = { period1: '2025-01-01', interval: '1d' };
+        const range = req.query.range || '1Y';
+        const now = new Date();
+        const rangeMap = {
+            '1D': { days: 1, interval: '5m' },
+            '1W': { days: 7, interval: '15m' },
+            '1M': { days: 30, interval: '1d' },
+            '3M': { days: 90, interval: '1d' },
+            '6M': { days: 180, interval: '1d' },
+            '1Y': { days: 365, interval: '1wk' },
+            '5Y': { days: 1825, interval: '1mo' },
+        };
+        const config = rangeMap[range] || rangeMap['1Y'];
+        const period1 = new Date(now.getTime() - config.days * 86400000);
+        const interval = req.query.interval || config.interval;
 
-        const result = await yahooFinance.historical(symbol, queryOptions);
-        res.json(result);
+        const result = await yahooFinance.chart(symbol, {
+            period1: period1.toISOString().split('T')[0],
+            interval,
+        });
+        // chart() returns { quotes: [...] } — normalize to flat array
+        const quotes = (result.quotes || result).map(q => ({
+            date: q.date,
+            open: q.open,
+            high: q.high,
+            low: q.low,
+            close: q.close,
+            volume: q.volume,
+        }));
+        res.json(quotes);
     } catch (error) {
         console.error(`Error fetching historical data for ${req.params.symbol}:`, error);
         res.status(500).json({ error: `Failed to fetch historical data for ${req.params.symbol}` });
@@ -118,6 +220,120 @@ app.get('/api/fx', async (req, res) => {
     } catch (error) {
         console.error('Error fetching FX rate:', error.message);
         res.json({ rate: fxCache.rate || 1.08, timestamp: Date.now() });
+    }
+});
+
+// ─── Search / Autocomplete ───
+app.get('/api/search', async (req, res) => {
+    try {
+        const q = req.query.q || '';
+        if (!q) return res.json({ quotes: [], news: [] });
+        const result = await yahooFinance.search(q);
+        res.json({ quotes: result.quotes || [], news: result.news || [] });
+    } catch (error) {
+        console.error('Search error:', error.message);
+        res.json({ quotes: [], news: [] });
+    }
+});
+
+// ─── Helper: safe screener call (handles Yahoo validation errors) ───
+async function safeScreener(scrIds, count = 20) {
+    try {
+        return await yahooFinance.screener({ scrIds, count }, { validateResult: false });
+    } catch (err) {
+        if (err.result) return err.result;
+        throw err;
+    }
+}
+
+// ─── Stock Screener ───
+app.get('/api/screener', async (req, res) => {
+    try {
+        const preset = req.query.preset || 'day_gainers';
+        const presetMap = {
+            gainers: 'day_gainers',
+            losers: 'day_losers',
+            most_actives: 'most_actives',
+            trending: 'trending_tickers',
+            undervalued_large_caps: 'undervalued_large_caps',
+            growth_technology_stocks: 'growth_technology_stocks',
+            small_cap_gainers: 'small_cap_gainers',
+        };
+        const screenerId = presetMap[preset] || preset;
+        const result = await safeScreener(screenerId, 25);
+        const quotes = result?.quotes || [];
+        res.json(quotes);
+    } catch (error) {
+        console.error('Screener error:', error.message?.substring(0, 100));
+        res.json([]);
+    }
+});
+
+// ─── Quote Summary (detailed) ───
+app.get('/api/summary/:symbol', async (req, res) => {
+    try {
+        const data = await yahooFinance.quoteSummary(req.params.symbol, {
+            modules: ['summaryDetail', 'defaultKeyStatistics', 'financialData', 'calendarEvents']
+        });
+        res.json(data);
+    } catch (error) {
+        console.error('Summary error:', error.message);
+        res.status(500).json({ error: 'Failed to fetch summary' });
+    }
+});
+
+// ─── Trending Symbols ───
+app.get('/api/trending', async (req, res) => {
+    try {
+        const result = await yahooFinance.trendingSymbols('US');
+        res.json(result?.quotes || []);
+    } catch (error) {
+        console.error('Trending error:', error.message);
+        res.json([]);
+    }
+});
+
+// ─── Daily Gainers ───
+app.get('/api/gainers', async (req, res) => {
+    try {
+        const result = await safeScreener('day_gainers');
+        res.json(result?.quotes || []);
+    } catch (error) {
+        console.error('Gainers error:', error.message?.substring(0, 100));
+        res.json([]);
+    }
+});
+
+// ─── Daily Losers ───
+app.get('/api/losers', async (req, res) => {
+    try {
+        const result = await safeScreener('day_losers');
+        res.json(result?.quotes || []);
+    } catch (error) {
+        console.error('Losers error:', error.message?.substring(0, 100));
+        res.json([]);
+    }
+});
+
+// ─── Recommendations ───
+app.get('/api/recommendations/:symbol', async (req, res) => {
+    try {
+        const result = await yahooFinance.recommendationsBySymbol(req.params.symbol);
+        res.json(result?.recommendedSymbols || []);
+    } catch (error) {
+        console.error('Recommendations error:', error.message);
+        res.json([]);
+    }
+});
+
+// ─── News for a symbol ───
+app.get('/api/news/:symbol', async (req, res) => {
+    try {
+        const result = await yahooFinance.search(req.params.symbol);
+        res.json(result?.news || []);
+    } catch (error) {
+        console.error('News error:', error.message);
+        res.json([]);
     }
 });
 
