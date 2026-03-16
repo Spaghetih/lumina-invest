@@ -262,6 +262,4 @@ Click **"Import"** to upload a CSV from Revolut or other brokers. The parser aut
 
 **Built for investors who appreciate both data and design.**
 
-`#ff9900` amber | `#000000` background | `JetBrains Mono` | `2px` radius
-
 </div>
