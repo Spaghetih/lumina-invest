@@ -62,7 +62,7 @@
     gap: 12px;
     padding: 8px 10px;
     border-radius: 2px;
-    color: var(--text-muted);
+    color: #999;
     text-decoration: none;
     font-weight: 500;
     font-size: 0.8rem;
@@ -70,6 +70,11 @@
     white-space: nowrap;
     overflow: hidden;
     border-left: 2px solid transparent;
+}
+
+.nav-item svg {
+    flex-shrink: 0;
+    min-width: 20px;
 }
 
 .nav-item span {
