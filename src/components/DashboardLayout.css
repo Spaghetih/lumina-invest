@@ -834,3 +834,28 @@
     background: rgba(255, 85, 85, 0.1);
     color: #ff5555;
 }
+
+@media (max-width: 480px) {
+    .notifications-dropdown {
+        width: calc(100vw - 20px);
+        right: -60px;
+        max-width: 340px;
+    }
+
+    .avatar-dropdown {
+        right: -10px;
+        width: 180px;
+    }
+
+    .portfolio-dropdown {
+        min-width: 180px;
+    }
+
+    .topbar-actions {
+        gap: 4px;
+    }
+
+    .search-bar input {
+        font-size: 16px;
+    }
+}

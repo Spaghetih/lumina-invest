@@ -311,3 +311,39 @@
         min-height: 300px;
     }
 }
+
+@media (max-width: 480px) {
+    .sc-toolbar {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .sc-quick-picks {
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+
+    .sc-pick-btn {
+        padding: 4px 8px;
+        font-size: 0.68rem;
+    }
+
+    .sc-header {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+    }
+
+    .sc-header-right {
+        align-items: flex-start;
+    }
+
+    .sc-timeframes {
+        gap: 2px;
+    }
+
+    .time-btn {
+        padding: 4px 8px;
+        font-size: 0.68rem;
+    }
+}

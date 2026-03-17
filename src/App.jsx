@@ -18,6 +18,7 @@ import Watchlist from './components/Watchlist';
 import Screener from './components/Screener';
 import Backtesting from './components/Backtesting';
 import Heatmap from './components/Heatmap';
+import Onboarding from './components/Onboarding';
 import TransactionHistory, { logTransaction } from './components/TransactionHistory';
 import CorrelationMatrix from './components/CorrelationMatrix';
 import NewsFeed from './components/NewsFeed';
@@ -210,22 +211,31 @@ function Dashboard() {
     >
       {activeTab === 'Dashboard' && (
         <div className="dashboard-content fade-in">
-          <PortfolioSummary metrics={metrics} historicalData={historicalData} />
-
-          <div className="main-grid">
-            <div className="chart-container">
-              <PerformanceChart
-                data={historicalData}
-                activeTimeframe={timeframe}
-                onTimeframeChange={setTimeframe}
-                metrics={metrics}
-              />
-            </div>
-            <div className="live-list-container">
-              <LiveStockList stocks={stocks} onDeleteStock={isDemo ? null : handleDeleteStock} />
-            </div>
-          </div>
-          {stocks.length > 0 && <Heatmap stocks={stocks} />}
+          {isLoaded && stocks.length === 0 ? (
+            <Onboarding
+              onAddPosition={() => { setInitialSearchTicker(''); setIsAddModalOpen(true); }}
+              onImport={() => setIsImportModalOpen(true)}
+              onDismiss={() => { setInitialSearchTicker(''); setIsAddModalOpen(true); }}
+            />
+          ) : (
+            <>
+              <PortfolioSummary metrics={metrics} historicalData={historicalData} />
+              <div className="main-grid">
+                <div className="chart-container">
+                  <PerformanceChart
+                    data={historicalData}
+                    activeTimeframe={timeframe}
+                    onTimeframeChange={setTimeframe}
+                    metrics={metrics}
+                  />
+                </div>
+                <div className="live-list-container">
+                  <LiveStockList stocks={stocks} onDeleteStock={isDemo ? null : handleDeleteStock} />
+                </div>
+              </div>
+              {stocks.length > 0 && <Heatmap stocks={stocks} />}
+            </>
+          )}
         </div>
       )}
 

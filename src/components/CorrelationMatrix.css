@@ -266,3 +266,38 @@
         gap: 8px;
     }
 }
+
+@media (max-width: 480px) {
+    .corr-stat-card {
+        padding: 10px 12px;
+    }
+
+    .corr-stat-value {
+        font-size: 0.85rem;
+    }
+
+    .corr-pairs-card {
+        padding: 10px 12px;
+    }
+
+    .corr-pair-names {
+        font-size: 0.68rem;
+    }
+
+    .corr-table thead th,
+    .corr-row-label {
+        padding: 4px 6px;
+        font-size: 0.6rem;
+    }
+
+    .corr-cell {
+        padding: 6px 4px;
+        min-width: 42px;
+        font-size: 0.68rem;
+    }
+
+    .corr-tooltip-bar {
+        font-size: 0.68rem;
+        padding: 8px 12px;
+    }
+}

@@ -325,10 +325,7 @@
 }
 
 /* Mobile */
-@media (max-width: 768px) {
-    .live-stocks-card {
-        padding: 0;
-    }
+
 
     .stocks-list {
         overflow-x: auto;
@@ -345,5 +342,70 @@
         flex-direction: column;
         align-items: flex-start;
         gap: 8px;
+    }
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+    .live-stocks-card {
+        border-radius: 0;
+    }
+
+    .card-header {
+        padding: 10px 14px;
+    }
+
+    .list-header {
+        display: none;
+    }
+
+    .stocks-list {
+        overflow-x: visible;
+    }
+
+    .stock-row {
+        display: flex;
+        flex-wrap: wrap;
+        min-width: 0;
+        padding: 10px 14px;
+        gap: 4px 12px;
+        position: relative;
+    }
+
+    .stock-info {
+        flex: 1 1 60%;
+        min-width: 0;
+    }
+
+    .stock-name {
+        max-width: 120px;
+    }
+
+    .stock-shares-col {
+        display: none;
+    }
+
+    .stock-pnl-col {
+        flex: 0 0 auto;
+        text-align: right;
+    }
+
+    .stock-price-col {
+        flex: 1 1 100%;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 4px;
+    }
+
+    .stock-price {
+        font-size: 0.85rem;
+    }
+
+    .delete-stock-btn {
+        opacity: 0.5;
+        position: absolute;
+        top: 8px;
+        right: 8px;
     }
 }
