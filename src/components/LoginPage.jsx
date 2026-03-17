@@ -166,6 +166,26 @@ export default function LoginPage() {
 
             {/* Right Panel - Form */}
             <div className="login-form-panel">
+                {/* Mobile Hero - visible only on small screens */}
+                <div className="login-mobile-hero">
+                    <div className="login-mobile-hero-inner">
+                        <svg width="36" height="36" viewBox="0 0 48 48" fill="none">
+                            <rect width="48" height="48" rx="12" fill="#ff9900" fillOpacity="0.15"/>
+                            <path d="M14 34V20l10-10 10 10v14H14z" stroke="#ff9900" strokeWidth="2.5" fill="none"/>
+                            <path d="M22 34v-8h4v8" stroke="#ff9900" strokeWidth="2.5"/>
+                            <circle cx="24" cy="22" r="2" fill="#ff9900"/>
+                        </svg>
+                        <h1 className="login-mobile-title">Lumina Invest</h1>
+                        <p className="login-mobile-tagline">Professional portfolio tracking</p>
+                        <MiniChart />
+                        <div className="login-mobile-pills">
+                            <span className="login-mobile-pill"><TrendingUp size={12} /> Live Quotes</span>
+                            <span className="login-mobile-pill"><BarChart3 size={12} /> Analytics</span>
+                            <span className="login-mobile-pill"><Shield size={12} /> Secure</span>
+                        </div>
+                    </div>
+                </div>
+
                 <div className="login-container">
                     <div className="login-header">
                         <div className="login-logo">

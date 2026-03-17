@@ -165,6 +165,7 @@
 .login-form-panel {
     flex: 0.8;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 40px;
@@ -245,6 +246,7 @@
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
     width: 100%;
+    box-sizing: border-box;
 }
 
 .login-field input:focus {
@@ -410,23 +412,139 @@
     text-decoration: underline;
 }
 
+/* ── Mobile Hero (hidden on desktop) ── */
+.login-mobile-hero {
+    display: none;
+}
+
 /* ── Responsive ── */
 @media (max-width: 1024px) {
+    .login-page {
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
     .login-hero {
         display: none;
     }
 
+    .login-mobile-hero {
+        display: block;
+        width: 100%;
+        background: linear-gradient(180deg, #0a0a0a 0%, #060606 100%);
+        padding: 48px 24px 32px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .login-mobile-hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image:
+            linear-gradient(rgba(255, 153, 0, 0.02) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 153, 0, 0.02) 1px, transparent 1px);
+        background-size: 30px 30px;
+        pointer-events: none;
+    }
+
+    .login-mobile-hero-inner {
+        position: relative;
+        z-index: 1;
+        max-width: 340px;
+        margin: 0 auto;
+    }
+
+    .login-mobile-title {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: #fff;
+        margin: 14px 0 4px;
+        letter-spacing: -0.5px;
+    }
+
+    .login-mobile-tagline {
+        color: #555;
+        font-size: 0.82rem;
+        margin: 0 0 24px;
+    }
+
+    .login-mobile-hero .login-mini-chart {
+        height: 50px;
+        margin-bottom: 20px;
+        opacity: 0.5;
+    }
+
+    .login-mobile-pills {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .login-mobile-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 6px 14px;
+        background: rgba(255, 153, 0, 0.06);
+        border: 1px solid rgba(255, 153, 0, 0.1);
+        border-radius: 20px;
+        color: #888;
+        font-size: 0.68rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+
+    .login-mobile-pill svg {
+        color: #ff9900;
+    }
+
     .login-form-panel {
         flex: 1;
-    }
-}
-
-@media (max-width: 480px) {
-    .login-form-panel {
-        padding: 20px;
+        padding: 28px 24px 40px;
+        background: #080808;
     }
 
     .login-container {
-        max-width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    /* Hide duplicate logo since mobile hero has it */
+    .login-logo {
+        display: none;
+    }
+
+    .login-header {
+        margin-bottom: 20px;
+    }
+
+    .login-title {
+        font-size: 1.3rem;
+    }
+
+    .login-subtitle {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 380px) {
+    .login-mobile-hero {
+        padding: 36px 16px 24px;
+    }
+
+    .login-mobile-title {
+        font-size: 1.5rem;
+    }
+
+    .login-form-panel {
+        padding: 20px 16px 32px;
+    }
+
+    .login-field input {
+        font-size: 16px; /* Prevent iOS zoom on focus */
     }
 }
