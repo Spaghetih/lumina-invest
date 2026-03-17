@@ -74,6 +74,15 @@ app.use('/api', (req, res, next) => {
     });
 });
 
+
+// --- Demo account: block all write operations ---
+function demoGuard(req, res, next) {
+    if (req.user && req.user.username === 'demo') {
+        return res.status(403).json({ error: 'Demo account is read-only. Create your own account to modify portfolios.' });
+    }
+    next();
+}
+
 // Per-user helper functions
 function getUserPortfoliosDir(userId) {
     const dir = path.join(getUserDataDir(userId), 'portfolios');
@@ -103,7 +112,7 @@ app.get('/api/portfolios', (req, res) => {
     res.json(loadUserMeta(req.user.id).portfolios);
 });
 
-app.post('/api/portfolios', (req, res) => {
+app.post('/api/portfolios', demoGuard, (req, res) => {
     const { name } = req.body;
     if (!name) return res.status(400).json({ error: 'Name required' });
     const meta = loadUserMeta(req.user.id);
@@ -114,7 +123,7 @@ app.post('/api/portfolios', (req, res) => {
     res.json({ id, name });
 });
 
-app.put('/api/portfolios/:id', (req, res) => {
+app.put('/api/portfolios/:id', demoGuard, (req, res) => {
     const { name } = req.body;
     const meta = loadUserMeta(req.user.id);
     const pId = sanitizeId(req.params.id);
@@ -126,7 +135,7 @@ app.put('/api/portfolios/:id', (req, res) => {
     res.json(p);
 });
 
-app.delete('/api/portfolios/:id', (req, res) => {
+app.delete('/api/portfolios/:id', demoGuard, (req, res) => {
     const meta = loadUserMeta(req.user.id);
     if (meta.portfolios.length <= 1) return res.status(400).json({ error: 'Cannot delete last portfolio' });
     const delId = sanitizeId(req.params.id);
@@ -149,7 +158,7 @@ app.get('/api/portfolio', (req, res) => {
     }
 });
 
-app.post('/api/portfolio', (req, res) => {
+app.post('/api/portfolio', demoGuard, (req, res) => {
     try {
         const id = sanitizeId(req.query.id || 'default');
         if (!id) return res.status(400).json({ error: 'Invalid portfolio ID' });
@@ -310,7 +319,7 @@ function saveUserAIKey(userId, data) {
     fs.writeFileSync(getUserAIKeyPath(userId), JSON.stringify(data, null, 2), { mode: 0o600 });
 }
 
-app.post('/api/ai/key', (req, res) => {
+app.post('/api/ai/key', demoGuard, (req, res) => {
     const { key, provider } = req.body;
     if (!key) return res.status(400).json({ error: 'No key provided' });
     saveUserAIKey(req.user.id, { apiKey: key, provider: provider || 'openai' });
@@ -322,7 +331,7 @@ app.get('/api/ai/key', (req, res) => {
     res.json({ hasKey: !!data.apiKey, method: data.provider || (data.apiKey ? 'openai' : null) });
 });
 
-app.post('/api/ai/logout', (req, res) => {
+app.post('/api/ai/logout', demoGuard, (req, res) => {
     saveUserAIKey(req.user.id, {});
     res.json({ success: true });
 });
@@ -413,7 +422,7 @@ const avatarUpload = multer({
     }
 });
 
-app.post('/api/avatar', uploadLimiter, avatarUpload.single('avatar'), (req, res) => {
+app.post('/api/avatar', demoGuard, uploadLimiter, avatarUpload.single('avatar'), (req, res) => {
     if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
     // Delete old avatars with different extensions
     const dir = getUserDataDir(req.user.id);

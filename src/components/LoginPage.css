@@ -167,3 +167,32 @@
 .login-toggle:hover {
     text-decoration: underline;
 }
+
+/* Demo hint */
+.login-demo-hint {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    margin-top: 12px;
+    background: rgba(255, 153, 0, 0.08);
+    border: 1px solid rgba(255, 153, 0, 0.2);
+    border-radius: 8px;
+    font-size: 0.78rem;
+    color: #ccc;
+}
+
+.login-demo-hint strong {
+    color: #ff9900;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.login-demo-hint em {
+    color: #888;
+    font-style: normal;
+}
+
+.demo-hint-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+}

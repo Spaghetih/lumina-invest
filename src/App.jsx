@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './contexts/AuthContext';
+import toast from 'react-hot-toast';
 import LoginPage from './components/LoginPage';
 import DashboardLayout from './components/DashboardLayout';
 import PortfolioSummary from './components/PortfolioSummary';
@@ -24,6 +25,8 @@ import AdminPanel from './components/AdminPanel';
 import { loadPortfolio, savePortfolio, subscribeToMarketUpdates, calculatePortfolioMetrics, generateHistoricalData, listPortfolios, createPortfolio, deletePortfolio, renamePortfolio } from './services/mockData';
 
 function Dashboard() {
+  const { user } = useAuth();
+  const isDemo = user && user.username === 'demo';
   const [stocks, setStocks] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [historicalData, setHistoricalData] = useState([]);
@@ -192,10 +195,11 @@ function Dashboard() {
       activeTab={activeTab}
       onTabChange={setActiveTab}
       onAddPositionClick={() => {
-        setInitialSearchTicker(''); // Reset prefill
+        if (isDemo) { toast('Demo account is read-only', { icon: '\u{1f512}', style: { background: '#1a1a1a', color: '#fff', border: '1px solid #ff9900' } }); return; }
+        setInitialSearchTicker('');
         setIsAddModalOpen(true);
       }}
-      onImportClick={() => setIsImportModalOpen(true)}
+      onImportClick={() => { if (isDemo) { toast('Demo account is read-only', { icon: '\u{1f512}', style: { background: '#1a1a1a', color: '#fff', border: '1px solid #ff9900' } }); return; } setIsImportModalOpen(true); }}
       onSearch={handleSearch}
       portfolios={portfolios}
       activePortfolioId={activePortfolioId}
@@ -218,7 +222,7 @@ function Dashboard() {
               />
             </div>
             <div className="live-list-container">
-              <LiveStockList stocks={stocks} onDeleteStock={handleDeleteStock} />
+              <LiveStockList stocks={stocks} onDeleteStock={isDemo ? null : handleDeleteStock} />
             </div>
           </div>
           {stocks.length > 0 && <Heatmap stocks={stocks} />}
@@ -229,7 +233,7 @@ function Dashboard() {
         <div className="fade-in">
           <h2>Live Markets</h2>
           <div style={{ marginTop: '0.5rem', border: '1px solid #333', background: '#111' }}>
-            <LiveStockList stocks={stocks} onDeleteStock={handleDeleteStock} />
+            <LiveStockList stocks={stocks} onDeleteStock={isDemo ? null : handleDeleteStock} />
           </div>
         </div>
       )}
@@ -282,7 +286,7 @@ function Dashboard() {
         <div className="fade-in">
           <Settings
             stocks={stocks}
-            onImportClick={() => setIsImportModalOpen(true)}
+            onImportClick={() => { if (isDemo) { toast('Demo account is read-only', { icon: '\u{1f512}', style: { background: '#1a1a1a', color: '#fff', border: '1px solid #ff9900' } }); return; } setIsImportModalOpen(true); }}
             onClearData={() => setStocks([])}
           />
         </div>
@@ -317,6 +321,19 @@ function Dashboard() {
 
 function App() {
   const { user, loading } = useAuth();
+  const isDemo = user && user.username === 'demo';
+  const demoNotifiedRef = React.useRef(false);
+
+  useEffect(() => {
+    if (user && user.username === 'demo' && !demoNotifiedRef.current) {
+      demoNotifiedRef.current = true;
+      toast('You are using a read-only demo account.\nCreate your own account to manage portfolios.', {
+        icon: '\u{1f512}',
+        duration: 6000,
+        style: { background: '#1a1a1a', color: '#fff', border: '1px solid #ff9900', fontSize: '0.85rem' }
+      });
+    }
+  }, [user]);
 
   if (loading) {
     return (

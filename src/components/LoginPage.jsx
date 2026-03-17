@@ -124,6 +124,11 @@ export default function LoginPage() {
                     </button>
                 </form>
 
+                <div className="login-demo-hint">
+                    <span className="demo-hint-icon">&#x1f512;</span>
+                    <span>Try the demo account: <strong>demo</strong> / <strong>demo</strong> <em>(read-only)</em></span>
+                </div>
+
                 <div className="login-footer">
                     <p>
                         {isRegister ? 'Already have an account?' : "Don't have an account?"}{' '}

@@ -162,11 +162,27 @@ const Settings = ({ stocks, onImportClick, onClearData }) => {
     };
 
     // Clear all data
-    const handleClearAll = () => {
-        localStorage.clear();
-        if (onClearData) onClearData();
-        setShowClearConfirm(false);
-        window.location.reload();
+    const handleClearAll = async () => {
+        try {
+            // Clear portfolio on server
+            await fetchAuth('/api/portfolio?id=default', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify([])
+            });
+
+            // Clear local transaction history only (keep token + settings)
+            localStorage.removeItem('lumina_transactions');
+            window.dispatchEvent(new Event('lumina_tx_update'));
+
+            // Update UI
+            if (onClearData) onClearData();
+            setShowClearConfirm(false);
+            toast.success('All portfolio data and transactions cleared');
+        } catch (err) {
+            console.error('Clear data error:', err);
+            toast.error('Failed to clear data');
+        }
     };
 
     const positionCount = stocks?.length || 0;

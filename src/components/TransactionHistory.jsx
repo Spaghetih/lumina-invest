@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { ArrowUpRight, ArrowDownRight, Filter } from 'lucide-react';
 import { useCurrency } from '../contexts/CurrencyContext';
 import './TransactionHistory.css';
@@ -8,7 +8,7 @@ export const logTransaction = (type, ticker, shares, price, currency = 'USD') =>
     const txs = JSON.parse(localStorage.getItem('lumina_transactions') || '[]');
     txs.unshift({
         id: Date.now(),
-        type, // 'BUY' or 'SELL'
+        type,
         ticker,
         shares,
         price,
@@ -17,6 +17,7 @@ export const logTransaction = (type, ticker, shares, price, currency = 'USD') =>
         date: new Date().toISOString(),
     });
     localStorage.setItem('lumina_transactions', JSON.stringify(txs));
+    window.dispatchEvent(new Event('lumina_tx_update'));
 };
 
 const TransactionHistory = () => {
@@ -24,8 +25,14 @@ const TransactionHistory = () => {
     const [filterTicker, setFilterTicker] = useState('');
     const [filterType, setFilterType] = useState('ALL');
 
-    const transactions = useMemo(() => {
-        return JSON.parse(localStorage.getItem('lumina_transactions') || '[]');
+    const [transactions, setTransactions] = useState(() =>
+        JSON.parse(localStorage.getItem('lumina_transactions') || '[]')
+    );
+
+    useEffect(() => {
+        const reload = () => setTransactions(JSON.parse(localStorage.getItem('lumina_transactions') || '[]'));
+        window.addEventListener('lumina_tx_update', reload);
+        return () => window.removeEventListener('lumina_tx_update', reload);
     }, []);
 
     const filtered = useMemo(() => {

@@ -141,6 +141,10 @@ const LiveStockList = ({ stocks, onDeleteStock }) => {
                         aValue = aPnl;
                         bValue = bPnl;
                         break;
+                    case 'price':
+                        aValue = a.price || 0;
+                        bValue = b.price || 0;
+                        break;
                     case 'value':
                         aValue = aCurrentValue;
                         bValue = bCurrentValue;
@@ -184,8 +188,8 @@ const LiveStockList = ({ stocks, onDeleteStock }) => {
                         <div className="header-col" onClick={() => handleSort('pnl')} style={{ justifyContent: 'flex-end' }}>
                             Total PNL {getSortIcon('pnl')}
                         </div>
-                        <div className="header-col" onClick={() => handleSort('value')} style={{ justifyContent: 'flex-end' }}>
-                            Price / Value {getSortIcon('value')}
+                        <div className="header-col header-col-price" onClick={() => handleSort('price')} style={{ justifyContent: 'flex-end' }}>
+                            Price {getSortIcon('price')}
                         </div>
                         <div className="header-col"></div> {/* Spacer for delete button */}
                     </div>

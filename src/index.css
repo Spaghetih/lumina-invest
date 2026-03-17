@@ -593,7 +593,19 @@ h1, h2, h3, h4, h5, h6 {
 .main-grid {
   display: grid;
   grid-template-columns: 1.5fr 1fr;
+  grid-template-rows: 1fr;
   gap: 1px;
+  max-height: 500px;
+}
+
+.main-grid > .chart-container {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.main-grid > .live-list-container {
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .layout-content {
