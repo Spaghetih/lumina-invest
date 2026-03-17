@@ -53,9 +53,9 @@ const ChartTooltip = ({ active, payload, label, compareMode, primaryTicker, seco
     return null;
 };
 
-const StockChart = ({ stocks = [] }) => {
+const StockChart = ({ stocks = [], initialTicker = '' }) => {
     const { format } = useCurrency();
-    const [ticker, setTicker] = useState('');
+    const [ticker, setTicker] = useState(initialTicker);
     const [searchInput, setSearchInput] = useState('');
     const [timeframe, setTimeframe] = useState('1M');
     const [chartData, setChartData] = useState([]);
@@ -181,6 +181,14 @@ const StockChart = ({ stocks = [] }) => {
             }
         } catch { /* silent */ }
     }, []);
+
+    // Load initialTicker when provided
+    useEffect(() => {
+        if (initialTicker) {
+            selectTicker(initialTicker);
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [initialTicker]);
 
     // Select a ticker
     const selectTicker = useCallback((sym) => {

@@ -42,10 +42,11 @@ function Dashboard() {
   const [portfolios, setPortfolios] = useState([]);
   const [activePortfolioId, setActivePortfolioId] = useState(localStorage.getItem('lumina_active_portfolio') || 'default');
 
+  const [chartTicker, setChartTicker] = useState('');
+
   const handleSearch = (query) => {
-    if (isDemo) { toast('Demo account is read-only', { icon: '\u{1f512}', style: { background: '#1a1a1a', color: '#fff', border: '1px solid #ff9900' } }); return; }
-    setInitialSearchTicker(query.toUpperCase());
-    setIsAddModalOpen(true);
+    setChartTicker(query.toUpperCase());
+    setActiveTab('Charts');
   };
 
   useEffect(() => {
@@ -195,7 +196,7 @@ function Dashboard() {
   return (
     <DashboardLayout
       activeTab={activeTab}
-      onTabChange={setActiveTab}
+      onTabChange={(tab) => { setActiveTab(tab); if (tab !== 'Charts') setChartTicker(''); }}
       onAddPositionClick={() => {
         if (isDemo) { toast('Demo account is read-only', { icon: '\u{1f512}', style: { background: '#1a1a1a', color: '#fff', border: '1px solid #ff9900' } }); return; }
         setInitialSearchTicker('');
@@ -251,7 +252,7 @@ function Dashboard() {
 
       {activeTab === 'Charts' && (
         <div className="fade-in">
-          <StockChart stocks={stocks} />
+          <StockChart stocks={stocks} initialTicker={chartTicker} />
         </div>
       )}
 
