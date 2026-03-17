@@ -381,14 +381,31 @@
 /* Responsive */
 
 
-/* == Mobile == */
-@media (max-width: 1200px) {
-    .pa-stats-row { grid-template-columns: 1fr 1fr; }
-    .pa-main-grid { grid-template-columns: 1fr; }
-}
+/* ═══ PortfolioAnalysis Mobile ═══ */
 @media (max-width: 768px) {
-    .pa-stats-row { grid-template-columns: 1fr; }
-    .pa-allocation, .pa-positions { padding: 10px; }
-    .pa-positions-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    .pa-positions-table { min-width: 550px; }
+    .pa-header-row {
+        flex-direction: column !important;
+        gap: 8px;
+    }
+    .pa-stat-card {
+        padding: 12px !important;
+    }
+    .pa-stats-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px;
+    }
+    .pa-allocation {
+        padding: 12px !important;
+    }
+    .pa-positions {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .pa-table {
+        min-width: 600px;
+    }
+    .pa-table th, .pa-table td {
+        padding: 10px 8px !important;
+        font-size: 0.72rem;
+    }
 }

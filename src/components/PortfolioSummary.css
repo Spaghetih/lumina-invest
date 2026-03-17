@@ -138,17 +138,33 @@
 }
 
 
-/* == Mobile == */
-@media (max-width: 1200px) {
-    .summary-cards { flex-wrap: wrap; }
-    .summary-card { min-width: 120px; }
-}
+/* ═══ PortfolioSummary Mobile ═══ */
 @media (max-width: 768px) {
-    .summary-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
-    .summary-card { border-right: 1px solid #333; border-bottom: 1px solid #333; padding: 8px 12px; }
-    .summary-card:nth-child(2n) { border-right: none; }
-    .summary-card:nth-last-child(-n+2) { border-bottom: none; }
-    .card-value { font-size: 0.95rem; }
-    .hero-value { font-size: 1.1rem; }
-    .card-title { font-size: 0.6rem; }
+    .summary-cards {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+        padding: 12px !important;
+    }
+    .summary-card {
+        padding: 12px !important;
+    }
+    .summary-card .card-value {
+        font-size: 1rem !important;
+    }
+    .summary-card .card-label {
+        font-size: 0.65rem !important;
+    }
+}
+@media (max-width: 480px) {
+    .summary-cards {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 6px !important;
+        padding: 8px !important;
+    }
+    .summary-card {
+        padding: 10px !important;
+    }
+    .summary-card .card-value {
+        font-size: 0.9rem !important;
+    }
 }

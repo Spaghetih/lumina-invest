@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Activity, Home, TrendingUp, PieChart, Info, Settings, Search, Plus, X, Upload, Eye, EyeOff, Sparkles, Menu, Calendar, LineChart, ListFilter, History, Sun, Moon, ChevronDown, FolderPlus, Trash2, LogOut, User, Shield, Camera } from 'lucide-react';
+import { Activity, Home, TrendingUp, PieChart, Info, Settings, Search, Plus, X, Upload, Eye, EyeOff, Sparkles, Menu, Calendar, LineChart, ListFilter, History, Sun, Moon, ChevronDown, FolderPlus, Trash2, LogOut, User, Shield, Camera, BarChart3, Briefcase } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { fetchAuth } from '../services/fetchAuth';
 import { useCurrency } from '../contexts/CurrencyContext';
@@ -9,6 +9,8 @@ import './DashboardLayout.css';
 export default function DashboardLayout({ children, activeTab, onTabChange, onAddPositionClick, onImportClick, onSearch, portfolios = [], activePortfolioId, onSwitchPortfolio, onCreatePortfolio, onDeletePortfolio, onRenamePortfolio }) {
     const [searchQuery, setSearchQuery] = useState('');
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [mobileMoreOpen, setMobileMoreOpen] = useState(false);
+    const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
     const [portfolioDropdownOpen, setPortfolioDropdownOpen] = useState(false);
     const [newPortfolioName, setNewPortfolioName] = useState('');
     const { currency, toggleCurrency, fxRate, hideBalances, toggleHideBalances, theme, toggleTheme } = useCurrency();
@@ -158,6 +160,9 @@ export default function DashboardLayout({ children, activeTab, onTabChange, onAd
                         <button className="mobile-menu-btn" onClick={() => setIsMobileMenuOpen(true)}>
                             <Menu size={24} />
                         </button>
+                        <button className="mobile-search-btn" onClick={() => setMobileSearchOpen(true)}>
+                            <Search size={20} />
+                        </button>
 
                         {/* Portfolio Selector */}
                         <div className="portfolio-selector" ref={portfolioRef} style={{ position: 'relative' }}>
@@ -285,6 +290,102 @@ export default function DashboardLayout({ children, activeTab, onTabChange, onAd
                     {children}
                 </div>
             </main>
+
+            {/* Mobile Bottom Navigation */}
+            <nav className="mobile-bottom-nav">
+                <button className={`mobile-nav-item ${activeTab === 'Dashboard' ? 'active' : ''}`} onClick={() => { onTabChange('Dashboard'); setMobileMoreOpen(false); }}>
+                    <Home size={20} />
+                    <span>Home</span>
+                </button>
+                <button className={`mobile-nav-item ${activeTab === 'Charts' ? 'active' : ''}`} onClick={() => { onTabChange('Charts'); setMobileMoreOpen(false); }}>
+                    <LineChart size={20} />
+                    <span>Charts</span>
+                </button>
+                <button className="mobile-nav-item mobile-nav-add" onClick={onAddPositionClick}>
+                    <div className="mobile-add-btn">
+                        <Plus size={22} />
+                    </div>
+                </button>
+                <button className={`mobile-nav-item ${activeTab === 'Portfolio' ? 'active' : ''}`} onClick={() => { onTabChange('Portfolio'); setMobileMoreOpen(false); }}>
+                    <PieChart size={20} />
+                    <span>Portfolio</span>
+                </button>
+                <button className={`mobile-nav-item ${mobileMoreOpen ? 'active' : ''}`} onClick={() => setMobileMoreOpen(!mobileMoreOpen)}>
+                    <Menu size={20} />
+                    <span>More</span>
+                </button>
+            </nav>
+
+            {/* Mobile More Menu */}
+            {mobileMoreOpen && (
+                <>
+                    <div className="mobile-more-overlay" onClick={() => setMobileMoreOpen(false)} />
+                    <div className="mobile-more-menu">
+                        <div className="mobile-more-grid">
+                            <button className="mobile-more-item" onClick={() => { onTabChange('Markets'); setMobileMoreOpen(false); }}>
+                                <Activity size={22} />
+                                <span>Markets</span>
+                            </button>
+                            <button className="mobile-more-item" onClick={() => { onTabChange('Watchlist'); setMobileMoreOpen(false); }}>
+                                <Eye size={22} />
+                                <span>Watchlist</span>
+                            </button>
+                            <button className="mobile-more-item" onClick={() => { onTabChange('Screener'); setMobileMoreOpen(false); }}>
+                                <ListFilter size={22} />
+                                <span>Screener</span>
+                            </button>
+                            <button className="mobile-more-item" onClick={() => { onTabChange('Backtest'); setMobileMoreOpen(false); }}>
+                                <History size={22} />
+                                <span>Backtest</span>
+                            </button>
+                            <button className="mobile-more-item" onClick={() => { onTabChange('Dividends'); setMobileMoreOpen(false); }}>
+                                <Calendar size={22} />
+                                <span>Dividends</span>
+                            </button>
+                            <button className="mobile-more-item" onClick={() => { onTabChange('Insights'); setMobileMoreOpen(false); }}>
+                                <Info size={22} />
+                                <span>Insights</span>
+                            </button>
+                            <button className="mobile-more-item" onClick={() => { onTabChange('AI'); setMobileMoreOpen(false); }}>
+                                <Sparkles size={22} />
+                                <span>Lumina AI</span>
+                            </button>
+                            <button className="mobile-more-item" onClick={() => { onTabChange('Settings'); setMobileMoreOpen(false); }}>
+                                <Settings size={22} />
+                                <span>Settings</span>
+                            </button>
+                        </div>
+                    </div>
+                </>
+            )}
+
+            {/* Mobile Search Overlay */}
+            {mobileSearchOpen && (
+                <div className="mobile-search-overlay" onClick={(e) => { if (e.target === e.currentTarget) setMobileSearchOpen(false); }}>
+                    <div className="mobile-search-container">
+                        <div className="mobile-search-input-wrap">
+                            <Search size={18} />
+                            <input
+                                type="text"
+                                placeholder="Search ticker (e.g. AAPL, BTC)..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' && searchQuery.trim()) {
+                                        onSearch(searchQuery.trim());
+                                        setSearchQuery('');
+                                        setMobileSearchOpen(false);
+                                    }
+                                }}
+                                autoFocus
+                            />
+                            <button onClick={() => setMobileSearchOpen(false)}>
+                                <X size={20} />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

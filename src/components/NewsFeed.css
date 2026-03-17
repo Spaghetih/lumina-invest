@@ -99,3 +99,14 @@
 .news-loading {
     color: #ff9900;
 }
+
+
+/* ═══ NewsFeed Mobile ═══ */
+@media (max-width: 768px) {
+    .nf-panel, .news-feed {
+        padding: 12px !important;
+    }
+    .nf-item, .news-item {
+        padding: 10px !important;
+    }
+}

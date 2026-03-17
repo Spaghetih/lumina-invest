@@ -290,11 +290,15 @@
 /* ─── Mobile Responsiveness ─── */
 
 
-/* == Mobile == */
+/* ═══ DividendCalendar Mobile ═══ */
 @media (max-width: 768px) {
-    .div-hero { flex-direction: column; gap: 12px; }
-    .div-hero-stats { width: 100%; flex-direction: row; flex-wrap: wrap; gap: 0; }
-    .div-hero-stat { flex: 1; min-width: 100px; border-left: none; border-bottom: 1px solid #333; padding: 8px 12px; }
-    .div-hero-value { font-size: 1.3rem; }
-    .div-timeline { padding: 10px; }
+    .dividend-panel {
+        padding: 12px !important;
+    }
+    .dividend-grid {
+        grid-template-columns: 1fr !important;
+    }
+    .dividend-month {
+        padding: 12px !important;
+    }
 }

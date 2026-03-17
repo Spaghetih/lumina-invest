@@ -548,3 +548,56 @@
         font-size: 16px; /* Prevent iOS zoom on focus */
     }
 }
+
+
+/* ═══ LoginPage Mobile ═══ */
+@media (max-width: 768px) {
+    .login-split {
+        flex-direction: column;
+        min-height: 100dvh;
+    }
+    .login-hero {
+        display: none;
+    }
+    .login-mobile-hero {
+        display: flex !important;
+        padding: 32px 20px 16px;
+    }
+    .login-form-panel {
+        flex: 1;
+        padding: 20px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+    }
+    .login-form-container {
+        width: 100%;
+        max-width: 400px;
+    }
+    .login-form-container h2 {
+        font-size: 1.3rem;
+    }
+    .login-input {
+        height: 48px !important;
+        font-size: 16px !important; /* prevent iOS zoom */
+        border-radius: 10px !important;
+    }
+    .login-btn {
+        height: 48px !important;
+        font-size: 0.9rem !important;
+        border-radius: 10px !important;
+    }
+    .login-tabs button {
+        min-height: 44px;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-mobile-hero {
+        padding: 24px 16px 12px;
+    }
+    .login-form-panel {
+        padding: 16px;
+    }
+}

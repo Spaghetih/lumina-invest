@@ -624,13 +624,27 @@
     background: linear-gradient(135deg, #e0b584, #d4a574);
 }
 
-/* == Mobile == */
+
+/* ═══ AIAssistant Mobile ═══ */
 @media (max-width: 768px) {
-    .ai-container { height: calc(100vh - 120px); }
-    .ai-messages { padding: 10px; }
-    .ai-message { max-width: 95%; }
-    .ai-input-form { padding: 8px; }
-    .ai-input-form input { font-size: 16px; }
-    .ai-header { flex-direction: column; gap: 8px; align-items: flex-start; }
-    .ai-provider-select { width: 100%; }
+    .ai-chat-panel {
+        height: calc(100dvh - 130px) !important;
+        border-radius: 0 !important;
+        border-left: none !important;
+        border-right: none !important;
+    }
+    .ai-input-bar {
+        padding: 8px 12px !important;
+        gap: 8px;
+    }
+    .ai-input-bar input {
+        font-size: 16px !important; /* prevent iOS zoom */
+    }
+    .ai-input-bar button {
+        min-width: 44px;
+        min-height: 44px;
+    }
+    .ai-messages {
+        padding: 12px !important;
+    }
 }

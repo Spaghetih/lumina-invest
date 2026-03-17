@@ -78,8 +78,16 @@
 }
 
 
-/* == Mobile == */
+/* ═══ PerformanceChart Mobile ═══ */
 @media (max-width: 768px) {
-    .chart-header { flex-direction: column; gap: 8px; align-items: flex-start; }
-    .chart-header .timeframe-buttons { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .chart-actions {
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 8px 12px !important;
+    }
+    .time-btn {
+        padding: 6px 10px !important;
+        font-size: 0.72rem !important;
+        min-height: 32px;
+    }
 }

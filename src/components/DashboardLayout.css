@@ -738,37 +738,537 @@
     .dashboard-grid { grid-template-columns: 1fr; }
 }
 
+/* ============================================
+   MOBILE RESPONSIVE — Complete Redesign
+   Following UI/UX Pro Max guidelines:
+   - Bottom nav (5 items max)
+   - Touch targets 44px min
+   - 8dp spacing rhythm
+   - No horizontal scroll
+   - Content-first priority
+   ============================================ */
+
+/* Mobile Search Button (hidden on desktop) */
+.mobile-search-btn {
+    display: none;
+}
+
+/* Mobile Bottom Nav (hidden on desktop) */
+.mobile-bottom-nav {
+    display: none;
+}
+
+/* Mobile More Menu (hidden on desktop) */
+.mobile-more-overlay,
+.mobile-more-menu,
+.mobile-search-overlay {
+    display: none;
+}
+
+/* ─── Breakpoint: Tablet (≤1024px) ─── */
+@media (max-width: 1024px) {
+    .topbar-actions .import-btn {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+    }
+    .topbar-actions .btn-primary {
+        padding: 4px 10px;
+        font-size: 0.75rem;
+    }
+    .search-bar {
+        width: 200px;
+    }
+    .portfolio-selector-btn span {
+        max-width: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+/* ─── Breakpoint: Mobile (≤768px) ─── */
 @media (max-width: 768px) {
-    .dashboard-wrapper { flex-direction: column; }
-    .main-content { padding: 0; height: auto; min-height: 100vh; }
-    .topbar { padding: 8px 12px; height: auto; flex-wrap: wrap; gap: 8px; }
-    .topbar-left { width: 100%; gap: 8px; }
-    .search-bar { flex: 1; width: auto; min-width: 0; }
-    .topbar-actions { width: 100%; justify-content: flex-end; flex-wrap: wrap; gap: 4px; }
-    .import-btn span { display: none; }
-    .mobile-menu-btn {
-        display: flex; align-items: center; justify-content: center;
-        background: transparent; color: var(--text-primary); border: none; cursor: pointer; padding: 4px;
+    /* Layout Structure */
+    .dashboard-wrapper {
+        flex-direction: column;
+        height: 100dvh;
     }
-    .mobile-close-btn { display: flex; background: transparent; color: var(--text-secondary); border: none; cursor: pointer; }
-    .mobile-overlay {
-        display: block; position: fixed; inset: 0; background: rgba(0,0,0,0.7);
-        z-index: 99; opacity: 0; visibility: hidden; transition: all 0.15s ease;
-    }
-    .mobile-overlay.open { opacity: 1; visibility: visible; }
+
+    /* Hide desktop sidebar completely */
     .sidebar {
-        position: fixed; top: 0; left: 0; height: 100vh; width: 260px; z-index: 100;
-        background: #0a0a0a; border-right: 1px solid #333;
-        transform: translateX(-100%); transition: transform 0.2s ease;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100dvh;
+        width: 280px;
+        z-index: 200;
+        background: #0a0a0a;
+        border-right: 1px solid #333;
+        transform: translateX(-100%);
+        transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .sidebar.mobile-open { transform: translateX(0); }
-    .sidebar .logo-text, .sidebar .nav-item span { opacity: 1; }
+    .sidebar.mobile-open {
+        transform: translateX(0);
+    }
+    .sidebar .logo-text,
+    .sidebar .nav-item span {
+        opacity: 1;
+    }
+
+    /* Mobile Overlay */
+    .mobile-overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 199;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.2s ease;
+        -webkit-backdrop-filter: blur(4px);
+        backdrop-filter: blur(4px);
+    }
+    .mobile-overlay.open {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .mobile-menu-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        color: var(--text-primary);
+        border: none;
+        cursor: pointer;
+        padding: 8px;
+        min-width: 44px;
+        min-height: 44px;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .mobile-close-btn {
+        display: flex;
+        background: transparent;
+        color: var(--text-secondary);
+        border: none;
+        cursor: pointer;
+        padding: 8px;
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    /* Main Content */
+    .main-content {
+        flex: 1;
+        padding: 0;
+        height: auto;
+        min-height: 0;
+        padding-bottom: 72px; /* Space for bottom nav */
+    }
+
+    /* ─── Topbar Mobile ─── */
+    .topbar {
+        padding: 8px 12px;
+        height: 52px;
+        flex-wrap: nowrap;
+        gap: 8px;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+    }
+
+    .topbar-left {
+        flex: 1;
+        gap: 4px;
+        min-width: 0;
+    }
+
+    /* Hide desktop search bar on mobile */
+    .search-bar {
+        display: none;
+    }
+
+    /* Show mobile search button */
+    .mobile-search-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: 1px solid #333;
+        color: var(--text-secondary);
+        border-radius: 2px;
+        padding: 6px;
+        min-width: 36px;
+        min-height: 36px;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+    }
+    .mobile-search-btn:active {
+        background: rgba(255, 153, 0, 0.1);
+        border-color: #ff9900;
+    }
+
+    /* Portfolio selector compact */
+    .portfolio-selector-btn {
+        padding: 4px 8px;
+        height: 36px;
+        font-size: 0.72rem;
+    }
+    .portfolio-selector-btn span {
+        max-width: 60px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .portfolio-dropdown {
+        min-width: 240px;
+        left: -8px;
+    }
+
+    /* Topbar actions — hide some on mobile */
+    .topbar-actions {
+        gap: 4px;
+        flex-shrink: 0;
+    }
+
+    /* Hide Import and Add Position buttons (use bottom nav + button) */
+    .topbar-actions .import-btn,
+    .topbar-actions .btn-primary {
+        display: none;
+    }
+
+    .currency-toggle {
+        padding: 4px 6px;
+        font-size: 0.72rem;
+        height: 36px;
+        min-width: 44px;
+    }
+
+    .icon-btn {
+        min-width: 36px;
+        min-height: 36px;
+    }
+
+    .avatar {
+        width: 32px;
+        height: 32px;
+    }
+    .avatar-fallback {
+        width: 32px;
+        height: 32px;
+        font-size: 13px;
+    }
+
+    .avatar-dropdown {
+        right: -4px;
+        width: 180px;
+    }
+
+    /* Notification dropdown — full-width bottom sheet */
     .notifications-dropdown {
-        position: fixed; top: auto; bottom: 0; left: 0; right: 0;
-        width: 100vw; max-height: 60vh; border-radius: 12px 12px 0 0;
+        position: fixed;
+        top: auto;
+        bottom: 72px;
+        left: 0;
+        right: 0;
+        width: 100vw;
+        max-height: 50vh;
+        border-radius: 16px 16px 0 0;
+        z-index: 150;
     }
-    .avatar-dropdown { right: 0; min-width: 180px; }
-    .portfolio-dropdown { min-width: 200px; }
-    .portfolio-selector-btn span { max-width: 80px; overflow: hidden; text-overflow: ellipsis; }
-    .currency-toggle { padding: 4px 6px; font-size: 0.75rem; }
+
+    /* ─── Mobile Bottom Navigation Bar ─── */
+    .mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 64px;
+        background: #0a0a0a;
+        border-top: 1px solid #222;
+        z-index: 100;
+        padding: 0 4px;
+        padding-bottom: env(safe-area-inset-bottom, 0);
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .mobile-nav-item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        background: none;
+        border: none;
+        color: #666;
+        font-size: 10px;
+        font-family: 'Inter', sans-serif;
+        font-weight: 500;
+        cursor: pointer;
+        padding: 8px 4px;
+        min-height: 44px;
+        transition: color 0.15s ease;
+        -webkit-tap-highlight-color: transparent;
+        position: relative;
+    }
+
+    .mobile-nav-item.active {
+        color: #ff9900;
+    }
+
+    .mobile-nav-item.active::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 24px;
+        height: 2px;
+        background: #ff9900;
+        border-radius: 0 0 2px 2px;
+    }
+
+    .mobile-nav-item:active {
+        color: #ff9900;
+        transform: scale(0.95);
+    }
+
+    /* Center Add button — elevated FAB style */
+    .mobile-nav-add {
+        position: relative;
+    }
+
+    .mobile-add-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #ff9900, #ffaa22);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #000;
+        margin-top: -8px;
+        box-shadow: 0 4px 12px rgba(255, 153, 0, 0.3);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .mobile-nav-add:active .mobile-add-btn {
+        transform: scale(0.92);
+        box-shadow: 0 2px 8px rgba(255, 153, 0, 0.2);
+    }
+
+    /* ─── Mobile More Menu (Bottom Sheet) ─── */
+    .mobile-more-overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 149;
+        -webkit-backdrop-filter: blur(2px);
+        backdrop-filter: blur(2px);
+        animation: fadeIn 0.15s ease;
+    }
+
+    .mobile-more-menu {
+        display: block;
+        position: fixed;
+        bottom: 64px;
+        left: 0;
+        right: 0;
+        background: #111;
+        border-top: 1px solid #333;
+        border-radius: 16px 16px 0 0;
+        padding: 16px;
+        z-index: 150;
+        animation: slideUp 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        padding-bottom: calc(16px + env(safe-area-inset-bottom, 0));
+    }
+
+    .mobile-more-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+    }
+
+    .mobile-more-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        background: #1a1a1a;
+        border: 1px solid #2a2a2a;
+        border-radius: 12px;
+        padding: 14px 8px;
+        color: #aaa;
+        font-size: 11px;
+        font-family: 'Inter', sans-serif;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        min-height: 72px;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .mobile-more-item:active {
+        background: rgba(255, 153, 0, 0.1);
+        border-color: #ff9900;
+        color: #ff9900;
+        transform: scale(0.96);
+    }
+
+    /* ─── Mobile Search Overlay ─── */
+    .mobile-search-overlay {
+        display: flex;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.85);
+        z-index: 300;
+        align-items: flex-start;
+        padding: 12px;
+        animation: fadeIn 0.15s ease;
+        -webkit-backdrop-filter: blur(8px);
+        backdrop-filter: blur(8px);
+    }
+
+    .mobile-search-container {
+        width: 100%;
+        animation: slideUp 0.2s ease;
+    }
+
+    .mobile-search-input-wrap {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #1a1a1a;
+        border: 1px solid #ff9900;
+        border-radius: 12px;
+        padding: 12px 16px;
+    }
+
+    .mobile-search-input-wrap svg {
+        color: #ff9900;
+        flex-shrink: 0;
+    }
+
+    .mobile-search-input-wrap input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        color: var(--text-primary);
+        font-size: 16px; /* Prevents iOS zoom */
+        font-family: 'Inter', sans-serif;
+        outline: none;
+    }
+
+    .mobile-search-input-wrap input::placeholder {
+        color: #666;
+    }
+
+    .mobile-search-input-wrap button {
+        background: none;
+        border: none;
+        color: #666;
+        cursor: pointer;
+        padding: 4px;
+        display: flex;
+        min-width: 44px;
+        min-height: 44px;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* ─── Layout Content ─── */
+    .layout-content {
+        padding: 0 0 16px;
+    }
+
+    /* ─── Light Theme Mobile ─── */
+    :root[data-theme="light"] .mobile-bottom-nav {
+        background: #f5f5f5;
+        border-top-color: #ddd;
+    }
+    :root[data-theme="light"] .mobile-more-menu {
+        background: #fff;
+        border-top-color: #ddd;
+    }
+    :root[data-theme="light"] .mobile-more-item {
+        background: #f0f0f0;
+        border-color: #e0e0e0;
+        color: #555;
+    }
+    :root[data-theme="light"] .mobile-more-item:active {
+        background: rgba(230, 138, 0, 0.1);
+        color: var(--primary);
+    }
+    :root[data-theme="light"] .mobile-search-input-wrap {
+        background: #fff;
+        border-color: var(--primary);
+    }
+    :root[data-theme="light"] .mobile-nav-item {
+        color: #999;
+    }
+    :root[data-theme="light"] .mobile-nav-item.active {
+        color: var(--primary);
+    }
+}
+
+/* ─── Breakpoint: Small Phone (≤480px) ─── */
+@media (max-width: 480px) {
+    .topbar {
+        padding: 6px 8px;
+        height: 48px;
+    }
+
+    .portfolio-selector-btn {
+        padding: 4px 6px;
+        height: 32px;
+    }
+    .portfolio-selector-btn svg:first-child {
+        display: none;
+    }
+    .portfolio-selector-btn span {
+        max-width: 50px;
+    }
+
+    .currency-toggle {
+        height: 32px;
+        padding: 2px 4px;
+        font-size: 0.68rem;
+    }
+
+    .icon-btn {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+        min-height: 32px;
+    }
+
+    .avatar, .avatar-fallback {
+        width: 28px;
+        height: 28px;
+    }
+
+    /* Tighter bottom nav */
+    .mobile-bottom-nav {
+        height: 56px;
+    }
+    .main-content {
+        padding-bottom: 56px;
+    }
+    .mobile-more-menu {
+        bottom: 56px;
+    }
+
+    .mobile-more-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+    }
+    .mobile-more-item {
+        padding: 10px 4px;
+        font-size: 10px;
+        min-height: 64px;
+        border-radius: 10px;
+    }
 }

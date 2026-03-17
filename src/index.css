@@ -669,14 +669,45 @@ h1, h2, h3, h4, h5, h6 {
 /* Mobile */
 
 
-/* == Mobile == */
+/* ═══ Global Mobile ═══ */
 @media (max-width: 768px) {
-    .modal-overlay { align-items: flex-end; }
-    .modal-content {
-        width: 100%; max-width: 100%; border-radius: 14px 14px 0 0;
-        padding: 20px 16px; max-height: 90vh; overflow-y: auto;
+    .main-grid {
+        grid-template-columns: 1fr;
+        max-height: none;
+        gap: 8px;
     }
-    .main-grid { grid-template-columns: 1fr; max-height: none; }
-    .form-row { grid-template-columns: 1fr; }
-    .dashboard-content { padding: 0 8px 8px; }
+    .main-grid > .chart-container {
+        min-height: 280px;
+    }
+    .main-grid > .live-list-container {
+        max-height: 400px;
+    }
+    .modal-overlay {
+        align-items: flex-end;
+    }
+    .modal-content {
+        width: 100%;
+        max-width: 100%;
+        border-radius: 16px 16px 0 0;
+        padding: 20px 16px;
+        max-height: 85vh;
+        overflow-y: auto;
+    }
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    .dashboard-content {
+        padding: 0 12px 12px;
+        gap: 12px;
+    }
+    h2 {
+        font-size: 1.1rem;
+        padding: 0 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-content {
+        padding: 0 8px 8px;
+    }
 }

@@ -100,10 +100,24 @@
     font-size: 0.85rem;
 }
 
-/* == Mobile == */
+
+/* ═══ Heatmap Mobile ═══ */
 @media (max-width: 768px) {
-    .heatmap-container { padding: 10px; border-radius: 0; border-left: none; border-right: none; }
-    .hm-chart-wrapper { min-height: 250px; }
-    .hm-header { margin-bottom: 8px; }
-    .hm-title { font-size: 0.78rem; }
+    .heatmap-panel {
+        padding: 12px !important;
+    }
+    .heatmap-grid {
+        gap: 4px;
+    }
+    .heatmap-cell {
+        padding: 8px 4px !important;
+        border-radius: 6px;
+        min-height: 50px;
+    }
+    .heatmap-cell .ticker {
+        font-size: 0.7rem !important;
+    }
+    .heatmap-cell .change {
+        font-size: 0.65rem !important;
+    }
 }

@@ -192,8 +192,16 @@
 }
 
 
-/* == Mobile == */
+/* ═══ AdminPanel Mobile ═══ */
 @media (max-width: 768px) {
-    .admin-table { grid-template-columns: 2fr 1fr 80px; }
-    .admin-table > div:nth-child(5n+3), .admin-table > div:nth-child(5n+4) { display: none; }
+    .admin-panel {
+        padding: 12px !important;
+    }
+    .admin-table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .admin-table {
+        min-width: 500px;
+    }
 }

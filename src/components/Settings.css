@@ -374,15 +374,19 @@ input:checked+.toggle-slider::before {
 /* ─── Responsive ─── */
 
 
-/* == Mobile == */
-@media (max-width: 900px) {
-    .settings-grid { grid-template-columns: 1fr; }
-}
+/* ═══ Settings Mobile ═══ */
 @media (max-width: 768px) {
-    .setting-row { flex-direction: column; gap: 10px; }
-    .segmented-control { width: 100%; flex-wrap: wrap; }
-    .toggle-pill { flex: 1; text-align: center; }
-    .setting-actions .btn-secondary, .setting-actions .btn-primary { width: 100%; }
-    .danger-confirm-actions { flex-direction: column; }
-    .danger-confirm-actions button { width: 100%; }
+    .settings-panel {
+        padding: 12px !important;
+    }
+    .settings-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px;
+    }
+    .settings-card {
+        padding: 16px !important;
+    }
+    .settings-card h3 {
+        font-size: 0.9rem;
+    }
 }

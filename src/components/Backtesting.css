@@ -169,11 +169,23 @@
 .text-down { color: #ff3333 !important; }
 
 
-/* == Mobile == */
+/* ═══ Backtesting Mobile ═══ */
 @media (max-width: 768px) {
-    .bt-form { flex-direction: column; }
-    .bt-form input, .bt-form select, .bt-form button { width: 100%; }
-    .bt-stats-row { flex-direction: column; }
-    .bt-stat { border-right: none; border-bottom: 1px solid #333; padding: 10px; }
-    .bt-stat:last-child { border-bottom: none; }
+    .bt-layout {
+        grid-template-columns: 1fr !important;
+        gap: 8px;
+    }
+    .bt-form-panel {
+        padding: 12px !important;
+    }
+    .bt-chart-panel {
+        min-height: 280px;
+    }
+    .bt-stats-row {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 6px;
+    }
+    .bt-input {
+        font-size: 16px !important; /* prevent iOS zoom */
+    }
 }

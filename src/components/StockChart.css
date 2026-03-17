@@ -290,16 +290,65 @@
 /* Responsive */
 
 
-/* == Mobile == */
+/* ═══ StockChart Mobile ═══ */
 @media (max-width: 768px) {
-    .sc-header { flex-direction: column; gap: 8px; align-items: stretch; }
-    .sc-search { min-width: 100%; }
-    .sc-header-right { flex-wrap: wrap; gap: 6px; }
+    .stock-chart-page {
+        gap: 8px;
+    }
+    .sc-toolbar {
+        flex-direction: column;
+        gap: 8px;
+        padding: 12px;
+    }
+    .sc-search {
+        min-width: 100%;
+    }
+    .sc-compare-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 10px;
+        min-height: 44px;
+    }
+    .sc-quick-picks {
+        width: 100%;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-bottom: 4px;
+    }
+    .sc-quick-picks::-webkit-scrollbar { display: none; }
+    .sc-pick-btn {
+        padding: 6px 12px;
+        font-size: 0.72rem;
+        min-height: 32px;
+        flex-shrink: 0;
+    }
+    .sc-header {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+        padding: 12px;
+    }
+    .sc-header-right {
+        width: 100%;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .sc-ticker { font-size: 1.1rem; }
+    .sc-price { font-size: 1rem; }
     .sc-chart-container { min-height: 280px; }
-    .sc-toolbar { flex-direction: column; gap: 8px; }
-    .sc-quick-picks { flex-wrap: wrap; gap: 4px; }
-    .sc-pick-btn { padding: 4px 8px; font-size: 0.7rem; }
-    .sc-timeframes { gap: 2px; flex-wrap: wrap; }
-    .time-btn { padding: 4px 8px; font-size: 0.7rem; }
-    .sc-stats { grid-template-columns: 1fr 1fr; gap: 6px; }
+    .sc-chart-panel { padding: 8px; }
+    .sc-timeframes {
+        width: 100%;
+        display: flex;
+    }
+    .sc-timeframes .time-btn {
+        flex: 1;
+        text-align: center;
+        padding: 8px 4px;
+        font-size: 0.72rem;
+        min-height: 36px;
+    }
 }
