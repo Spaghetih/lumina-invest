@@ -290,6 +290,27 @@
 /* ─── Mobile Responsiveness ─── */
 
 
+
+/* Bloomberg Terminal — Desktop */
+@media (min-width: 769px) {
+    .dividendcalendar-panel,
+    .dividendcalendar-card,
+    .insight-card,
+    .settings-panel,
+    .settings-card,
+    .ai-chat-panel,
+    .dividend-panel,
+    .bt-form-panel,
+    .bt-chart-panel,
+    .wl-toolbar,
+    .wl-table-wrap,
+    .scr-toolbar,
+    .scr-table-wrap,
+    .cm-panel {
+        border-radius: 0 !important;
+    }
+}
+
 /* ═══ DividendCalendar Mobile ═══ */
 @media (max-width: 768px) {
     .dividend-panel {

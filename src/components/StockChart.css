@@ -290,6 +290,46 @@
 /* Responsive */
 
 
+
+/* Bloomberg Terminal — Desktop */
+@media (min-width: 769px) {
+    .sc-toolbar {
+        padding: 6px 10px;
+        gap: 8px;
+        background: #080808;
+        border-radius: 0;
+    }
+    .sc-search {
+        border-radius: 0;
+        background: #000;
+        border-color: #1a1a1a;
+        padding: 4px 10px;
+    }
+    .sc-header {
+        padding: 8px 12px;
+        border-radius: 0;
+        background: #080808;
+    }
+    .sc-chart-panel {
+        border-radius: 0;
+        background: #080808;
+        padding: 8px 12px;
+    }
+    .sc-pick-btn {
+        border-radius: 0;
+        font-size: 0.7rem;
+        padding: 3px 8px;
+    }
+    .sc-compare-btn {
+        border-radius: 0;
+    }
+    .sc-tooltip {
+        border-radius: 0;
+        background: #0a0a0a;
+        border-color: #1e1e1e;
+    }
+}
+
 /* ═══ StockChart Mobile ═══ */
 @media (max-width: 768px) {
     .stock-chart-page {

@@ -2,23 +2,19 @@
 .summary-cards {
     display: flex;
     gap: 0;
-    border: 1px solid #333;
-    background: #111;
-    border-radius: 2px;
+    background: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    overflow: hidden;
 }
 
 .summary-card {
-    padding: 10px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    position: relative;
-    overflow: hidden;
     flex: 1;
+    padding: 8px 14px;
+    border-right: 1px solid #1a1a1a;
     min-width: 0;
-    border-right: 1px solid #333;
-    background: transparent;
-    border-radius: 0;
+}
+.summary-card:last-child {
+    border-right: none;
 }
 
 .summary-card:last-child {
@@ -135,6 +131,64 @@
 
 .text-down {
     color: var(--status-down);
+}
+
+
+/* Bloomberg Terminal — Desktop Dense */
+.summary-card .card-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 2px;
+}
+
+.summary-card .card-title {
+    font-size: 0.6rem;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-family: var(--font-mono);
+    font-weight: 600;
+}
+
+.summary-card .card-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    letter-spacing: -0.3px;
+}
+
+.summary-card.hero-card .card-value {
+    font-size: 1.4rem;
+    color: #ff9900;
+}
+
+.summary-card .card-icon-wrapper {
+    width: 24px;
+    height: 24px;
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.summary-card .card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.summary-card .card-date {
+    font-size: 0.58rem;
+    color: #444;
+    font-family: var(--font-mono);
+}
+
+.summary-card .status-badge {
+    font-size: 0.62rem;
+    padding: 1px 4px;
+    border-radius: 0;
+    font-family: var(--font-mono);
 }
 
 /* ═══ Mobile Hero (hidden on desktop) ═══ */

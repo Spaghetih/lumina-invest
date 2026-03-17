@@ -380,6 +380,81 @@
 
 /* Responsive */
 
+
+/* Bloomberg Terminal — Desktop Dense Tables */
+@media (min-width: 769px) {
+    .pa-section-title {
+        font-size: 0.72rem;
+        font-family: var(--font-mono);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #888;
+        margin-bottom: 8px;
+    }
+    .pa-stat-card {
+        border-radius: 0;
+        padding: 10px;
+    }
+    .pa-stat-label {
+        font-size: 0.6rem;
+        font-family: var(--font-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .pa-stat-value {
+        font-size: 0.82rem;
+        font-family: var(--font-mono);
+    }
+    .pa-allocation {
+        border-radius: 0;
+    }
+    .pa-positions {
+        border-radius: 0;
+    }
+    .pa-table thead th {
+        padding: 5px 8px;
+        font-size: 0.62rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #555;
+        background: #060606;
+        border-bottom: 1px solid #1a1a1a;
+        font-family: var(--font-mono);
+    }
+    .pa-table tbody td {
+        padding: 5px 8px;
+        font-size: 0.75rem;
+        font-family: var(--font-mono);
+        border-bottom: 1px solid #111;
+    }
+    .pa-table tbody tr:hover {
+        background: #0d0d0d !important;
+    }
+    .pa-asset-symbol {
+        font-weight: 700;
+        font-size: 0.78rem;
+    }
+    .pa-asset-name {
+        font-size: 0.6rem;
+        color: #444;
+    }
+    .pa-pnl-pct {
+        font-size: 0.62rem;
+        color: #666;
+    }
+    .pa-legend-item {
+        font-size: 0.68rem;
+        font-family: var(--font-mono);
+    }
+    .pa-page-title {
+        font-size: 0.85rem;
+        font-family: var(--font-mono);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: #888;
+    }
+}
+
 /* ═══ PortfolioAnalysis Mobile ═══ */
 @media (max-width: 768px) {
     .portfolio-analysis {

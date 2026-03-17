@@ -11,7 +11,7 @@
     margin-bottom: 0;
     padding: 8px 12px;
     border-bottom: 1px solid #333;
-    background: #0d0d0d;
+    background: #080808;
 }
 
 .card-title {
@@ -68,7 +68,7 @@
     gap: 12px;
     padding: 4px 12px;
     border-bottom: 1px solid #444;
-    background: #0d0d0d;
+    background: #080808;
     font-size: 0.68rem;
     color: var(--text-muted);
     font-weight: 600;
@@ -117,7 +117,7 @@
 }
 
 .stock-row:nth-child(even) {
-    background: #0a0a0a;
+    background: #060606;
 }
 
 .stock-row:hover {
@@ -345,6 +345,63 @@
 }
 
 /* ── Mobile ── */
+
+
+/* Bloomberg Terminal — Desktop Dense Table */
+@media (min-width: 769px) {
+    .live-stocks-card {
+        border-radius: 0;
+        border: 1px solid #1a1a1a;
+        background: #080808;
+    }
+    .live-stocks-card .card-header {
+        padding: 6px 10px;
+        border-bottom: 1px solid #1a1a1a;
+        background: #0a0a0a;
+    }
+    .live-stocks-card .card-header h3 {
+        font-size: 0.72rem;
+        font-family: var(--font-mono);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #888;
+    }
+    .list-header {
+        padding: 4px 10px;
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #555;
+        border-bottom: 1px solid #1a1a1a;
+        background: #060606;
+    }
+    .stock-row {
+        padding: 5px 10px;
+        font-size: 0.75rem;
+        border-bottom: 1px solid #111;
+        transition: background 0.08s;
+    }
+    .stock-row:hover {
+        background: #111 !important;
+    }
+    .stock-row .stock-ticker {
+        font-size: 0.78rem;
+        font-weight: 700;
+        font-family: var(--font-mono);
+        letter-spacing: 0.3px;
+    }
+    .stock-row .stock-name {
+        font-size: 0.62rem;
+        color: #444;
+    }
+    .stock-row .stock-price,
+    .stock-row .stock-change,
+    .stock-row .stock-value,
+    .stock-row .stock-shares {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+    }
+}
 
 /* ═══ LiveStockList Mobile ═══ */
 @media (max-width: 768px) {

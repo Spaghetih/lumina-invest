@@ -77,6 +77,41 @@
     margin-left: 4px;
 }
 
+
+/* Bloomberg Terminal — Desktop */
+@media (min-width: 769px) {
+    .chart-container {
+        border-radius: 0;
+    }
+    .chart-actions {
+        padding: 3px 8px;
+        gap: 0;
+        background: #0a0a0a;
+        border-bottom: 1px solid #1a1a1a;
+    }
+    .chart-header {
+        padding: 6px 10px;
+    }
+    .chart-header .chart-title {
+        font-size: 0.72rem;
+        font-family: var(--font-mono);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #888;
+    }
+    .time-btn {
+        padding: 3px 10px;
+        font-size: 0.68rem;
+        border-radius: 0;
+        font-family: var(--font-mono);
+    }
+    .time-btn.active {
+        background: #ff9900;
+        color: #000;
+        border-radius: 0;
+    }
+}
+
 /* ═══ PerformanceChart Mobile ═══ */
 @media (max-width: 768px) {
     .chart-actions {
