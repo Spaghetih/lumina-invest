@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Sparkles, Bot, User, Loader2, KeyRound, AlertCircle, TrendingUp, Shield, BarChart3, Lightbulb, RefreshCw, LogIn, Key, LogOut } from 'lucide-react';
+import { Send, Sparkles, Bot, User, Loader2, KeyRound, AlertCircle, TrendingUp, Shield, BarChart3, Lightbulb, RefreshCw, Key, LogOut } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useCurrency } from '../contexts/CurrencyContext';
 import './AIAssistant.css';
+import { fetchAuth } from '../services/fetchAuth';
 
 const PRESET_PROMPTS = [
     { icon: <TrendingUp size={16} />, label: 'Portfolio Summary', prompt: 'Give me a detailed summary of my portfolio performance, including which positions are performing best and worst.' },
@@ -46,15 +47,14 @@ const AIAssistant = ({ stocks }) => {
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [hasKey, setHasKey] = useState(null);
-    const [authMethod, setAuthMethod] = useState(null); // 'chatgpt' or 'apikey'
+    const [authMethod, setAuthMethod] = useState(null);
     const [apiKeyInput, setApiKeyInput] = useState('');
     const [keyError, setKeyError] = useState('');
-    const [authTab, setAuthTab] = useState('chatgpt');
-    const [oauthLoading, setOauthLoading] = useState(false);
+    const [authTab, setAuthTab] = useState('openai');
     const messagesEndRef = useRef(null);
 
     useEffect(() => {
-        fetch('http://localhost:3001/api/ai/key')
+        fetchAuth('/api/ai/key')
             .then(r => r.json())
             .then(data => {
                 setHasKey(data.hasKey);
@@ -121,7 +121,7 @@ Guidelines:
 
             const apiMessages = [systemMsg, ...messages.filter(m => m.role !== 'system'), userMsg];
 
-            const res = await fetch('http://localhost:3001/api/ai/chat', {
+            const res = await fetchAuth('/api/ai/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ messages: apiMessages })
@@ -141,20 +141,20 @@ Guidelines:
         }
     };
 
-    const handleKeySubmit = async () => {
+    const handleKeySubmit = async (provider = 'openai') => {
         if (!apiKeyInput.trim()) return;
         setKeyError('');
         try {
-            const res = await fetch('http://localhost:3001/api/ai/key', {
+            const res = await fetchAuth('/api/ai/key', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ key: apiKeyInput.trim() })
+                body: JSON.stringify({ key: apiKeyInput.trim(), provider })
             });
             if (res.ok) {
                 setHasKey(true);
-                setAuthMethod('apikey');
+                setAuthMethod(provider);
                 setApiKeyInput('');
-                toast.success('OpenAI API Key connected successfully!');
+                toast.success(`${provider === 'claude' ? 'Claude' : 'OpenAI'} API Key connected!`);
             } else {
                 setKeyError('Failed to save API key');
                 toast.error('Failed to save API key');
@@ -165,59 +165,11 @@ Guidelines:
         }
     };
 
-    const handleChatGPTSignIn = async () => {
-        setOauthLoading(true);
-        setKeyError('');
-        try {
-            // Ask backend to generate the OAuth URL with PKCE
-            const res = await fetch('http://localhost:3001/api/ai/oauth/start');
-            const { url } = await res.json();
-
-            // Open the OpenAI auth page in a popup
-            const authWindow = window.open(url, 'ChatGPT Sign In', 'width=500,height=700,menubar=no,toolbar=no');
-
-            // Poll for authentication completion
-            const pollInterval = setInterval(async () => {
-                try {
-                    const statusRes = await fetch('http://localhost:3001/api/ai/key');
-                    const statusData = await statusRes.json();
-                    if (statusData.hasKey) {
-                        clearInterval(pollInterval);
-                        setHasKey(true);
-                        setAuthMethod(statusData.method);
-                        setOauthLoading(false);
-                        toast.success('Successfully connected to ChatGPT!');
-                        try { authWindow?.close(); } catch { }
-                    }
-                } catch { }
-
-                // Stop polling if window was closed without auth
-                if (authWindow?.closed) {
-                    setTimeout(async () => {
-                        const finalCheck = await fetch('http://localhost:3001/api/ai/key');
-                        const finalData = await finalCheck.json();
-                        if (!finalData.hasKey) {
-                            clearInterval(pollInterval);
-                            setKeyError('Sign-in window closed before authentication completed.');
-                            setOauthLoading(false);
-                        }
-                    }, 2000);
-                }
-            }, 2000);
-
-            // Timeout after 5 minutes
-            setTimeout(() => { clearInterval(pollInterval); setOauthLoading(false); }, 300000);
-        } catch (err) {
-            setKeyError('Failed to start sign-in: ' + err.message);
-            setOauthLoading(false);
-        }
-    };
-
     const handleNewChat = () => setMessages([]);
 
     const handleLogout = async () => {
         try {
-            await fetch('http://localhost:3001/api/ai/logout', { method: 'POST' });
+            await fetchAuth('/api/ai/logout', { method: 'POST' });
             setHasKey(false);
             setAuthMethod(null);
             setMessages([]);
@@ -237,55 +189,52 @@ Guidelines:
                         <Sparkles size={48} />
                     </div>
                     <h2>Activate Lumina AI</h2>
-                    <p>Choose how to connect to OpenAI's GPT models</p>
+                    <p>Connect your preferred AI provider</p>
 
                     <div className="ai-auth-tabs">
-                        <button className={`ai-auth-tab ${authTab === 'chatgpt' ? 'active' : ''}`} onClick={() => { setAuthTab('chatgpt'); setKeyError(''); }}>
-                            <LogIn size={16} />
-                            ChatGPT Sign-in
-                        </button>
-                        <button className={`ai-auth-tab ${authTab === 'apikey' ? 'active' : ''}`} onClick={() => { setAuthTab('apikey'); setKeyError(''); }}>
+                        <button className={`ai-auth-tab ${authTab === 'openai' ? 'active' : ''}`} onClick={() => { setAuthTab('openai'); setKeyError(''); }}>
                             <Key size={16} />
-                            API Key
+                            OpenAI
+                        </button>
+                        <button className={`ai-auth-tab ${authTab === 'claude' ? 'active' : ''}`} onClick={() => { setAuthTab('claude'); setKeyError(''); }}>
+                            <Sparkles size={16} />
+                            Claude
                         </button>
                     </div>
 
-                    {authTab === 'chatgpt' ? (
+                    {authTab === 'openai' ? (
                         <div className="ai-auth-content">
                             <div className="ai-auth-info">
-                                <h4>📱 Subscription Access</h4>
-                                <p>Sign in with your ChatGPT account.<br />Uses your existing Plus / Pro subscription.</p>
-                            </div>
-                            <button className="ai-chatgpt-signin" onClick={handleChatGPTSignIn} disabled={oauthLoading}>
-                                {oauthLoading ? (
-                                    <><Loader2 size={18} className="spin" /> Waiting for sign-in...</>
-                                ) : (
-                                    <>
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                            <path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.676l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0l-4.83-2.786A4.504 4.504 0 0 1 2.34 7.872zm16.597 3.855l-5.833-3.387L15.119 7.2a.076.076 0 0 1 .071 0l4.83 2.791a4.494 4.494 0 0 1-.676 8.105v-5.678a.79.79 0 0 0-.407-.667zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.83-2.787a4.5 4.5 0 0 1 6.68 4.66zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.615 1.5v3.005l-2.602 1.5-2.615-1.5z" />
-                                        </svg>
-                                        Sign in with ChatGPT
-                                    </>
-                                )}
-                            </button>
-                            <p className="ai-setup-hint">No API key needed — uses OAuth to connect directly with your ChatGPT account.</p>
-                        </div>
-                    ) : (
-                        <div className="ai-auth-content">
-                            <div className="ai-auth-info">
-                                <h4>🔑 Usage-Based Access</h4>
-                                <p>Pay per use with your API key. Stored securely on the server.</p>
+                                <h4>OpenAI GPT</h4>
+                                <p>Use GPT-4o with your OpenAI API key.<br/>Pay per use, stored securely per account.</p>
                             </div>
                             <div className="ai-key-form">
                                 <div className="ai-key-input-wrapper">
                                     <KeyRound size={18} />
-                                    <input type="password" placeholder="sk-..." value={apiKeyInput} onChange={(e) => setApiKeyInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleKeySubmit()} />
+                                    <input type="password" placeholder="sk-..." value={apiKeyInput} onChange={(e) => setApiKeyInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleKeySubmit('openai')} />
                                 </div>
-                                <button className="ai-key-submit" onClick={handleKeySubmit}>
-                                    Activate with API Key
+                                <button className="ai-key-submit" onClick={() => handleKeySubmit('openai')}>
+                                    Connect OpenAI
                                 </button>
                             </div>
                             <p className="ai-setup-hint">Get your key from <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer">platform.openai.com</a></p>
+                        </div>
+                    ) : (
+                        <div className="ai-auth-content">
+                            <div className="ai-auth-info">
+                                <h4>Anthropic Claude</h4>
+                                <p>Use Claude Sonnet with your Anthropic API key.<br/>Pay per use, stored securely per account.</p>
+                            </div>
+                            <div className="ai-key-form">
+                                <div className="ai-key-input-wrapper">
+                                    <KeyRound size={18} />
+                                    <input type="password" placeholder="sk-ant-..." value={apiKeyInput} onChange={(e) => setApiKeyInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleKeySubmit('claude')} />
+                                </div>
+                                <button className="ai-key-submit claude" onClick={() => handleKeySubmit('claude')}>
+                                    Connect Claude
+                                </button>
+                            </div>
+                            <p className="ai-setup-hint">Get your key from <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener noreferrer">console.anthropic.com</a></p>
                         </div>
                     )}
 
@@ -316,7 +265,7 @@ Guidelines:
                         <Sparkles size={22} className="ai-header-icon" />
                         <div>
                             <h2>Lumina AI</h2>
-                            <span className="ai-model-badge">{authMethod === 'chatgpt' ? 'GPT-5.2-Codex' : 'GPT-4o'}</span>
+                            <span className="ai-model-badge">{authMethod === 'claude' ? 'Claude Sonnet' : 'GPT-4o'}</span>
                         </div>
                     </div>
                     <div className="ai-header-actions">

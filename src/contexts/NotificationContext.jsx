@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { useAuth } from './AuthContext.jsx';
 
 const NotificationContext = createContext();
 
@@ -7,22 +8,38 @@ export function useNotifications() {
 }
 
 export function NotificationProvider({ children }) {
+    const { user } = useAuth();
+    const storageKey = user ? `lumina_notifications_${user.id}` : null;
+
     const [notifications, setNotifications] = useState(() => {
+        if (!storageKey) return [];
         try {
-            const saved = localStorage.getItem('lumina_notifications');
+            const saved = localStorage.getItem(storageKey);
             return saved ? JSON.parse(saved) : [];
         } catch {
             return [];
         }
     });
 
+    // Reload notifications when user changes (login/logout)
     useEffect(() => {
+        if (!storageKey) { setNotifications([]); return; }
         try {
-            localStorage.setItem('lumina_notifications', JSON.stringify(notifications));
+            const saved = localStorage.getItem(storageKey);
+            setNotifications(saved ? JSON.parse(saved) : []);
+        } catch {
+            setNotifications([]);
+        }
+    }, [storageKey]);
+
+    useEffect(() => {
+        if (!storageKey) return;
+        try {
+            localStorage.setItem(storageKey, JSON.stringify(notifications));
         } catch {
             // ignore
         }
-    }, [notifications]);
+    }, [notifications, storageKey]);
 
     const addNotification = useCallback((notification) => {
         const newNotification = {

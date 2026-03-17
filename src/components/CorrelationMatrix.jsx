@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Grid3x3 } from 'lucide-react';
 import './CorrelationMatrix.css';
+import { fetchAuth } from '../services/fetchAuth';
 
 const calculateCorrelation = (x, y) => {
     const n = Math.min(x.length, y.length);
@@ -41,7 +42,7 @@ const CorrelationMatrix = ({ stocks }) => {
 
             for (const sym of symbols) {
                 try {
-                    const res = await fetch(`http://localhost:3001/api/historical/${sym}?range=3M`);
+                    const res = await fetchAuth(`/api/historical/${sym}?range=3M`);
                     const data = await res.json();
                     // Calculate daily returns
                     const dailyReturns = [];

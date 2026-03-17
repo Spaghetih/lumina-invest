@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Search, Trash2, TrendingUp, TrendingDown, Eye } from 'lucide-react';
 import './Watchlist.css';
+import { fetchAuth } from '../services/fetchAuth';
 
 const STORAGE_KEY = 'lumina_watchlist';
 const POLL_INTERVAL = 5000;
@@ -65,7 +66,7 @@ const Watchlist = () => {
         debounceRef.current = setTimeout(async () => {
             setSearching(true);
             try {
-                const res = await fetch(`http://localhost:3001/api/search?q=${encodeURIComponent(query.trim())}`);
+                const res = await fetchAuth(`/api/search?q=${encodeURIComponent(query.trim())}`);
                 if (res.ok) {
                     const data = await res.json();
                     const results = (data.quotes || data.results || data || [])
@@ -87,7 +88,7 @@ const Watchlist = () => {
     const fetchQuotes = useCallback(async () => {
         if (symbols.length === 0) return;
         try {
-            const res = await fetch(`http://localhost:3001/api/quotes?symbols=${symbols.join(',')}`);
+            const res = await fetchAuth(`/api/quotes?symbols=${symbols.join(',')}`);
             if (res.ok) {
                 const data = await res.json();
                 const quotesMap = {};

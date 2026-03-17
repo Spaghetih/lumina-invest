@@ -3,6 +3,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { History, TrendingUp, TrendingDown, DollarSign, Percent, BarChart3 } from 'lucide-react';
 import { useCurrency } from '../contexts/CurrencyContext';
 import './Backtesting.css';
+import { fetchAuth } from '../services/fetchAuth';
 
 const BacktestTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
@@ -41,7 +42,7 @@ const Backtesting = () => {
         setChartData([]);
 
         try {
-            const res = await fetch(`http://localhost:3001/api/historical/${ticker.toUpperCase()}?range=5Y`);
+            const res = await fetchAuth(`/api/historical/${ticker.toUpperCase()}?range=5Y`);
             if (!res.ok) throw new Error('Failed to fetch data');
             const data = await res.json();
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Newspaper, ExternalLink, Clock } from 'lucide-react';
 import './NewsFeed.css';
+import { fetchAuth } from '../services/fetchAuth';
 
 const NewsFeed = ({ symbol }) => {
     const [news, setNews] = useState([]);
@@ -10,7 +11,7 @@ const NewsFeed = ({ symbol }) => {
         if (!symbol) return;
         setLoading(true);
         try {
-            const res = await fetch(`http://localhost:3001/api/news/${symbol}`);
+            const res = await fetchAuth(`/api/news/${symbol}`);
             const data = await res.json();
             setNews(data.slice(0, 8));
         } catch {

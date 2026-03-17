@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Calendar, DollarSign, ArrowUpRight, TrendingUp, PiggyBank, RefreshCw, Info } from 'lucide-react';
 import { useCurrency } from '../contexts/CurrencyContext';
 import './DividendCalendar.css';
+import { fetchAuth } from '../services/fetchAuth';
 
 const DividendCalendar = ({ stocks }) => {
     const { format } = useCurrency();
@@ -24,7 +25,7 @@ const DividendCalendar = ({ stocks }) => {
             setLoading(true);
             try {
                 const symbols = stocks.map(s => s.id).join(',');
-                const res = await fetch(`http://localhost:3001/api/dividends?symbols=${symbols}`);
+                const res = await fetchAuth(`/api/dividends?symbols=${symbols}`);
                 const data = await res.json();
 
                 // Merge dividend data with user's share count

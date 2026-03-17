@@ -9,6 +9,7 @@ import {
 import PriceAlerts from './PriceAlerts';
 import { exportPortfolioCSV } from '../services/exportService';
 import './Settings.css';
+import { fetchAuth } from '../services/fetchAuth';
 
 const Settings = ({ stocks, onImportClick, onClearData }) => {
     const { currency, toggleCurrency, fxRate, hideBalances, toggleHideBalances } = useCurrency();
@@ -91,7 +92,7 @@ const Settings = ({ stocks, onImportClick, onClearData }) => {
         }
 
         try {
-            const res = await fetch(discordWebhookUrl, {
+            const res = await fetchAuth(discordWebhookUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

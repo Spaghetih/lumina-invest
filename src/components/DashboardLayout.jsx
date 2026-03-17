@@ -1,5 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Activity, Home, TrendingUp, PieChart, Info, Settings, Search, Plus, X, Upload, Eye, EyeOff, Sparkles, Menu, Calendar, LineChart, ListFilter, History, Sun, Moon, ChevronDown, FolderPlus, Trash2 } from 'lucide-react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Activity, Home, TrendingUp, PieChart, Info, Settings, Search, Plus, X, Upload, Eye, EyeOff, Sparkles, Menu, Calendar, LineChart, ListFilter, History, Sun, Moon, ChevronDown, FolderPlus, Trash2, LogOut, User, Shield, Camera } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { fetchAuth } from '../services/fetchAuth';
 import { useCurrency } from '../contexts/CurrencyContext';
 import NotificationCenter from './NotificationCenter';
 import './DashboardLayout.css';
@@ -10,6 +12,42 @@ export default function DashboardLayout({ children, activeTab, onTabChange, onAd
     const [portfolioDropdownOpen, setPortfolioDropdownOpen] = useState(false);
     const [newPortfolioName, setNewPortfolioName] = useState('');
     const { currency, toggleCurrency, fxRate, hideBalances, toggleHideBalances, theme, toggleTheme } = useCurrency();
+    const { user, logout } = useAuth();
+    const [avatarUrl, setAvatarUrl] = useState(null);
+    const [avatarDropdown, setAvatarDropdown] = useState(false);
+    const avatarInputRef = useRef(null);
+    const avatarDropdownRef = useRef(null);
+
+    useEffect(() => {
+        if (user?.id) setAvatarUrl('/api/avatar/' + user.id + '?t=' + Date.now());
+    }, [user?.id]);
+
+    useEffect(() => {
+        const handleClick = (e) => {
+            if (avatarDropdownRef.current && !avatarDropdownRef.current.contains(e.target)) {
+                setAvatarDropdown(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClick);
+        return () => document.removeEventListener('mousedown', handleClick);
+    }, []);
+
+    const handleAvatarUpload = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const formData = new FormData();
+        formData.append('avatar', file);
+        try {
+            const token = localStorage.getItem('lumina_token');
+            const res = await fetch('/api/avatar', {
+                method: 'POST',
+                headers: { 'Authorization': 'Bearer ' + token },
+                body: formData
+            });
+            if (res.ok) setAvatarUrl('/api/avatar/' + user.id + '?t=' + Date.now());
+        } catch (err) { console.error('Avatar upload failed:', err); }
+        setAvatarDropdown(false);
+    };
 
     const portfolioRef = useRef(null);
     const activePortfolioName = portfolios.find(p => p.id === activePortfolioId)?.name || 'Portfolio';
@@ -88,6 +126,12 @@ export default function DashboardLayout({ children, activeTab, onTabChange, onAd
                         <Sparkles size={20} />
                         <span>Lumina AI</span>
                     </a>
+                    {user?.role === 'admin' && (
+                        <a href="#" className={`nav-item ${activeTab === 'Admin' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); onTabChange('Admin'); setIsMobileMenuOpen(false); }}>
+                            <Shield size={20} />
+                            <span>Admin</span>
+                        </a>
+                    )}
                 </nav>
 
                 <div className="nav-bottom">
@@ -95,6 +139,16 @@ export default function DashboardLayout({ children, activeTab, onTabChange, onAd
                         <Settings size={20} />
                         <span>Settings</span>
                     </a>
+                </div>
+
+                <div className="sidebar-user">
+                    <div className="sidebar-user-info">
+                        <User size={16} />
+                        <span>{user?.username}</span>
+                    </div>
+                    <button className="sidebar-logout-btn" onClick={logout} title="Logout">
+                        <LogOut size={16} />
+                    </button>
                 </div>
             </aside>
 
@@ -195,7 +249,35 @@ export default function DashboardLayout({ children, activeTab, onTabChange, onAd
 
                         <NotificationCenter />
 
-                        <img src="https://i.pravatar.cc/100?img=11" alt="User" className="avatar" />
+                        <div className="avatar-wrapper" ref={avatarDropdownRef}>
+                            <img
+                                src={avatarUrl}
+                                alt={user?.username}
+                                className="avatar"
+                                onClick={() => setAvatarDropdown(!avatarDropdown)}
+                                onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
+                            />
+                            <div className="avatar-fallback" onClick={() => setAvatarDropdown(!avatarDropdown)}>
+                                {user?.username?.[0]?.toUpperCase() || '?'}
+                            </div>
+                            {avatarDropdown && (
+                                <div className="avatar-dropdown">
+                                    <div className="avatar-dropdown-header">
+                                        <span className="avatar-dropdown-name">{user?.username}</span>
+                                        <span className="avatar-dropdown-role">{user?.role}</span>
+                                    </div>
+                                    <button className="avatar-dropdown-item" onClick={() => avatarInputRef.current?.click()}>
+                                        <Camera size={14} />
+                                        Change Photo
+                                    </button>
+                                    <button className="avatar-dropdown-item logout" onClick={logout}>
+                                        <LogOut size={14} />
+                                        Logout
+                                    </button>
+                                    <input ref={avatarInputRef} type="file" accept="image/*" style={{display:'none'}} onChange={handleAvatarUpload} />
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </header>
 

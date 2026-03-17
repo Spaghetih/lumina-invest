@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { fetchAuth } from '../services/fetchAuth';
 
 const CurrencyContext = createContext();
 
@@ -24,7 +25,7 @@ export const CurrencyProvider = ({ children }) => {
     useEffect(() => {
         const fetchRate = async () => {
             try {
-                const res = await fetch('http://localhost:3001/api/fx');
+                const res = await fetchAuth('/api/fx');
                 const data = await res.json();
                 if (data.rate) {
                     setFxRate(data.rate);

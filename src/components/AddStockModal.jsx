@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { X, Search, CheckCircle, AlertCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { fetchAuth } from '../services/fetchAuth';
 
 export default function AddStockModal({ isOpen, onClose, onAdd, initialTicker = '' }) {
     const [ticker, setTicker] = useState(initialTicker);
@@ -23,7 +24,7 @@ export default function AddStockModal({ isOpen, onClose, onAdd, initialTicker = 
         setSuccessQuote(null);
 
         try {
-            const response = await fetch(`http://localhost:3001/api/quotes?symbols=${targetTicker.toUpperCase()}`);
+            const response = await fetchAuth(`/api/quotes?symbols=${targetTicker.toUpperCase()}`);
             if (!response.ok) throw new Error('API Error');
 
             const data = await response.json();

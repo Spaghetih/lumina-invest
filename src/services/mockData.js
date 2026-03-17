@@ -1,36 +1,26 @@
 // Mock Data Service for Stock Dashboard
+import { fetchAuth } from '../services/fetchAuth';
 
 const DEFAULT_STOCKS = [];
 
 export const loadPortfolio = async (portfolioId = 'default') => {
   try {
-    const response = await fetch(`http://localhost:3001/api/portfolio?id=${portfolioId}`);
+    const response = await fetchAuth(`/api/portfolio?id=${portfolioId}`);
     if (response.ok) {
       const data = await response.json();
-      if (Array.isArray(data) && data.length > 0) {
-        localStorage.setItem(`lumina_portfolio_${portfolioId}`, JSON.stringify(data));
+      if (Array.isArray(data)) {
         return data;
       }
     }
   } catch (e) {
     console.error("Failed to load portfolio from backend", e);
   }
-
-  const saved = localStorage.getItem(`lumina_portfolio_${portfolioId}`) || localStorage.getItem('lumina_portfolio');
-  if (saved) {
-    try {
-      return JSON.parse(saved);
-    } catch (e) {
-      console.error("Failed to parse saved portfolio", e);
-    }
-  }
   return DEFAULT_STOCKS;
 };
 
 export const savePortfolio = async (stocks, portfolioId = 'default') => {
-  localStorage.setItem(`lumina_portfolio_${portfolioId}`, JSON.stringify(stocks));
   try {
-    await fetch(`http://localhost:3001/api/portfolio?id=${portfolioId}`, {
+    await fetchAuth(`/api/portfolio?id=${portfolioId}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(stocks)
@@ -43,7 +33,7 @@ export const savePortfolio = async (stocks, portfolioId = 'default') => {
 // Portfolio management helpers
 export const listPortfolios = async () => {
   try {
-    const res = await fetch('http://localhost:3001/api/portfolios');
+    const res = await fetchAuth('/api/portfolios');
     if (res.ok) return await res.json();
   } catch (e) {
     console.error("Failed to list portfolios", e);
@@ -52,7 +42,7 @@ export const listPortfolios = async () => {
 };
 
 export const createPortfolio = async (name) => {
-  const res = await fetch('http://localhost:3001/api/portfolios', {
+  const res = await fetchAuth('/api/portfolios', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name })
@@ -61,7 +51,7 @@ export const createPortfolio = async (name) => {
 };
 
 export const renamePortfolio = async (id, name) => {
-  const res = await fetch(`http://localhost:3001/api/portfolios/${id}`, {
+  const res = await fetchAuth(`/api/portfolios/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name })
@@ -70,7 +60,7 @@ export const renamePortfolio = async (id, name) => {
 };
 
 export const deletePortfolio = async (id) => {
-  const res = await fetch(`http://localhost:3001/api/portfolios/${id}`, { method: 'DELETE' });
+  const res = await fetchAuth(`/api/portfolios/${id}`, { method: 'DELETE' });
   return await res.json();
 };
 
@@ -128,7 +118,7 @@ export const subscribeToMarketUpdates = (stocks, callback) => {
   const fetchQuotes = async () => {
     try {
       const symbols = stocks.map(s => s.id).join(',');
-      const response = await fetch(`http://localhost:3001/api/quotes?symbols=${symbols}`);
+      const response = await fetchAuth(`/api/quotes?symbols=${symbols}`);
       if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
 

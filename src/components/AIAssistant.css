@@ -613,3 +613,14 @@
     margin-top: 8px;
     opacity: 0.7;
 }
+
+
+/* Claude button variant */
+.ai-key-submit.claude {
+    background: linear-gradient(135deg, #d4a574, #c49664);
+    color: #1a1a1a;
+}
+
+.ai-key-submit.claude:hover {
+    background: linear-gradient(135deg, #e0b584, #d4a574);
+}

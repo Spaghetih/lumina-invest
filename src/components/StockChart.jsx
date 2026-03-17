@@ -4,6 +4,7 @@ import { Search, TrendingUp, TrendingDown, Volume2, GitCompare } from 'lucide-re
 import { useCurrency } from '../contexts/CurrencyContext';
 import NewsFeed from './NewsFeed';
 import './StockChart.css';
+import { fetchAuth } from '../services/fetchAuth';
 
 const TIMEFRAMES = ['1D', '1W', '1M', '3M', '6M', '1Y', '5Y'];
 
@@ -81,7 +82,7 @@ const StockChart = ({ stocks = [] }) => {
 
     // Fetch historical data for a given symbol
     const fetchHistorical = useCallback(async (sym, tf) => {
-        const res = await fetch(`http://localhost:3001/api/historical/${sym}?range=${tf}`);
+        const res = await fetchAuth(`/api/historical/${sym}?range=${tf}`);
         if (!res.ok) throw new Error(`Failed to fetch data for ${sym}`);
         const data = await res.json();
         return data.map(item => ({
@@ -163,7 +164,7 @@ const StockChart = ({ stocks = [] }) => {
     const fetchQuote = useCallback(async (sym) => {
         if (!sym) return;
         try {
-            const res = await fetch(`http://localhost:3001/api/quotes?symbols=${sym}`);
+            const res = await fetchAuth(`/api/quotes?symbols=${sym}`);
             if (!res.ok) return;
             const data = await res.json();
             if (data && data.length > 0) {

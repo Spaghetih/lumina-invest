@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Filter, Loader } from 'lucide-react';
 import './Screener.css';
+import { fetchAuth } from '../services/fetchAuth';
 
 const PRESETS = [
     { key: 'gainers', label: 'Top Gainers' },
@@ -43,7 +44,7 @@ const Screener = ({ onViewChart }) => {
         setLoading(true);
         setError(null);
         try {
-            const res = await fetch(`http://localhost:3001/api/screener?preset=${encodeURIComponent(preset)}`);
+            const res = await fetchAuth(`/api/screener?preset=${encodeURIComponent(preset)}`);
             if (!res.ok) throw new Error('Failed to fetch screener data');
             const data = await res.json();
             const list = Array.isArray(data) ? data : data.quotes || data.results || data.stocks || [];

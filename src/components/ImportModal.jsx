@@ -3,6 +3,7 @@ import { Upload, FileSpreadsheet, Check, AlertCircle, X, ArrowRight, Pencil, Sea
 import toast from 'react-hot-toast';
 import { useNotifications } from '../contexts/NotificationContext';
 import './ImportModal.css';
+import { fetchAuth } from '../services/fetchAuth';
 
 // Known Revolut ticker → Yahoo Finance ticker mappings
 const REVOLUT_TICKER_MAP = {
@@ -223,7 +224,7 @@ const ImportModal = ({ isOpen, onClose, onImport }) => {
         setValidating(true);
         const symbols = positions.map(p => p.ticker).join(',');
         try {
-            const response = await fetch(`http://localhost:3001/api/quotes?symbols=${symbols}`);
+            const response = await fetchAuth(`/api/quotes?symbols=${symbols}`);
             const quotes = response.ok ? await response.json() : [];
 
             const updated = positions.map(p => {
@@ -305,7 +306,7 @@ const ImportModal = ({ isOpen, onClose, onImport }) => {
 
         // Validate the remapped ticker
         try {
-            const response = await fetch(`http://localhost:3001/api/quotes?symbols=${upper}`);
+            const response = await fetchAuth(`/api/quotes?symbols=${upper}`);
             const quotes = response.ok ? await response.json() : [];
             const quote = quotes.find(q => q.symbol === upper);
             const newUpdated = [...updated];
@@ -334,7 +335,7 @@ const ImportModal = ({ isOpen, onClose, onImport }) => {
             }
 
             const symbols = validPositions.map(p => p.ticker).join(',');
-            const response = await fetch(`http://localhost:3001/api/quotes?symbols=${symbols}`);
+            const response = await fetchAuth(`/api/quotes?symbols=${symbols}`);
             const quotes = response.ok ? await response.json() : [];
 
             for (const pos of validPositions) {

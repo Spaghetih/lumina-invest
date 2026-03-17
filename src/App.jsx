@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from './contexts/AuthContext';
+import LoginPage from './components/LoginPage';
 import DashboardLayout from './components/DashboardLayout';
 import PortfolioSummary from './components/PortfolioSummary';
 import LiveStockList from './components/LiveStockList';
@@ -18,9 +20,10 @@ import Heatmap from './components/Heatmap';
 import TransactionHistory, { logTransaction } from './components/TransactionHistory';
 import CorrelationMatrix from './components/CorrelationMatrix';
 import NewsFeed from './components/NewsFeed';
+import AdminPanel from './components/AdminPanel';
 import { loadPortfolio, savePortfolio, subscribeToMarketUpdates, calculatePortfolioMetrics, generateHistoricalData, listPortfolios, createPortfolio, deletePortfolio, renamePortfolio } from './services/mockData';
 
-function App() {
+function Dashboard() {
   const [stocks, setStocks] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [historicalData, setHistoricalData] = useState([]);
@@ -291,6 +294,12 @@ function App() {
         </div>
       )}
 
+      {activeTab === 'Admin' && (
+        <div className="fade-in">
+          <AdminPanel />
+        </div>
+      )}
+
       <AddStockModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
@@ -304,6 +313,25 @@ function App() {
       />
     </DashboardLayout>
   );
+}
+
+function App() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="app-loader fade-in">
+        <div className="spinner"></div>
+        <p style={{ fontWeight: 500, color: "var(--text-secondary)", marginTop: "8px" }}>Loading...</p>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <LoginPage />;
+  }
+
+  return <Dashboard />;
 }
 
 export default App;

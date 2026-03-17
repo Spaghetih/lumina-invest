@@ -28,3 +28,10 @@ dist-ssr
 .codex_token.json
 portfolio.json
 *.csv
+
+# Auth & User Data (NEVER push)
+auth/.jwt_secret
+auth/*.db
+auth/*.db-shm
+auth/*.db-wal
+data/
