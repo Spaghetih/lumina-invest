@@ -4,11 +4,13 @@
 
 **Terminal-grade portfolio intelligence for the modern investor**
 
-<img src="docs/dashboard.png" alt="Lumina Invest — Dashboard" width="820">
-<br>
-<img src="docs/light-mode.png" alt="Lumina Invest — Light Mode" width="820">
-<br>
-<img src="docs/charts.png" alt="Lumina Invest — Charts & News" width="820">
+<img src="docs/screenshots/login-page.png" alt="Lumina Invest — Login" width="820">
+<br><br>
+<img src="docs/screenshots/dashboard.png" alt="Lumina Invest — Dashboard" width="820">
+<br><br>
+<img src="docs/screenshots/chart.png" alt="Lumina Invest — Stock Charts" width="820">
+<br><br>
+<img src="docs/screenshots/dividends.png" alt="Lumina Invest — Dividends Calendar" width="820">
 
 [![React](https://img.shields.io/badge/React-19.2-61DAFB?style=flat-square&logo=react&logoColor=white)](https://react.dev)
 [![Vite](https://img.shields.io/badge/Vite-7.3-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vite.dev)
@@ -61,8 +63,12 @@ Lumina Invest is a full-featured stock portfolio dashboard inspired by Bloomberg
 | **SQLite Database** | All user data stored in SQLite (WAL mode) via better-sqlite3. No plain JSON files. |
 | **Per-User Isolation** | Each user's portfolios, API keys, avatars, and settings are fully isolated. |
 | **Admin Panel** | First registered user is admin. Manage users, promote/demote roles, view stats. |
-| **Rate Limiting** | 5 login attempts max, 15-minute IP lockout to prevent brute force. |
-| **Profile Avatars** | Upload a profile photo (2MB max). Displayed in topbar with dropdown menu. |
+| **Rate Limiting** | Global API rate limiting (200 req/15min), AI-specific limits, upload limits. |
+| **Path Traversal Protection** | All user-supplied IDs sanitized + resolved path validated against base directory. |
+| **Demo Account** | Read-only `demo/demo` account with pre-loaded portfolio for safe exploration. |
+| **Onboarding Tutorial** | Interactive 6-step walkthrough for new accounts with zero positions. |
+| **Profile Avatars** | Upload a profile photo (2MB max, MIME validated). Displayed in topbar with dropdown menu. |
+| **HTTPS Enforced** | Automatic HTTP→HTTPS redirect via nginx + Cloudflare Tunnel. |
 
 ### Market Intelligence
 
@@ -73,7 +79,7 @@ Lumina Invest is a full-featured stock portfolio dashboard inspired by Bloomberg
 | **Watchlist** | Track tickers without owning them. Add/remove, live quotes, 52-week range. Stored in localStorage. |
 | **Stock Screener** | Pre-built screens: Top Gainers, Top Losers, Most Active, Trending, Undervalued Large Caps, Growth Tech, Small Cap Gainers. |
 | **News Feed** | Per-ticker news with source, timestamp, and external links. Displayed under stock charts. |
-| **Correlation Matrix** | Heatmap showing return correlations between all portfolio positions over 6 months of data. |
+| **Correlation Matrix** | Return correlation heatmap with period selector (1M–1Y), diversification score, top/bottom pairs, and per-stock volatility. |
 
 ### Analytics & Tools
 
