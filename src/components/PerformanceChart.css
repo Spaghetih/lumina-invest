@@ -84,10 +84,20 @@
         flex-wrap: wrap;
         gap: 6px;
         padding: 8px 12px !important;
+        justify-content: flex-start;
+    }
+    .chart-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 8px;
     }
     .time-btn {
         padding: 6px 10px !important;
         font-size: 0.72rem !important;
-        min-height: 32px;
+        min-height: 36px;
+        min-width: 36px;
+    }
+    .chart-container .recharts-responsive-container {
+        min-height: 250px;
     }
 }

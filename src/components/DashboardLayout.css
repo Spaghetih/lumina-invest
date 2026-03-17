@@ -793,68 +793,20 @@
         height: 100dvh;
     }
 
-    /* Hide desktop sidebar completely */
+    /* HIDE sidebar completely on mobile — bottom nav replaces it */
     .sidebar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        height: 100dvh;
-        width: 280px;
-        z-index: 200;
-        background: #0a0a0a;
-        border-right: 1px solid #333;
-        transform: translateX(-100%);
-        transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .sidebar.mobile-open {
-        transform: translateX(0);
-    }
-    .sidebar .logo-text,
-    .sidebar .nav-item span {
-        opacity: 1;
+        display: none !important;
     }
 
-    /* Mobile Overlay */
-    .mobile-overlay {
-        display: block;
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.6);
-        z-index: 199;
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.2s ease;
-        -webkit-backdrop-filter: blur(4px);
-        backdrop-filter: blur(4px);
-    }
-    .mobile-overlay.open {
-        opacity: 1;
-        visibility: visible;
-    }
-
+    /* Hide hamburger menu — no longer needed */
     .mobile-menu-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: transparent;
-        color: var(--text-primary);
-        border: none;
-        cursor: pointer;
-        padding: 8px;
-        min-width: 44px;
-        min-height: 44px;
-        -webkit-tap-highlight-color: transparent;
+        display: none !important;
     }
-
     .mobile-close-btn {
-        display: flex;
-        background: transparent;
-        color: var(--text-secondary);
-        border: none;
-        cursor: pointer;
-        padding: 8px;
-        min-width: 44px;
-        min-height: 44px;
+        display: none !important;
+    }
+    .mobile-overlay {
+        display: none !important;
     }
 
     /* Main Content */

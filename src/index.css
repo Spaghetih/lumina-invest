@@ -697,8 +697,12 @@ h1, h2, h3, h4, h5, h6 {
         grid-template-columns: 1fr;
     }
     .dashboard-content {
-        padding: 0 12px 12px;
-        gap: 12px;
+        padding: 0 8px 12px;
+        gap: 10px;
+    }
+    .dashboard-content h2 {
+        padding: 0 4px;
+        font-size: 0.85rem;
     }
     h2 {
         font-size: 1.1rem;
