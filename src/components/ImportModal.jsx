@@ -35,6 +35,8 @@ const REVOLUT_TICKER_MAP = {
     'STM': 'STM.PA',    // STMicroelectronics
     'TEP': 'TEP.PA',    // Teleperformance
     'ML': 'ML.PA',      // Michelin
+    'XAGUSD': 'SI=F',   // Silver
+    'XAUUSD': 'GC=F',   // Gold
 };
 
 // Apply ticker mapping

@@ -44,8 +44,10 @@ function Dashboard() {
 
   const [chartTicker, setChartTicker] = useState('');
 
+  const TICKER_ALIASES = { 'XAGUSD': 'SI=F', 'XAUUSD': 'GC=F', 'SILVER': 'SI=F', 'GOLD': 'GC=F' };
   const handleSearch = (query) => {
-    setChartTicker(query.toUpperCase());
+    const upper = query.toUpperCase();
+    setChartTicker(TICKER_ALIASES[upper] || upper);
     setActiveTab('Charts');
   };
 

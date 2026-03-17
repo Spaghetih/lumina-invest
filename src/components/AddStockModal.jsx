@@ -3,6 +3,11 @@ import { X, Search, CheckCircle, AlertCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { fetchAuth } from '../services/fetchAuth';
 
+const TICKER_ALIASES = {
+    'XAGUSD': 'SI=F', 'XAUUSD': 'GC=F', 'SILVER': 'SI=F', 'GOLD': 'GC=F',
+};
+const resolveTicker = (t) => TICKER_ALIASES[t.toUpperCase()] || t;
+
 export default function AddStockModal({ isOpen, onClose, onAdd, initialTicker = '' }) {
     const [ticker, setTicker] = useState(initialTicker);
     const [shares, setShares] = useState('');
@@ -13,7 +18,8 @@ export default function AddStockModal({ isOpen, onClose, onAdd, initialTicker = 
     const [successQuote, setSuccessQuote] = useState(null);
 
     const validateTicker = async (symOverride) => {
-        const targetTicker = typeof symOverride === 'string' ? symOverride : ticker;
+        const raw = typeof symOverride === 'string' ? symOverride : ticker;
+        const targetTicker = resolveTicker(raw);
         if (!targetTicker) {
             setError('Please enter a ticker symbol.');
             return;
@@ -34,6 +40,7 @@ export default function AddStockModal({ isOpen, onClose, onAdd, initialTicker = 
                 setError(`Ticker ${targetTicker} not found.`);
             } else {
                 setSuccessQuote(quote);
+                if (targetTicker !== raw) setTicker(targetTicker);
                 // Pre-fill avg price with current market price if empty
                 if (!avgPrice) {
                     setAvgPrice(quote.regularMarketPrice.toFixed(2));
