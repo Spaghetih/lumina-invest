@@ -614,7 +614,6 @@
     opacity: 0.7;
 }
 
-
 /* Claude button variant */
 .ai-key-submit.claude {
     background: linear-gradient(135deg, #d4a574, #c49664);
@@ -623,4 +622,15 @@
 
 .ai-key-submit.claude:hover {
     background: linear-gradient(135deg, #e0b584, #d4a574);
+}
+
+/* == Mobile == */
+@media (max-width: 768px) {
+    .ai-container { height: calc(100vh - 120px); }
+    .ai-messages { padding: 10px; }
+    .ai-message { max-width: 95%; }
+    .ai-input-form { padding: 8px; }
+    .ai-input-form input { font-size: 16px; }
+    .ai-header { flex-direction: column; gap: 8px; align-items: flex-start; }
+    .ai-provider-select { width: 100%; }
 }

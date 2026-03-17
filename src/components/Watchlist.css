@@ -319,13 +319,12 @@
 }
 
 /* Mobile */
-@media (max-width: 768px) {
-    .watchlist-table-wrap {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
 
-    .watchlist-table {
-        min-width: 700px;
-    }
+
+/* == Mobile == */
+@media (max-width: 768px) {
+    .watchlist-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .watchlist-table { min-width: 650px; }
+    .wl-header { flex-direction: column; gap: 8px; align-items: stretch; }
+    .wl-search { width: 100%; }
 }

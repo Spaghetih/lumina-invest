@@ -379,23 +379,16 @@
 }
 
 /* Responsive */
+
+
+/* == Mobile == */
 @media (max-width: 1200px) {
-    .pa-stats-row {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .pa-main-grid {
-        grid-template-columns: 1fr;
-    }
+    .pa-stats-row { grid-template-columns: 1fr 1fr; }
+    .pa-main-grid { grid-template-columns: 1fr; }
 }
-
 @media (max-width: 768px) {
-    .pa-stats-row {
-        grid-template-columns: 1fr;
-    }
-
-    .pa-allocation,
-    .pa-positions {
-        padding: 10px;
-    }
+    .pa-stats-row { grid-template-columns: 1fr; }
+    .pa-allocation, .pa-positions { padding: 10px; }
+    .pa-positions-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .pa-positions-table { min-width: 550px; }
 }

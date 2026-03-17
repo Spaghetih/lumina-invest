@@ -137,24 +137,18 @@
     color: var(--status-down);
 }
 
-@media (max-width: 1200px) {
-    .summary-cards {
-        flex-wrap: wrap;
-    }
-    .summary-card {
-        min-width: 140px;
-    }
-}
 
+/* == Mobile == */
+@media (max-width: 1200px) {
+    .summary-cards { flex-wrap: wrap; }
+    .summary-card { min-width: 120px; }
+}
 @media (max-width: 768px) {
-    .summary-cards {
-        flex-direction: column;
-    }
-    .summary-card {
-        border-right: none;
-        border-bottom: 1px solid #333;
-    }
-    .summary-card:last-child {
-        border-bottom: none;
-    }
+    .summary-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+    .summary-card { border-right: 1px solid #333; border-bottom: 1px solid #333; padding: 8px 12px; }
+    .summary-card:nth-child(2n) { border-right: none; }
+    .summary-card:nth-last-child(-n+2) { border-bottom: none; }
+    .card-value { font-size: 0.95rem; }
+    .hero-value { font-size: 1.1rem; }
+    .card-title { font-size: 0.6rem; }
 }

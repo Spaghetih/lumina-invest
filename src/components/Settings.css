@@ -372,44 +372,17 @@ input:checked+.toggle-slider::before {
 }
 
 /* ─── Responsive ─── */
+
+
+/* == Mobile == */
 @media (max-width: 900px) {
-    .settings-grid {
-        grid-template-columns: 1fr;
-    }
+    .settings-grid { grid-template-columns: 1fr; }
 }
-
 @media (max-width: 768px) {
-    .setting-row {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-    }
-
-    .setting-segmented {
-        flex-wrap: wrap;
-        width: 100%;
-        gap: 4px;
-    }
-
-    .setting-segmented button {
-        flex: 1;
-        min-width: 40px;
-    }
-
-    .setting-toggle-pill {
-        width: 100%;
-    }
-
-    .setting-toggle-pill span {
-        flex: 1;
-        text-align: center;
-    }
-
-    .setting-action-btn {
-        width: 100%;
-    }
-
-    .danger-confirm-actions {
-        flex-direction: column;
-    }
+    .setting-row { flex-direction: column; gap: 10px; }
+    .segmented-control { width: 100%; flex-wrap: wrap; }
+    .toggle-pill { flex: 1; text-align: center; }
+    .setting-actions .btn-secondary, .setting-actions .btn-primary { width: 100%; }
+    .danger-confirm-actions { flex-direction: column; }
+    .danger-confirm-actions button { width: 100%; }
 }

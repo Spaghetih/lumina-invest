@@ -99,3 +99,11 @@
     font-family: var(--font-mono);
     font-size: 0.85rem;
 }
+
+/* == Mobile == */
+@media (max-width: 768px) {
+    .heatmap-container { padding: 10px; border-radius: 0; border-left: none; border-right: none; }
+    .hm-chart-wrapper { min-height: 250px; }
+    .hm-header { margin-bottom: 8px; }
+    .hm-title { font-size: 0.78rem; }
+}

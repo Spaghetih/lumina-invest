@@ -201,20 +201,11 @@
 }
 
 /* Mobile */
+
+
+/* == Mobile == */
 @media (max-width: 768px) {
-    .screener-table-wrap {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .screener-table {
-        min-width: 650px;
-    }
-
-    .screener-presets {
-        overflow-x: auto;
-        flex-wrap: nowrap;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: 4px;
-    }
+    .screener-presets { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 4px; }
+    .screener-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .screener-table { min-width: 600px; }
 }

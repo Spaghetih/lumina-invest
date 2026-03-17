@@ -326,7 +326,6 @@
 
 /* Mobile */
 
-
     .stocks-list {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
@@ -346,66 +345,26 @@
 }
 
 /* ── Mobile ── */
+
+
+/* == Mobile == */
 @media (max-width: 768px) {
-    .live-stocks-card {
-        border-radius: 0;
-    }
-
-    .card-header {
-        padding: 10px 14px;
-    }
-
-    .list-header {
-        display: none;
-    }
-
-    .stocks-list {
-        overflow-x: visible;
-    }
-
+    .live-stocks-card { border-radius: 0; border-left: none; border-right: none; }
+    .card-header { padding: 10px 12px; }
+    .list-header { display: none; }
+    .stocks-list { overflow-x: visible; }
     .stock-row {
-        display: flex;
-        flex-wrap: wrap;
-        min-width: 0;
-        padding: 10px 14px;
-        gap: 4px 12px;
-        position: relative;
+        display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto auto;
+        min-width: 0; padding: 10px 12px; gap: 2px 12px; position: relative;
     }
-
-    .stock-info {
-        flex: 1 1 60%;
-        min-width: 0;
-    }
-
-    .stock-name {
-        max-width: 120px;
-    }
-
-    .stock-shares-col {
-        display: none;
-    }
-
-    .stock-pnl-col {
-        flex: 0 0 auto;
-        text-align: right;
-    }
-
+    .stock-info { grid-column: 1; grid-row: 1; min-width: 0; }
+    .stock-name { max-width: 140px; overflow: hidden; text-overflow: ellipsis; }
+    .stock-shares-col { display: none; }
+    .stock-pnl-col { grid-column: 2; grid-row: 1; text-align: right; }
     .stock-price-col {
-        flex: 1 1 100%;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        padding-top: 4px;
+        grid-column: 1 / -1; grid-row: 2; display: flex;
+        justify-content: space-between; align-items: center; padding-top: 2px;
     }
-
-    .stock-price {
-        font-size: 0.85rem;
-    }
-
-    .delete-stock-btn {
-        opacity: 0.5;
-        position: absolute;
-        top: 8px;
-        right: 8px;
-    }
+    .stock-price { font-size: 0.82rem; }
+    .delete-stock-btn { opacity: 0.4; position: absolute; top: 6px; right: 6px; width: 20px; height: 20px; }
 }

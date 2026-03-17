@@ -168,19 +168,12 @@
 .text-up { color: #00ff41 !important; }
 .text-down { color: #ff3333 !important; }
 
+
+/* == Mobile == */
 @media (max-width: 768px) {
-    .bt-form {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    .bt-field input {
-        width: 100%;
-    }
-    .bt-stats-row {
-        flex-direction: column;
-    }
-    .bt-stat {
-        border-right: none;
-        border-bottom: 1px solid #333;
-    }
+    .bt-form { flex-direction: column; }
+    .bt-form input, .bt-form select, .bt-form button { width: 100%; }
+    .bt-stats-row { flex-direction: column; }
+    .bt-stat { border-right: none; border-bottom: 1px solid #333; padding: 10px; }
+    .bt-stat:last-child { border-bottom: none; }
 }

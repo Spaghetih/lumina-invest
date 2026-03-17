@@ -297,12 +297,6 @@
     gap: 1px;
 }
 
-@media (max-width: 1200px) {
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
 /* Currency Toggle — Terminal style */
 .currency-toggle {
     display: flex;
@@ -571,102 +565,6 @@
 }
 
 /* Mobile */
-@media (max-width: 768px) {
-
-    .dashboard-wrapper {
-        flex-direction: column;
-    }
-
-    .main-content {
-        padding: 0 8px 8px 8px;
-    }
-
-    .topbar {
-        padding: 8px 12px;
-        margin-top: 0;
-        margin-bottom: 8px;
-        flex-direction: column;
-        gap: 8px;
-        align-items: stretch;
-        height: auto;
-    }
-
-    .topbar-actions {
-        justify-content: space-between;
-        width: 100%;
-        gap: 6px;
-    }
-
-    .import-btn span {
-        display: none;
-    }
-
-    .search-bar {
-        width: 100%;
-    }
-
-    .mobile-menu-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: transparent;
-        color: var(--text-primary);
-        border: none;
-        cursor: pointer;
-        padding: 4px;
-    }
-
-    .mobile-close-btn {
-        display: flex;
-        background: transparent;
-        color: var(--text-secondary);
-        border: none;
-        cursor: pointer;
-    }
-
-    .mobile-overlay {
-        display: block;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.7);
-        z-index: 99;
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.15s ease;
-    }
-
-    .mobile-overlay.open {
-        opacity: 1;
-        visibility: visible;
-    }
-
-    .sidebar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        height: 100vh;
-        width: 240px;
-        z-index: 100;
-        background: #0a0a0a;
-        border-right: 1px solid #333;
-        border-radius: 0;
-        transform: translateX(-100%);
-        transition: transform 0.15s ease;
-    }
-
-    .sidebar.mobile-open {
-        transform: translateX(0);
-    }
-
-    .sidebar .logo-text,
-    .sidebar .nav-item span {
-        opacity: 1;
-    }
-}
-
 
 /* Sidebar User Section */
 .sidebar-user {
@@ -732,7 +630,6 @@
     color: #ff5555;
     background: rgba(255, 85, 85, 0.1);
 }
-
 
 /* Avatar Wrapper */
 .avatar-wrapper {
@@ -835,27 +732,43 @@
     color: #ff5555;
 }
 
-@media (max-width: 480px) {
+
+/* == Responsive == */
+@media (max-width: 1200px) {
+    .dashboard-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+    .dashboard-wrapper { flex-direction: column; }
+    .main-content { padding: 0; height: auto; min-height: 100vh; }
+    .topbar { padding: 8px 12px; height: auto; flex-wrap: wrap; gap: 8px; }
+    .topbar-left { width: 100%; gap: 8px; }
+    .search-bar { flex: 1; width: auto; min-width: 0; }
+    .topbar-actions { width: 100%; justify-content: flex-end; flex-wrap: wrap; gap: 4px; }
+    .import-btn span { display: none; }
+    .mobile-menu-btn {
+        display: flex; align-items: center; justify-content: center;
+        background: transparent; color: var(--text-primary); border: none; cursor: pointer; padding: 4px;
+    }
+    .mobile-close-btn { display: flex; background: transparent; color: var(--text-secondary); border: none; cursor: pointer; }
+    .mobile-overlay {
+        display: block; position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+        z-index: 99; opacity: 0; visibility: hidden; transition: all 0.15s ease;
+    }
+    .mobile-overlay.open { opacity: 1; visibility: visible; }
+    .sidebar {
+        position: fixed; top: 0; left: 0; height: 100vh; width: 260px; z-index: 100;
+        background: #0a0a0a; border-right: 1px solid #333;
+        transform: translateX(-100%); transition: transform 0.2s ease;
+    }
+    .sidebar.mobile-open { transform: translateX(0); }
+    .sidebar .logo-text, .sidebar .nav-item span { opacity: 1; }
     .notifications-dropdown {
-        width: calc(100vw - 20px);
-        right: -60px;
-        max-width: 340px;
+        position: fixed; top: auto; bottom: 0; left: 0; right: 0;
+        width: 100vw; max-height: 60vh; border-radius: 12px 12px 0 0;
     }
-
-    .avatar-dropdown {
-        right: -10px;
-        width: 180px;
-    }
-
-    .portfolio-dropdown {
-        min-width: 180px;
-    }
-
-    .topbar-actions {
-        gap: 4px;
-    }
-
-    .search-bar input {
-        font-size: 16px;
-    }
+    .avatar-dropdown { right: 0; min-width: 180px; }
+    .portfolio-dropdown { min-width: 200px; }
+    .portfolio-selector-btn span { max-width: 80px; overflow: hidden; text-overflow: ellipsis; }
+    .currency-toggle { padding: 4px 6px; font-size: 0.75rem; }
 }
