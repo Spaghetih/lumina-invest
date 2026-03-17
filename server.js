@@ -30,6 +30,8 @@ function safeResolvePath(baseDir, ...segments) {
 const app = express();
 const PORT = 3001;
 
+app.set('trust proxy', 1);
+
 app.use(cors({
     origin: ['https://invest.unver.cloud', 'http://localhost:5173', 'http://127.0.0.1:5173'],
     credentials: true
@@ -58,14 +60,18 @@ const uploadLimiter = rateLimit({
     message: { error: 'Too many uploads, try again later.' }
 });
 
-app.use('/api', apiLimiter);
+
 // Auth routes (public)
 setupAuthRoutes(app);
 
 // Protect all /api/ routes except /api/auth/*
 app.use('/api', (req, res, next) => {
     if (req.path.startsWith('/auth/')) return next();
-    return authMiddleware(req, res, next);
+    // Apply rate limit to authenticated routes only
+    apiLimiter(req, res, (err) => {
+        if (err) return;
+        authMiddleware(req, res, next);
+    });
 });
 
 // Per-user helper functions
