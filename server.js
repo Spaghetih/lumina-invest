@@ -8,14 +8,57 @@ import http from 'http';
 import { URL, fileURLToPath } from 'url';
 import yahooFinanceLib from 'yahoo-finance2';
 import multer from 'multer';
+import rateLimit from 'express-rate-limit';
+
 
 const yahooFinance = new yahooFinanceLib({ validation: { logErrors: false } });
+
+// --- Security: Path Traversal Protection ---
+function sanitizeId(id) {
+    if (!id || typeof id !== 'string') return null;
+    // Only allow alphanumeric, hyphens, underscores
+    if (!/^[a-zA-Z0-9_-]+$/.test(id)) return null;
+    return id;
+}
+
+function safeResolvePath(baseDir, ...segments) {
+    const resolved = path.resolve(baseDir, ...segments);
+    if (!resolved.startsWith(path.resolve(baseDir))) return null;
+    return resolved;
+}
+
 const app = express();
 const PORT = 3001;
 
-app.use(cors());
-app.use(express.json());
+app.use(cors({
+    origin: ['https://invest.unver.cloud', 'http://localhost:5173', 'http://127.0.0.1:5173'],
+    credentials: true
+}));
+app.use(express.json({ limit: '1mb' }));
 
+
+// --- Security: Rate Limiting ---
+const apiLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 min
+    max: 200, // 200 requests per 15 min per IP
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Too many requests, please try again later.' }
+});
+
+const aiLimiter = rateLimit({
+    windowMs: 60 * 1000, // 1 min
+    max: 10, // 10 AI requests per minute
+    message: { error: 'Too many AI requests, slow down.' }
+});
+
+const uploadLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 10, // 10 uploads per 15 min
+    message: { error: 'Too many uploads, try again later.' }
+});
+
+app.use('/api', apiLimiter);
 // Auth routes (public)
 setupAuthRoutes(app);
 
@@ -68,7 +111,9 @@ app.post('/api/portfolios', (req, res) => {
 app.put('/api/portfolios/:id', (req, res) => {
     const { name } = req.body;
     const meta = loadUserMeta(req.user.id);
-    const p = meta.portfolios.find(p => p.id === req.params.id);
+    const pId = sanitizeId(req.params.id);
+    if (!pId) return res.status(400).json({ error: 'Invalid portfolio ID' });
+    const p = meta.portfolios.find(p => p.id === pId);
     if (!p) return res.status(404).json({ error: 'Not found' });
     p.name = name;
     saveUserMeta(req.user.id, meta);
@@ -78,15 +123,18 @@ app.put('/api/portfolios/:id', (req, res) => {
 app.delete('/api/portfolios/:id', (req, res) => {
     const meta = loadUserMeta(req.user.id);
     if (meta.portfolios.length <= 1) return res.status(400).json({ error: 'Cannot delete last portfolio' });
-    meta.portfolios = meta.portfolios.filter(p => p.id !== req.params.id);
+    const delId = sanitizeId(req.params.id);
+    if (!delId) return res.status(400).json({ error: 'Invalid portfolio ID' });
+    meta.portfolios = meta.portfolios.filter(p => p.id !== delId);
     saveUserMeta(req.user.id, meta);
-    const fp = getUserPortfolioPath(req.user.id, req.params.id);
+    const fp = getUserPortfolioPath(req.user.id, delId);
     if (fs.existsSync(fp)) fs.unlinkSync(fp);
     res.json({ success: true });
 });
 
 app.get('/api/portfolio', (req, res) => {
-    const id = req.query.id || 'default';
+    const id = sanitizeId(req.query.id || 'default');
+    if (!id) return res.status(400).json({ error: 'Invalid portfolio ID' });
     const fp = getUserPortfolioPath(req.user.id, id);
     if (fs.existsSync(fp)) {
         res.sendFile(fp);
@@ -97,7 +145,10 @@ app.get('/api/portfolio', (req, res) => {
 
 app.post('/api/portfolio', (req, res) => {
     try {
-        const id = req.query.id || 'default';
+        const id = sanitizeId(req.query.id || 'default');
+        if (!id) return res.status(400).json({ error: 'Invalid portfolio ID' });
+        if (!Array.isArray(req.body)) return res.status(400).json({ error: 'Portfolio must be an array' });
+        if (req.body.length > 500) return res.status(400).json({ error: 'Too many positions (max 500)' });
         fs.writeFileSync(getUserPortfolioPath(req.user.id, id), JSON.stringify(req.body, null, 2));
         res.json({ success: true });
     } catch (e) {
@@ -270,7 +321,7 @@ app.post('/api/ai/logout', (req, res) => {
     res.json({ success: true });
 });
 
-app.post('/api/ai/chat', async (req, res) => {
+app.post('/api/ai/chat', aiLimiter, async (req, res) => {
     const data = loadUserAIKey(req.user.id);
     const token = data.apiKey;
     const provider = data.provider || 'openai';
@@ -350,12 +401,13 @@ const avatarUpload = multer({
     fileFilter: (req, file, cb) => {
         const allowed = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
         const ext = path.extname(file.originalname).toLowerCase();
-        if (allowed.includes(ext)) cb(null, true);
+        const allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        if (allowed.includes(ext) && allowedMimes.includes(file.mimetype)) cb(null, true);
         else cb(new Error('Only image files allowed'));
     }
 });
 
-app.post('/api/avatar', avatarUpload.single('avatar'), (req, res) => {
+app.post('/api/avatar', uploadLimiter, avatarUpload.single('avatar'), (req, res) => {
     if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
     // Delete old avatars with different extensions
     const dir = getUserDataDir(req.user.id);
@@ -367,8 +419,10 @@ app.post('/api/avatar', avatarUpload.single('avatar'), (req, res) => {
 });
 
 app.get('/api/avatar/:userId', (req, res) => {
-    const userDir = path.join(process.cwd(), 'data', req.params.userId);
-    if (!fs.existsSync(userDir)) return res.status(404).json({ error: 'Not found' });
+    const userId = sanitizeId(req.params.userId);
+    if (!userId) return res.status(400).json({ error: 'Invalid user ID' });
+    const userDir = safeResolvePath(path.join(process.cwd(), 'data'), userId);
+    if (!userDir || !fs.existsSync(userDir)) return res.status(404).json({ error: 'Not found' });
     const exts = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
     for (const ext of exts) {
         const fp = path.join(userDir, 'avatar' + ext);

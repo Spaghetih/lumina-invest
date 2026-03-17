@@ -5,6 +5,12 @@ import path from 'path';
 import crypto from 'crypto';
 import Database from 'better-sqlite3';
 
+function sanitizeId(id) {
+    if (!id || typeof id !== 'string') return null;
+    if (!/^[a-zA-Z0-9_-]+$/.test(id)) return null;
+    return id;
+}
+
 const DATA_DIR = path.join(process.cwd(), 'data');
 const AUTH_DIR = path.join(process.cwd(), 'auth');
 const JWT_SECRET_FILE = path.join(AUTH_DIR, '.jwt_secret');
@@ -164,27 +170,31 @@ export function setupAuthRoutes(app) {
     app.put('/api/admin/users/:id/role', authMiddleware, adminOnly, (req, res) => {
         const { role } = req.body;
         if (!['user', 'admin'].includes(role)) return res.status(400).json({ error: 'Role must be user or admin' });
-        if (req.params.id === req.user.id) return res.status(400).json({ error: 'Cannot change your own role' });
+        const targetId = sanitizeId(req.params.id);
+        if (!targetId) return res.status(400).json({ error: 'Invalid user ID' });
+        if (targetId === req.user.id) return res.status(400).json({ error: 'Cannot change your own role' });
 
-        const user = db.prepare('SELECT id FROM users WHERE id = ?').get(req.params.id);
+        const user = db.prepare('SELECT id FROM users WHERE id = ?').get(targetId);
         if (!user) return res.status(404).json({ error: 'User not found' });
 
-        db.prepare('UPDATE users SET role = ? WHERE id = ?').run(role, req.params.id);
+        db.prepare('UPDATE users SET role = ? WHERE id = ?').run(role, targetId);
         res.json({ success: true });
     });
 
     // Delete user (admin only)
     app.delete('/api/admin/users/:id', authMiddleware, adminOnly, (req, res) => {
-        if (req.params.id === req.user.id) return res.status(400).json({ error: 'Cannot delete yourself' });
+        const delId = sanitizeId(req.params.id);
+        if (!delId) return res.status(400).json({ error: 'Invalid user ID' });
+        if (delId === req.user.id) return res.status(400).json({ error: 'Cannot delete yourself' });
 
-        const user = db.prepare('SELECT id FROM users WHERE id = ?').get(req.params.id);
+        const user = db.prepare('SELECT id FROM users WHERE id = ?').get(delId);
         if (!user) return res.status(404).json({ error: 'User not found' });
 
         // Delete user data
-        const userDir = path.join(DATA_DIR, req.params.id);
+        const userDir = path.join(DATA_DIR, delId);
         if (fs.existsSync(userDir)) fs.rmSync(userDir, { recursive: true, force: true });
 
-        db.prepare('DELETE FROM users WHERE id = ?').run(req.params.id);
+        db.prepare('DELETE FROM users WHERE id = ?').run(delId);
         res.json({ success: true });
     });
 
