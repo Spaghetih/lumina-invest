@@ -5,13 +5,9 @@
 **Terminal-grade portfolio intelligence for the modern investor**
 
 <img src="docs/dashboard.png" alt="Lumina Invest — Dashboard" width="820">
-
 <br>
-
 <img src="docs/light-mode.png" alt="Lumina Invest — Light Mode" width="820">
-
 <br>
-
 <img src="docs/charts.png" alt="Lumina Invest — Charts & News" width="820">
 
 [![React](https://img.shields.io/badge/React-19.2-61DAFB?style=flat-square&logo=react&logoColor=white)](https://react.dev)
@@ -32,6 +28,16 @@ Lumina Invest is a full-featured stock portfolio dashboard inspired by Bloomberg
 
 ---
 
+## Live Demo
+
+> **Try it now:** [https://invest.unver.cloud](https://invest.unver.cloud)
+>
+> **Demo account:** `demo` / `demo`
+>
+> The demo account comes pre-loaded with a diversified portfolio (~30k EUR) so you can explore all features immediately — charts, analytics, heatmap, AI assistant, and more.
+
+---
+
 ## Features
 
 ### Core
@@ -46,6 +52,17 @@ Lumina Invest is a full-featured stock portfolio dashboard inspired by Bloomberg
 | **Currency Toggle** | Switch display between EUR and USD. FX rate auto-fetched. All metrics normalized to EUR internally. |
 | **Hide Balances** | One-click privacy mode to mask all monetary values. |
 | **Dark / Light Mode** | Full theme support. 190+ CSS overrides for consistent light palette. Persisted in localStorage. |
+
+### Multi-User & Security
+
+| Feature | Description |
+|---------|-------------|
+| **User Authentication** | Secure registration & login with bcrypt (12 rounds) + JWT (7-day expiry). |
+| **SQLite Database** | All user data stored in SQLite (WAL mode) via better-sqlite3. No plain JSON files. |
+| **Per-User Isolation** | Each user's portfolios, API keys, avatars, and settings are fully isolated. |
+| **Admin Panel** | First registered user is admin. Manage users, promote/demote roles, view stats. |
+| **Rate Limiting** | 5 login attempts max, 15-minute IP lockout to prevent brute force. |
+| **Profile Avatars** | Upload a profile photo (2MB max). Displayed in topbar with dropdown menu. |
 
 ### Market Intelligence
 
@@ -75,9 +92,10 @@ Lumina Invest is a full-featured stock portfolio dashboard inspired by Bloomberg
 
 | Feature | Description |
 |---------|-------------|
-| **Lumina AI** | Chat-based financial advisor powered by OpenAI. Analyzes your portfolio, suggests diversification. |
+| **Lumina AI** | Chat-based financial advisor powered by OpenAI GPT-4o or Anthropic Claude Sonnet. |
+| **Dual Provider** | Choose between OpenAI and Claude — connect with your own API key. |
 | **Context-Aware** | Sends your current holdings, sector weights, and performance data as context to each query. |
-| **OAuth Support** | Optional OAuth flow for API key management. Keys stored server-side securely. |
+| **Per-User Keys** | API keys stored server-side, isolated per user account. |
 
 ---
 
@@ -88,6 +106,8 @@ lumina-invest/
   ├── src/
   │   ├── components/          # 21 React components + CSS modules
   │   │   ├── DashboardLayout  # Shell: sidebar, topbar, portfolio selector
+  │   │   ├── LoginPage        # Login / Register UI
+  │   │   ├── AdminPanel       # User management (admin only)
   │   │   ├── PortfolioSummary # Summary cards (balance, PNL, ATH/ATL)
   │   │   ├── PerformanceChart # Recharts area chart with timeframes
   │   │   ├── LiveStockList    # Real-time positions table
@@ -103,27 +123,49 @@ lumina-invest/
   │   │   ├── Insights         # Sector/risk analytics
   │   │   ├── NewsFeed         # Per-ticker news
   │   │   ├── PriceAlerts      # Alert configuration
-  │   │   ├── AIAssistant      # OpenAI chat interface
+  │   │   ├── AIAssistant      # OpenAI / Claude chat interface
   │   │   ├── Settings         # App configuration + export
   │   │   └── ...modals        # AddStock, Import
   │   ├── contexts/
+  │   │   ├── AuthContext       # JWT auth state management
   │   │   ├── CurrencyContext   # EUR/USD, theme, hide balances
-  │   │   └── NotificationContext
+  │   │   └── NotificationContext # Per-user notifications
   │   ├── services/
+  │   │   ├── fetchAuth.js      # Authenticated fetch wrapper
   │   │   ├── mockData.js       # Portfolio CRUD, metrics, subscriptions
   │   │   └── exportService.js  # Native CSV generation
-  │   ├── App.jsx               # State management, routing
+  │   ├── App.jsx               # Auth gate + Dashboard routing
   │   └── index.css             # Global styles + light theme
-  ├── server.js                 # Express 5 API proxy
-  ├── portfolios/               # Per-portfolio JSON storage
-  │   ├── _meta.json            # Portfolio index
-  │   └── default.json          # Default portfolio data
+  ├── server.js                 # Express 5 API + auth + AI proxy
+  ├── auth.js                   # SQLite auth module (bcrypt + JWT)
+  ├── auth/lumina.db            # SQLite database (users, login_attempts)
+  ├── data/{userId}/            # Per-user data directories
+  │   ├── portfolios/           # Portfolio JSON files
+  │   ├── ai_key.json           # Encrypted AI provider key
+  │   └── avatar.*              # Profile photo
   └── package.json
 ```
 
 ---
 
 ## API Reference
+
+### Authentication
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/auth/register` | Register `{ username, password }` |
+| `POST` | `/api/auth/login` | Login `{ username, password }` → JWT |
+| `GET` | `/api/auth/me` | Verify token, get user info |
+
+### Admin
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/admin/users` | List all users (admin only) |
+| `PUT` | `/api/admin/users/:id/role` | Change user role |
+| `DELETE` | `/api/admin/users/:id` | Delete user |
+| `GET` | `/api/admin/stats` | Platform statistics |
 
 ### Portfolio
 
@@ -163,8 +205,16 @@ lumina-invest/
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | `POST` | `/api/ai/chat` | Send message with portfolio context |
-| `POST` | `/api/ai/key` | Store OpenAI API key |
-| `GET` | `/api/ai/key` | Check key status |
+| `POST` | `/api/ai/key` | Store API key `{ key, provider }` |
+| `GET` | `/api/ai/key` | Check key status + provider |
+| `POST` | `/api/ai/logout` | Remove stored API key |
+
+### User
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/avatar` | Upload profile photo (multipart) |
+| `GET` | `/api/avatar/:userId` | Get user avatar |
 
 ---
 
@@ -194,6 +244,10 @@ npm run dev
 
 Open **http://localhost:5173** in your browser.
 
+### First User = Admin
+
+The first account registered automatically gets the **admin** role with access to the Admin Panel for user management.
+
 ### Add Your First Position
 
 1. Click **"Add Position"** or type a ticker in the search bar and press Enter
@@ -217,7 +271,9 @@ Click **"Import"** to upload a CSV from Revolut or other brokers. The parser aut
 | **Icons** | Lucide React | 0.577 |
 | **Server** | Express | 5.2 |
 | **Market Data** | yahoo-finance2 | 3.13 |
-| **AI** | OpenAI API | GPT-4 |
+| **AI** | OpenAI GPT-4o / Claude Sonnet | Multi-provider |
+| **Auth** | bcryptjs + jsonwebtoken | JWT |
+| **Database** | better-sqlite3 | WAL mode |
 | **Notifications** | react-hot-toast | 2.6 |
 | **Styling** | Vanilla CSS | Custom properties + themes |
 
@@ -237,6 +293,7 @@ Click **"Import"** to upload a CSV from Revolut or other brokers. The parser aut
 | Dividends | `Calendar` | Payout calendar + income estimate |
 | Insights | `Info` | Sector analytics + correlation matrix |
 | Lumina AI | `Sparkles` | AI-powered portfolio advisor |
+| Admin | `Shield` | User management (admin only) |
 | Settings | `Settings` | Config, export, alerts, theme |
 
 ---
@@ -245,8 +302,11 @@ Click **"Import"** to upload a CSV from Revolut or other brokers. The parser aut
 
 | Data | Location | Persistence |
 |------|----------|-------------|
-| Portfolio positions | `portfolios/*.json` + localStorage | Server + client |
-| Portfolio metadata | `portfolios/_meta.json` | Server |
+| User accounts | `auth/lumina.db` (SQLite) | Server |
+| Portfolio positions | `data/{userId}/portfolios/*.json` | Server |
+| Portfolio metadata | `data/{userId}/portfolios/_meta.json` | Server |
+| AI API keys | `data/{userId}/ai_key.json` | Server |
+| Profile avatars | `data/{userId}/avatar.*` | Server |
 | Watchlist | `localStorage:lumina_watchlist` | Client |
 | Price alerts | `localStorage:lumina_alerts` | Client |
 | Target prices | `localStorage:lumina_targets` | Client |
@@ -254,7 +314,7 @@ Click **"Import"** to upload a CSV from Revolut or other brokers. The parser aut
 | Theme preference | `localStorage:lumina_theme` | Client |
 | Active portfolio | `localStorage:lumina_active_portfolio` | Client |
 | Currency preference | `localStorage:lumina_currency` | Client |
-| OpenAI key | `ai_key.json` (server) | Server |
+| Notifications | `localStorage:lumina_notifications_{userId}` | Client (per-user) |
 
 ---
 
