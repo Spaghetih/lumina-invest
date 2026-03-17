@@ -216,7 +216,7 @@ export default function DashboardLayout({ children, activeTab, onTabChange, onAd
                             <Search size={18} className="search-icon" />
                             <input
                                 type="text"
-                                placeholder="Type a ticker and press Enter to add..."
+                                placeholder="Search ticker..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 onKeyDown={handleSearchSubmit}

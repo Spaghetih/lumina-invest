@@ -43,6 +43,7 @@ function Dashboard() {
   const [activePortfolioId, setActivePortfolioId] = useState(localStorage.getItem('lumina_active_portfolio') || 'default');
 
   const handleSearch = (query) => {
+    if (isDemo) { toast('Demo account is read-only', { icon: '\u{1f512}', style: { background: '#1a1a1a', color: '#fff', border: '1px solid #ff9900' } }); return; }
     setInitialSearchTicker(query.toUpperCase());
     setIsAddModalOpen(true);
   };
