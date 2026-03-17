@@ -137,42 +137,78 @@
     color: var(--status-down);
 }
 
-
-/* ═══ PortfolioSummary Mobile ═══ */
-@media (max-width: 768px) {
-    .summary-cards {
-        display: flex !important;
-        overflow-x: auto !important;
-        -webkit-overflow-scrolling: touch;
-        scroll-snap-type: x mandatory;
-        gap: 8px !important;
-        padding: 12px !important;
-        scrollbar-width: none;
-    }
-    .summary-cards::-webkit-scrollbar {
-        display: none;
-    }
-    .summary-card {
-        min-width: 130px !important;
-        flex-shrink: 0 !important;
-        padding: 12px 14px !important;
-        scroll-snap-align: start;
-    }
-    .summary-card .card-value {
-        font-size: 1rem !important;
-        white-space: nowrap !important;
-    }
-    .summary-card .card-label {
-        font-size: 0.65rem !important;
-        white-space: nowrap !important;
-    }
+/* ═══ Mobile Hero (hidden on desktop) ═══ */
+.mobile-portfolio-hero {
+    display: none;
 }
-@media (max-width: 480px) {
-    .summary-card {
-        min-width: 110px !important;
-        padding: 10px 12px !important;
+
+@media (max-width: 768px) {
+    /* Show mobile hero */
+    .mobile-portfolio-hero {
+        display: flex;
+        flex-direction: column;
+        padding: 20px 16px 12px;
+        gap: 16px;
     }
-    .summary-card .card-value {
-        font-size: 0.88rem !important;
+
+    .mph-balance {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .mph-label {
+        font-size: 0.72rem;
+        color: #888;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .mph-value {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--text-primary);
+        font-family: var(--font-mono);
+        margin: 0;
+        letter-spacing: -0.5px;
+    }
+
+    .mph-stats {
+        display: flex;
+        gap: 16px;
+    }
+
+    .mph-stat {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .mph-stat-label {
+        font-size: 0.65rem;
+        color: #666;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+
+    .mph-stat-value {
+        font-size: 0.88rem;
+        font-weight: 700;
+        font-family: var(--font-mono);
+    }
+
+    .mph-stat.up .mph-stat-value { color: var(--status-up); }
+    .mph-stat.down .mph-stat-value { color: var(--status-down); }
+
+    .mph-stat-pct {
+        font-size: 0.72rem;
+        opacity: 0.8;
+    }
+
+    /* Hide desktop summary cards on mobile */
+    .summary-cards {
+        display: none !important;
     }
 }

@@ -674,7 +674,14 @@ h1, h2, h3, h4, h5, h6 {
     .main-grid {
         grid-template-columns: 1fr;
         max-height: none;
-        gap: 8px;
+        gap: 0;
+    }
+    .main-grid > .chart-container {
+        border-bottom: 1px solid #222;
+    }
+    /* Hide heatmap on mobile */
+    .desktop-only-section {
+        display: none !important;
     }
     .main-grid > .chart-container {
         min-height: 280px;

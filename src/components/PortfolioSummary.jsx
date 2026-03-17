@@ -27,6 +27,31 @@ const PortfolioSummary = ({ metrics, historicalData }) => {
     if (atl.value === Infinity) atl = { value: 0, date: '—' };
 
     return (
+        <>
+        {/* Mobile Hero Summary */}
+        <div className="mobile-portfolio-hero">
+            <div className="mph-balance">
+                <span className="mph-label">Total Balance</span>
+                <h1 className="mph-value">{format(metrics.totalBalance, fc)}</h1>
+            </div>
+            <div className="mph-stats">
+                <div className={`mph-stat ${metrics.todayPnl >= 0 ? 'up' : 'down'}`}>
+                    <span className="mph-stat-label">Today</span>
+                    <span className="mph-stat-value">
+                        {metrics.todayPnl >= 0 ? '+' : ''}{format(metrics.todayPnl, fc)}
+                        <span className="mph-stat-pct"> ({formatPercent(metrics.todayPnlPercent)})</span>
+                    </span>
+                </div>
+                <div className={`mph-stat ${metrics.totalPnl >= 0 ? 'up' : 'down'}`}>
+                    <span className="mph-stat-label">Total P&L</span>
+                    <span className="mph-stat-value">
+                        {metrics.totalPnl >= 0 ? '+' : ''}{format(metrics.totalPnl, fc)}
+                        <span className="mph-stat-pct"> ({formatPercent(metrics.totalPnlPercent)})</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
         <div className="summary-cards">
             {/* Total Balance Card */}
             <div className="summary-card hero-card">
@@ -114,6 +139,7 @@ const PortfolioSummary = ({ metrics, historicalData }) => {
                 </div>
             </div>
         </div>
+        </>
     );
 };
 

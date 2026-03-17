@@ -380,32 +380,148 @@
 
 /* Responsive */
 
-
 /* ═══ PortfolioAnalysis Mobile ═══ */
 @media (max-width: 768px) {
+    .portfolio-analysis {
+        padding: 0 !important;
+    }
     .pa-header-row {
-        flex-direction: column !important;
-        gap: 8px;
+        padding: 12px 16px;
+        flex-direction: row !important;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .pa-page-title {
+        font-size: 1rem;
+    }
+
+    /* Stats: 2x2 grid, compact */
+    .pa-stats-row {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 8px !important;
+        padding: 0 12px 12px;
     }
     .pa-stat-card {
         padding: 12px !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 6px !important;
     }
-    .pa-stats-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 8px;
+    .pa-stat-icon {
+        width: 32px !important;
+        height: 32px !important;
     }
+    .pa-stat-label {
+        font-size: 0.62rem !important;
+    }
+    .pa-stat-value {
+        font-size: 0.78rem !important;
+    }
+
+    /* Main grid: stack vertically */
+    .pa-main-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px;
+        padding: 0 12px;
+    }
+
+    /* Pie chart compact */
     .pa-allocation {
+        padding: 16px !important;
+    }
+    .pa-pie-wrapper .recharts-responsive-container {
+        height: 200px !important;
+    }
+    .pa-legend {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 4px 12px;
+    }
+    .pa-legend-item {
+        font-size: 0.72rem;
+    }
+
+    /* Positions: mobile card layout */
+    .pa-positions {
         padding: 12px !important;
     }
-    .pa-positions {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
+    .pa-table-wrapper {
+        overflow-x: hidden !important;
     }
     .pa-table {
-        min-width: 600px;
+        min-width: 0 !important;
     }
-    .pa-table th, .pa-table td {
-        padding: 10px 8px !important;
-        font-size: 0.72rem;
+    .pa-table thead {
+        display: none !important;
+    }
+    .pa-table tbody {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    .pa-table tbody tr {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 14px;
+        background: #0a0a0a;
+        border: 1px solid #1a1a1a;
+        border-radius: 12px;
+        gap: 4px 16px;
+        align-items: center;
+    }
+    /* Asset cell — full width top */
+    .pa-table tbody td:nth-child(1) {
+        width: 100%;
+        padding: 0 0 8px !important;
+        border-bottom: 1px solid #1a1a1a;
+        margin-bottom: 4px;
+    }
+    .pa-asset-cell {
+        gap: 10px !important;
+    }
+    .pa-asset-symbol {
+        font-size: 0.95rem !important;
+        font-weight: 700 !important;
+    }
+    .pa-asset-name {
+        font-size: 0.7rem !important;
+    }
+
+    /* Key metrics in 2 columns */
+    .pa-table tbody td {
+        padding: 2px 0 !important;
+        font-size: 0.78rem;
+        border: none !important;
+    }
+    .pa-table tbody td:nth-child(2),
+    .pa-table tbody td:nth-child(6) {
+        width: calc(50% - 8px);
+    }
+    .pa-table tbody td:nth-child(3),
+    .pa-table tbody td:nth-child(7) {
+        width: calc(50% - 8px);
+    }
+    .pa-table tbody td:nth-child(4),
+    .pa-table tbody td:nth-child(8) {
+        width: calc(50% - 8px);
+    }
+    /* Hide less critical cols: Target, Purchased */
+    .pa-table tbody td:nth-child(5),
+    .pa-table tbody td:nth-child(9) {
+        display: none !important;
+    }
+    .pa-pnl-pct {
+        font-size: 0.68rem !important;
+    }
+
+    /* Light theme card */
+    :root[data-theme="light"] .pa-table tbody tr {
+        background: #fff;
+        border-color: #e0e0e0;
+    }
+    :root[data-theme="light"] .pa-table tbody td:nth-child(1) {
+        border-bottom-color: #e8e8e8;
     }
 }

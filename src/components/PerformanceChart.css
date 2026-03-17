@@ -77,27 +77,29 @@
     margin-left: 4px;
 }
 
-
 /* ═══ PerformanceChart Mobile ═══ */
 @media (max-width: 768px) {
     .chart-actions {
-        flex-wrap: wrap;
-        gap: 6px;
-        padding: 8px 12px !important;
-        justify-content: flex-start;
+        flex-wrap: nowrap;
+        gap: 0;
+        padding: 4px 12px !important;
+        overflow-x: auto;
+        scrollbar-width: none;
     }
+    .chart-actions::-webkit-scrollbar { display: none; }
     .chart-header {
         flex-direction: column !important;
         align-items: flex-start !important;
-        gap: 8px;
+        gap: 4px;
+        padding: 10px 14px 6px !important;
+    }
+    .chart-header .chart-title {
+        font-size: 0.8rem;
     }
     .time-btn {
-        padding: 6px 10px !important;
+        padding: 8px 12px !important;
         font-size: 0.72rem !important;
-        min-height: 36px;
-        min-width: 36px;
-    }
-    .chart-container .recharts-responsive-container {
-        min-height: 250px;
+        min-height: 32px;
+        flex-shrink: 0;
     }
 }
