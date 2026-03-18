@@ -1,4 +1,5 @@
 import bcrypt from 'bcryptjs';
+import rateLimit from 'express-rate-limit';
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
 import path from 'path';
@@ -102,8 +103,16 @@ function initUserData(userId) {
 
 // ─── Auth Routes ───
 export function setupAuthRoutes(app) {
+    const registerLimiter = rateLimit({
+        windowMs: 24 * 60 * 60 * 1000, // 24 hours
+        max: 2, // 2 registrations per 24h per IP
+        standardHeaders: true,
+        legacyHeaders: false,
+        message: { error: 'Too many accounts created. Try again in 24 hours.' }
+    });
+
     // Register (public)
-    app.post('/api/auth/register', async (req, res) => {
+    app.post('/api/auth/register', registerLimiter, async (req, res) => {
         const { username, password } = req.body;
         if (!username || !password) return res.status(400).json({ error: 'Username and password required' });
         if (username.trim().length < 3) return res.status(400).json({ error: 'Username must be at least 3 characters' });
@@ -112,7 +121,7 @@ export function setupAuthRoutes(app) {
 
         const normalized = username.trim().toLowerCase();
         const existing = db.prepare('SELECT id FROM users WHERE username = ?').get(normalized);
-        if (existing) return res.status(409).json({ error: 'Username already taken' });
+        if (existing) return res.status(200).json({ error: 'Registration processed. If the username is available, check your account.' });
 
         const hashedPassword = await bcrypt.hash(password, BCRYPT_ROUNDS);
         const id = crypto.randomUUID();
