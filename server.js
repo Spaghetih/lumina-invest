@@ -1,5 +1,5 @@
 import express from 'express';
-import { setupAuthRoutes, authMiddleware, getUserDataDir } from './auth.js';
+import { setupAuthRoutes, authMiddleware, getUserDataDir, logSecurity } from './auth.js';
 import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
@@ -45,7 +45,11 @@ const apiLimiter = rateLimit({
     max: 1000, // 1000 requests per 15 min per IP
     standardHeaders: true,
     legacyHeaders: false,
-    message: { error: 'Too many requests, please try again later.' }
+    message: { error: 'Too many requests, please try again later.' },
+    handler: (req, res) => {
+        logSecurity('rate_limit', req.ip, `API rate limit hit: ${req.method} ${req.originalUrl}`, 'warning');
+        res.status(429).json({ error: 'Too many requests, please try again later.' });
+    }
 });
 
 const aiLimiter = rateLimit({
@@ -162,6 +166,7 @@ app.get('/api/portfolio', (req, res) => {
     const baseDir = getUserPortfoliosDir(req.user.id);
     const fp = path.resolve(baseDir, `${id}.json`);
     if (!fp.startsWith(path.resolve(baseDir) + path.sep) && fp !== path.resolve(baseDir)) {
+        logSecurity('path_traversal', req.ip, `Path traversal attempt: ${req.method} ${req.originalUrl}`, 'critical');
         return res.status(400).json({ error: 'Invalid path' });
     }
     if (fs.existsSync(fp)) {
@@ -180,7 +185,8 @@ app.post('/api/portfolio', demoGuard, (req, res) => {
         const baseDir = getUserPortfoliosDir(req.user.id);
         const fp = path.resolve(baseDir, `${id}.json`);
         if (!fp.startsWith(path.resolve(baseDir) + path.sep) && fp !== path.resolve(baseDir)) {
-            return res.status(400).json({ error: 'Invalid path' });
+            logSecurity('path_traversal', req.ip, `Path traversal attempt: ${req.method} ${req.originalUrl}`, 'critical');
+        return res.status(400).json({ error: 'Invalid path' });
         }
         fs.writeFileSync(fp, JSON.stringify(req.body, null, 2));
         res.json({ success: true });

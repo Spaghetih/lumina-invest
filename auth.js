@@ -50,6 +50,15 @@ db.exec(`
     CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
     CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT);
     INSERT OR IGNORE INTO settings (key, value) VALUES ('registrationOpen', 'true');
+    CREATE TABLE IF NOT EXISTS security_log (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        timestamp TEXT NOT NULL DEFAULT (datetime('now')),
+        event_type TEXT NOT NULL,
+        ip TEXT,
+        detail TEXT,
+        severity TEXT NOT NULL DEFAULT 'warning'
+    );
+    CREATE INDEX IF NOT EXISTS idx_security_log_timestamp ON security_log(timestamp);
 `);
 
 // ─── JWT Secret ───
@@ -88,6 +97,17 @@ function clearAttempts(ip) {
     db.prepare('DELETE FROM login_attempts WHERE ip = ?').run(ip);
 }
 
+// ─── Security Logging ───
+function logSecurity(eventType, ip, detail, severity = 'warning') {
+    try {
+        db.prepare('INSERT INTO security_log (event_type, ip, detail, severity) VALUES (?, ?, ?, ?)').run(eventType, ip || 'unknown', detail, severity);
+        // Keep only last 1000 entries
+        db.prepare('DELETE FROM security_log WHERE id NOT IN (SELECT id FROM security_log ORDER BY id DESC LIMIT 1000)').run();
+    } catch {}
+}
+
+export { logSecurity };
+
 // ─── User Data Dir ───
 export function getUserDataDir(userId) {
     const dir = path.resolve(DATA_DIR, userId);
@@ -112,7 +132,11 @@ export function setupAuthRoutes(app) {
         max: 2, // 2 registrations per 24h per IP
         standardHeaders: true,
         legacyHeaders: false,
-        message: { error: 'Too many accounts created. Try again in 24 hours.' }
+        message: { error: 'Too many accounts created. Try again in 24 hours.' },
+        handler: (req, res) => {
+            logSecurity('registration_abuse', req.ip || 'unknown', 'Rate limit exceeded for registration', 'critical');
+            res.status(429).json({ error: 'Too many accounts created. Try again in 24 hours.' });
+        }
     });
 
     // Register (public)
@@ -146,18 +170,27 @@ export function setupAuthRoutes(app) {
     // Login
     app.post('/api/auth/login', async (req, res) => {
         const ip = req.ip || req.socket?.remoteAddress || 'unknown';
-        if (isLockedOut(ip)) return res.status(429).json({ error: 'Too many failed attempts. Try again in 15 minutes.' });
+        if (isLockedOut(ip)) {
+            logSecurity('account_lockout', ip, 'Login attempt on locked IP', 'critical');
+            return res.status(429).json({ error: 'Too many failed attempts. Try again in 15 minutes.' });
+        }
 
         const { username, password } = req.body;
         if (!username || !password) return res.status(400).json({ error: 'Username and password required' });
 
         const user = db.prepare('SELECT * FROM users WHERE username = ?').get(username.trim().toLowerCase());
-        if (!user) { recordFailedAttempt(ip); return res.status(401).json({ error: 'Invalid credentials' }); }
+        if (!user) {
+            recordFailedAttempt(ip);
+            logSecurity('login_failed', ip, `Unknown username: ${username.trim().substring(0, 30)}`, 'warning');
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
 
         const valid = await bcrypt.compare(password, user.password);
         if (!valid) {
             const lockout = recordFailedAttempt(ip);
             const remaining = MAX_LOGIN_ATTEMPTS - lockout.attempts;
+            const sev = remaining <= 1 ? 'critical' : 'warning';
+            logSecurity('login_failed', ip, `Wrong password for user: ${user.username} (${remaining} left)`, sev);
             return res.status(401).json({
                 error: remaining > 0 ? `Invalid credentials. ${remaining} attempts remaining.` : 'Account locked for 15 minutes.'
             });
@@ -298,6 +331,38 @@ export function setupAuthRoutes(app) {
         const newVal = current?.value === 'true' ? 'false' : 'true';
         db.prepare("INSERT OR REPLACE INTO settings (key, value) VALUES ('registrationOpen', ?)").run(newVal);
         res.json({ registrationOpen: newVal === 'true' });
+    });
+
+    // Admin: security log
+    app.get('/api/admin/security-log', authMiddleware, adminOnly, (req, res) => {
+        const page = parseInt(req.query.page) || 1;
+        const limit = 50;
+        const offset = (page - 1) * limit;
+        const severity = req.query.severity || '';
+
+        let logs, total;
+        if (severity) {
+            logs = db.prepare('SELECT * FROM security_log WHERE severity = ? ORDER BY id DESC LIMIT ? OFFSET ?').all(severity, limit, offset);
+            total = db.prepare('SELECT COUNT(*) as count FROM security_log WHERE severity = ?').get(severity).count;
+        } else {
+            logs = db.prepare('SELECT * FROM security_log ORDER BY id DESC LIMIT ? OFFSET ?').all(limit, offset);
+            total = db.prepare('SELECT COUNT(*) as count FROM security_log').get().count;
+        }
+
+        const stats = {
+            total,
+            critical: db.prepare("SELECT COUNT(*) as count FROM security_log WHERE severity = 'critical'").get().count,
+            warning: db.prepare("SELECT COUNT(*) as count FROM security_log WHERE severity = 'warning'").get().count,
+            today: db.prepare("SELECT COUNT(*) as count FROM security_log WHERE timestamp >= datetime('now', '-1 day')").get().count,
+        };
+
+        res.json({ logs, stats, page, totalPages: Math.ceil(total / limit) });
+    });
+
+    // Admin: clear security log
+    app.delete('/api/admin/security-log', authMiddleware, adminOnly, (req, res) => {
+        db.prepare('DELETE FROM security_log').run();
+        res.json({ success: true });
     });
 }
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { fetchAuth } from '../services/fetchAuth';
 import { useAuth } from '../contexts/AuthContext';
-import { Shield, Trash2, UserCheck, UserX, Users, Activity, Crown, Search, Server, Cpu, HardDrive, UserPlus, BarChart3, DollarSign, Clock, ToggleLeft, ToggleRight } from 'lucide-react';
+import { Shield, Trash2, UserCheck, UserX, Users, Activity, Crown, Search, Server, Cpu, HardDrive, UserPlus, BarChart3, DollarSign, Clock, ToggleLeft, ToggleRight, ShieldAlert, AlertTriangle, XCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 import './AdminPanel.css';
 
 function formatUptime(seconds) {
@@ -31,6 +31,8 @@ export default function AdminPanel() {
     const [stats, setStats] = useState(null);
     const [health, setHealth] = useState(null);
     const [activity, setActivity] = useState([]);
+    const [securityLog, setSecurityLog] = useState({ logs: [], stats: {}, page: 1, totalPages: 1 });
+    const [secFilter, setSecFilter] = useState('');
     const [loading, setLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
@@ -47,16 +49,18 @@ export default function AdminPanel() {
 
     const loadData = async () => {
         try {
-            const [usersRes, statsRes, healthRes, activityRes] = await Promise.all([
+            const [usersRes, statsRes, healthRes, activityRes, secRes] = await Promise.all([
                 fetchAuth('/api/admin/users'),
                 fetchAuth('/api/admin/stats'),
                 fetchAuth('/api/admin/system-health'),
-                fetchAuth('/api/admin/activity')
+                fetchAuth('/api/admin/activity'),
+                fetchAuth('/api/admin/security-log')
             ]);
             if (usersRes.ok) setUsers(await usersRes.json());
             if (statsRes.ok) setStats(await statsRes.json());
             if (healthRes.ok) setHealth(await healthRes.json());
             if (activityRes.ok) setActivity(await activityRes.json());
+            if (secRes.ok) setSecurityLog(await secRes.json());
         } catch (err) {
             console.error('Failed to load admin data:', err);
         } finally {
@@ -237,19 +241,72 @@ export default function AdminPanel() {
                 {users.length === 0 && <div className="admin-empty">No users found</div>}
             </div>
 
-            {activity.length > 0 && (
-                <div className="admin-activity">
-                    <div className="activity-header"><Clock size={16} /> Recent Activity</div>
-                    <div className="activity-list">
-                        {activity.map((a, i) => (
-                            <div key={i} className="activity-item">
-                                <span className="activity-user">{a.username}</span>
-                                <span className="activity-time">{formatDateTime(a.last_login)}</span>
+            <div className="admin-two-col">
+                {activity.length > 0 && (
+                    <div className="admin-activity">
+                        <div className="activity-header"><Clock size={16} /> Recent Activity</div>
+                        <div className="activity-list">
+                            {activity.map((a, i) => (
+                                <div key={i} className="activity-item">
+                                    <span className="activity-user">{a.username}</span>
+                                    <span className="activity-time">{formatDateTime(a.last_login)}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                <div className="admin-security">
+                    <div className="security-header">
+                        <div className="security-title"><ShieldAlert size={16} /> Security Log</div>
+                        <div className="security-badges">
+                            {securityLog.stats.critical > 0 && <span className="sec-badge critical">{securityLog.stats.critical} critical</span>}
+                            {securityLog.stats.warning > 0 && <span className="sec-badge warning">{securityLog.stats.warning} warning</span>}
+                            <span className="sec-badge info">{securityLog.stats.today || 0} today</span>
+                        </div>
+                    </div>
+                    <div className="security-filters">
+                        {['', 'critical', 'warning'].map(f => (
+                            <button key={f} className={`sec-filter-btn ${secFilter === f ? 'active' : ''}`} onClick={async () => {
+                                setSecFilter(f);
+                                const res = await fetchAuth(`/api/admin/security-log?severity=${f}`);
+                                if (res.ok) setSecurityLog(await res.json());
+                            }}>{f || 'All'}</button>
+                        ))}
+                    </div>
+                    <div className="security-list">
+                        {securityLog.logs.length === 0 && <div className="admin-empty" style={{ padding: '20px' }}>No security events</div>}
+                        {securityLog.logs.map((log) => (
+                            <div key={log.id} className={`security-item severity-${log.severity}`}>
+                                <div className="sec-item-icon">
+                                    {log.severity === 'critical' ? <XCircle size={14} /> : <AlertTriangle size={14} />}
+                                </div>
+                                <div className="sec-item-content">
+                                    <div className="sec-item-type">{log.event_type.replace(/_/g, ' ')}</div>
+                                    <div className="sec-item-detail">{log.detail}</div>
+                                </div>
+                                <div className="sec-item-meta">
+                                    <span className="sec-item-ip">{log.ip}</span>
+                                    <span className="sec-item-time">{formatDateTime(log.timestamp)}</span>
+                                </div>
                             </div>
                         ))}
                     </div>
+                    {securityLog.totalPages > 1 && (
+                        <div className="security-pagination">
+                            <button disabled={securityLog.page <= 1} onClick={async () => {
+                                const res = await fetchAuth(`/api/admin/security-log?page=${securityLog.page - 1}&severity=${secFilter}`);
+                                if (res.ok) setSecurityLog(await res.json());
+                            }}><ChevronLeft size={14} /></button>
+                            <span>{securityLog.page} / {securityLog.totalPages}</span>
+                            <button disabled={securityLog.page >= securityLog.totalPages} onClick={async () => {
+                                const res = await fetchAuth(`/api/admin/security-log?page=${securityLog.page + 1}&severity=${secFilter}`);
+                                if (res.ok) setSecurityLog(await res.json());
+                            }}><ChevronRight size={14} /></button>
+                        </div>
+                    )}
                 </div>
-            )}
+            </div>
         </div>
     );
 }

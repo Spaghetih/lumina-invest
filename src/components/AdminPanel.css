@@ -132,11 +132,83 @@
 .activity-list::-webkit-scrollbar-track { background: transparent; }
 .activity-list::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
 
+/* Two Column Layout */
+.admin-two-col {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+}
+
+/* Security Log */
+.admin-security {
+    background: #111; border: 1px solid #333; border-radius: 12px; overflow: hidden;
+}
+.security-header {
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+    padding: 14px 20px; border-bottom: 1px solid #222;
+}
+.security-title {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 600; color: #ff5555; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.security-badges { display: flex; gap: 6px; }
+.sec-badge {
+    font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 600;
+}
+.sec-badge.critical { background: rgba(255,85,85,0.15); color: #ff5555; }
+.sec-badge.warning { background: rgba(255,170,0,0.15); color: #ffaa00; }
+.sec-badge.info { background: rgba(255,255,255,0.06); color: #888; }
+
+.security-filters {
+    display: flex; gap: 4px; padding: 8px 20px; border-bottom: 1px solid #1a1a1a;
+}
+.sec-filter-btn {
+    background: none; border: 1px solid #333; color: #888; padding: 4px 12px;
+    border-radius: 6px; font-size: 12px; cursor: pointer; transition: all 0.15s; text-transform: capitalize;
+}
+.sec-filter-btn.active { border-color: #ff9900; color: #ff9900; background: rgba(255,153,0,0.1); }
+.sec-filter-btn:hover:not(.active) { border-color: #555; color: #ccc; }
+
+.security-list { max-height: 300px; overflow-y: auto; }
+.security-list::-webkit-scrollbar { width: 4px; }
+.security-list::-webkit-scrollbar-track { background: transparent; }
+.security-list::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+
+.security-item {
+    display: flex; align-items: flex-start; gap: 10px; padding: 10px 20px;
+    border-bottom: 1px solid #1a1a1a; font-size: 13px;
+}
+.security-item:last-child { border-bottom: none; }
+
+.sec-item-icon { margin-top: 2px; flex-shrink: 0; }
+.severity-critical .sec-item-icon { color: #ff5555; }
+.severity-warning .sec-item-icon { color: #ffaa00; }
+
+.sec-item-content { flex: 1; min-width: 0; }
+.sec-item-type { font-weight: 600; color: #ccc; text-transform: capitalize; font-size: 12px; }
+.sec-item-detail { color: #888; font-size: 12px; margin-top: 2px; word-break: break-all; }
+
+.sec-item-meta {
+    display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex-shrink: 0;
+}
+.sec-item-ip { font-size: 11px; color: #666; font-family: monospace; }
+.sec-item-time { font-size: 11px; color: #555; }
+
+.security-pagination {
+    display: flex; align-items: center; justify-content: center; gap: 12px; padding: 10px;
+    border-top: 1px solid #222; font-size: 12px; color: #888;
+}
+.security-pagination button {
+    background: none; border: 1px solid #333; color: #888; padding: 4px 8px;
+    border-radius: 4px; cursor: pointer; display: flex; align-items: center;
+}
+.security-pagination button:hover:not(:disabled) { border-color: #555; color: #fff; }
+.security-pagination button:disabled { opacity: 0.3; cursor: not-allowed; }
+
 /* Mobile */
 @media (max-width: 768px) {
     .admin-panel { padding: 12px !important; }
     .admin-stats { grid-template-columns: repeat(2, 1fr); }
     .admin-health { grid-template-columns: 1fr; }
+    .admin-two-col { grid-template-columns: 1fr; }
     .admin-header { flex-wrap: wrap; }
     .reg-toggle-btn { margin-left: 0; }
     .admin-table-header, .admin-table-row {
