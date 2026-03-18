@@ -218,8 +218,8 @@ export default function AdminPanel() {
                             <span className="portfolio-value">{u.portfolioValue > 0 ? formatCurrency(u.portfolioValue) : '-'}</span>
                             {u.positionCount > 0 && <span className="portfolio-count">{u.positionCount} pos.</span>}
                         </span>
-                        <span className="admin-date">{formatDate(u.created_at)}</span>
-                        <span className="admin-date">{u.last_login ? formatDate(u.last_login) : 'Never'}</span>
+                        <span className="admin-date">{formatDateTime(u.created_at)}</span>
+                        <span className="admin-date">{u.last_login ? formatDateTime(u.last_login) : 'Never'}</span>
                         <span className="admin-actions">
                             {u.id !== currentUser.id && (
                                 <>
