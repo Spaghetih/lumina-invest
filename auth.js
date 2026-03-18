@@ -85,8 +85,8 @@ function clearAttempts(ip) {
 
 // ─── User Data Dir ───
 export function getUserDataDir(userId) {
-    const dir = safeResolvePath(DATA_DIR, userId);
-    if (!dir) throw new Error('Invalid user ID path');
+    const dir = path.resolve(DATA_DIR, userId);
+    if (!dir.startsWith(path.resolve(DATA_DIR) + path.sep)) throw new Error('Invalid user ID path');
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     return dir;
 }
@@ -198,8 +198,11 @@ export function setupAuthRoutes(app) {
         if (!user) return res.status(404).json({ error: 'User not found' });
 
         // Delete user data
-        const userDir = safeResolvePath(DATA_DIR, delId);
-        if (userDir && fs.existsSync(userDir)) fs.rmSync(userDir, { recursive: true, force: true });
+        const userDir = path.resolve(DATA_DIR, delId);
+        if (!userDir.startsWith(path.resolve(DATA_DIR) + path.sep)) {
+            return res.status(400).json({ error: 'Invalid path' });
+        }
+        if (fs.existsSync(userDir)) fs.rmSync(userDir, { recursive: true, force: true });
 
         db.prepare('DELETE FROM users WHERE id = ?').run(delId);
         res.json({ success: true });
