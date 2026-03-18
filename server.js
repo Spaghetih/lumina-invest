@@ -280,8 +280,16 @@ async function safeScreener(scrIds, count = 20) {
 app.get('/api/screener', async (req, res) => {
     try {
         const preset = req.query.preset || 'day_gainers';
+        // Trending uses trendingSymbols API (screener trending_tickers is deprecated)
+        if (preset === 'trending') {
+            const trending = await yahooFinance.trendingSymbols('US');
+            const symbols = (trending?.quotes || []).map(q => q.symbol).slice(0, 25);
+            if (symbols.length === 0) return res.json([]);
+            const quotes = await yahooFinance.quote(symbols);
+            return res.json(Array.isArray(quotes) ? quotes : quotes ? [quotes] : []);
+        }
         const presetMap = { gainers: 'day_gainers', losers: 'day_losers', most_actives: 'most_actives',
-            trending: 'trending_tickers', undervalued_large_caps: 'undervalued_large_caps',
+            undervalued_large_caps: 'undervalued_large_caps',
             growth_technology_stocks: 'growth_technology_stocks', small_cap_gainers: 'small_cap_gainers' };
         const result = await safeScreener(presetMap[preset] || preset, 25);
         res.json(result?.quotes || []);
