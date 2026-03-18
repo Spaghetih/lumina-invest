@@ -467,6 +467,6 @@ app.get('/api/avatar/:userId', (req, res) => {
     res.status(404).json({ error: 'No avatar' });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, '127.0.0.1', () => {
     console.log(`Lumina Invest Server running on http://localhost:${PORT}`);
 });
