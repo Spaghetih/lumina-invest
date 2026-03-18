@@ -431,8 +431,18 @@ const ImportModal = ({ isOpen, onClose, onImport }) => {
                         )}
 
                         <div className="import-help">
-                            <FileSpreadsheet size={16} />
-                            <span>Export from Revolut: Settings → Stocks → Account Statement → CSV</span>
+                            <div className="import-help-header">
+                                <FileSpreadsheet size={18} />
+                                <span>How to export from Revolut</span>
+                            </div>
+                            <ol className="import-help-steps">
+                                <li>Open the <strong>Revolut</strong> app</li>
+                                <li>Go to <strong>Stocks</strong> tab</li>
+                                <li>Tap the <strong>gear icon</strong> (Settings)</li>
+                                <li>Select <strong>Account Statement</strong></li>
+                                <li>Choose your date range and export as <strong>CSV</strong></li>
+                            </ol>
+                            <p className="import-help-note">Only BUY transactions will be imported. Multiple buys of the same stock are automatically merged.</p>
                         </div>
                     </>
                 ) : (

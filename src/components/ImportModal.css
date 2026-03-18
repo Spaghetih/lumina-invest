@@ -50,15 +50,46 @@
 /* Help */
 .import-help {
     display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 0.82rem;
+    color: #999;
+    padding: 16px 18px;
+    background: linear-gradient(135deg, rgba(255,153,0,0.04), rgba(255,153,0,0.01));
+    border-radius: 10px;
+    border: 1px solid rgba(255,153,0,0.15);
+    margin-top: 16px;
+}
+
+.import-help-header {
+    display: flex;
     align-items: center;
-    gap: 6px;
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    padding: 8px 12px;
-    background: #111;
-    border-radius: 2px;
-    border: 1px solid #333;
-    margin-top: 8px;
+    gap: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #ff9900;
+}
+
+.import-help-steps {
+    margin: 0;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    color: #aaa;
+    font-size: 0.8rem;
+    line-height: 1.5;
+}
+
+.import-help-steps strong {
+    color: #ddd;
+}
+
+.import-help-note {
+    margin: 0;
+    font-size: 0.75rem;
+    color: #666;
+    font-style: italic;
 }
 
 /* Summary */
