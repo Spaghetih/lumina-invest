@@ -62,13 +62,16 @@ Lumina Invest is a full-featured stock portfolio dashboard inspired by Bloomberg
 | **User Authentication** | Secure registration & login with bcrypt (12 rounds) + JWT (7-day expiry). |
 | **SQLite Database** | All user data stored in SQLite (WAL mode) via better-sqlite3. No plain JSON files. |
 | **Per-User Isolation** | Each user's portfolios, API keys, avatars, and settings are fully isolated. |
-| **Admin Panel** | First registered user is admin. Manage users, promote/demote roles, view stats. |
-| **Rate Limiting** | Global API rate limiting (200 req/15min), AI-specific limits, upload limits. |
-| **Path Traversal Protection** | All user-supplied IDs sanitized + resolved path validated against base directory. |
+| **Admin Panel** | User management, role promotion, system health monitoring (CPU/RAM/disk), user search, portfolio value per user, registration toggle, recent activity log. |
+| **Rate Limiting** | Global API rate limiting (1000 req/15min), AI-specific limits (10/min), upload limits (10/15min), registration limits (2 accounts/24h per IP). |
+| **Path Traversal Protection** | All user-supplied IDs sanitized + inline `path.resolve` + `startsWith` validation against base directory. |
+| **Anti-Enumeration** | Registration endpoint returns generic messages to prevent username discovery. |
+| **Security Headers** | HSTS, X-Frame-Options, X-Content-Type-Options, X-XSS-Protection, Referrer-Policy, Permissions-Policy. |
+| **Server Hardening** | Node.js runs as unprivileged user, internal services bound to localhost, firewall with default-deny policy, fail2ban intrusion prevention, automatic security updates. |
 | **Demo Account** | Read-only `demo/demo` account with pre-loaded portfolio for safe exploration. |
 | **Onboarding Tutorial** | Interactive 6-step walkthrough for new accounts with zero positions. |
 | **Profile Avatars** | Upload a profile photo (2MB max, MIME validated). Displayed in topbar with dropdown menu. |
-| **HTTPS Enforced** | Automatic HTTP→HTTPS redirect via nginx + Cloudflare Tunnel. |
+| **HTTPS Enforced** | Automatic HTTP→HTTPS redirect + HSTS preload + TLS 1.2 minimum. |
 
 ### Market Intelligence
 
@@ -77,7 +80,7 @@ Lumina Invest is a full-featured stock portfolio dashboard inspired by Bloomberg
 | **Stock Charts** | Per-ticker historical chart with range selector (1D to 5Y). Powered by Yahoo Finance `chart()`. |
 | **Ticker Comparator** | Overlay two tickers on the same chart, normalized to % change for apples-to-apples comparison. |
 | **Watchlist** | Track tickers without owning them. Add/remove, live quotes, 52-week range. Stored in localStorage. |
-| **Stock Screener** | Pre-built screens: Top Gainers, Top Losers, Most Active, Trending, Undervalued Large Caps, Growth Tech, Small Cap Gainers. |
+| **Stock Screener** | Pre-built screens: Top Gainers, Top Losers, Most Active, Trending (live trendingSymbols), Undervalued Large Caps, Growth Tech, Small Cap Gainers. Click any stock to open its chart. |
 | **News Feed** | Per-ticker news with source, timestamp, and external links. Displayed under stock charts. |
 | **Correlation Matrix** | Return correlation heatmap with period selector (1M–1Y), diversification score, top/bottom pairs, and per-stock volatility. |
 
@@ -160,18 +163,22 @@ lumina-invest/
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `POST` | `/api/auth/register` | Register `{ username, password }` |
-| `POST` | `/api/auth/login` | Login `{ username, password }` → JWT |
+| `POST` | `/api/auth/register` | Register `{ username, password }` (rate limited: 2/24h per IP) |
+| `POST` | `/api/auth/login` | Login `{ username, password }` → JWT (lockout after 5 failures) |
 | `GET` | `/api/auth/me` | Verify token, get user info |
+| `GET` | `/api/auth/status` | Check if registration is open |
 
 ### Admin
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `GET` | `/api/admin/users` | List all users (admin only) |
+| `GET` | `/api/admin/users?search=` | List users with portfolio values (admin only) |
 | `PUT` | `/api/admin/users/:id/role` | Change user role |
-| `DELETE` | `/api/admin/users/:id` | Delete user |
-| `GET` | `/api/admin/stats` | Platform statistics |
+| `DELETE` | `/api/admin/users/:id` | Delete user and all their data |
+| `GET` | `/api/admin/stats` | Platform statistics (users, positions, total value) |
+| `GET` | `/api/admin/system-health` | Server uptime, memory, disk usage |
+| `GET` | `/api/admin/activity` | Last 20 user logins |
+| `POST` | `/api/admin/registration-toggle` | Open/close public registration |
 
 ### Portfolio
 
@@ -299,7 +306,7 @@ Click **"Import"** to upload a CSV from Revolut or other brokers. The parser aut
 | Dividends | `Calendar` | Payout calendar + income estimate |
 | Insights | `Info` | Sector analytics + correlation matrix |
 | Lumina AI | `Sparkles` | AI-powered portfolio advisor |
-| Admin | `Shield` | User management (admin only) |
+| Admin | `Shield` | User management, system health, activity log, registration control (admin only) |
 | Settings | `Settings` | Config, export, alerts, theme |
 
 ---
@@ -308,7 +315,8 @@ Click **"Import"** to upload a CSV from Revolut or other brokers. The parser aut
 
 | Data | Location | Persistence |
 |------|----------|-------------|
-| User accounts | `auth/lumina.db` (SQLite) | Server |
+| User accounts | `auth/lumina.db` (SQLite) | Server (permissions: 600) |
+| App settings | `auth/lumina.db` settings table | Server |
 | Portfolio positions | `data/{userId}/portfolios/*.json` | Server |
 | Portfolio metadata | `data/{userId}/portfolios/_meta.json` | Server |
 | AI API keys | `data/{userId}/ai_key.json` | Server |
