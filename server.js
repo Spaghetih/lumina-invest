@@ -66,7 +66,7 @@ setupAuthRoutes(app);
 
 // Protect all /api/ routes except /api/auth/*
 app.use('/api', (req, res, next) => {
-    if (req.path.startsWith('/auth/')) return next();
+    if (req.path.startsWith('/auth/') || (req.method === 'GET' && req.path.startsWith('/avatar/'))) return next();
     // Apply rate limit to authenticated routes only
     apiLimiter(req, res, (err) => {
         if (err) return;
