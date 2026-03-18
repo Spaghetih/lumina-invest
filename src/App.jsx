@@ -266,7 +266,7 @@ function Dashboard() {
 
       {activeTab === 'Screener' && (
         <div className="fade-in">
-          <Screener onViewChart={(sym) => { setActiveTab('Charts'); }} />
+          <Screener onViewChart={(sym) => { setChartTicker(sym); setActiveTab('Charts'); }} />
         </div>
       )}
 
