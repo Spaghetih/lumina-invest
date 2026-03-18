@@ -42,7 +42,7 @@ app.use(express.json({ limit: '1mb' }));
 // --- Security: Rate Limiting ---
 const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 min
-    max: 200, // 200 requests per 15 min per IP
+    max: 1000, // 1000 requests per 15 min per IP
     standardHeaders: true,
     legacyHeaders: false,
     message: { error: 'Too many requests, please try again later.' }
@@ -119,7 +119,9 @@ app.post('/api/portfolios', demoGuard, (req, res) => {
     const id = name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').substring(0, 30) + '-' + Date.now().toString(36);
     meta.portfolios.push({ id, name });
     saveUserMeta(req.user.id, meta);
-    fs.writeFileSync(getUserPortfolioPath(req.user.id, id), '[]');
+    const newPath = getUserPortfolioPath(req.user.id, id);
+    if (!newPath) return res.status(400).json({ error: 'Invalid portfolio ID' });
+    fs.writeFileSync(newPath, '[]');
     res.json({ id, name });
 });
 
@@ -143,7 +145,7 @@ app.delete('/api/portfolios/:id', demoGuard, (req, res) => {
     meta.portfolios = meta.portfolios.filter(p => p.id !== delId);
     saveUserMeta(req.user.id, meta);
     const fp = getUserPortfolioPath(req.user.id, delId);
-    if (fs.existsSync(fp)) fs.unlinkSync(fp);
+    if (fp && fs.existsSync(fp)) fs.unlinkSync(fp);
     res.json({ success: true });
 });
 
@@ -151,8 +153,9 @@ app.get('/api/portfolio', (req, res) => {
     const id = sanitizeId(req.query.id || 'default');
     if (!id) return res.status(400).json({ error: 'Invalid portfolio ID' });
     const fp = getUserPortfolioPath(req.user.id, id);
+    if (!fp) return res.status(400).json({ error: 'Invalid path' });
     if (fs.existsSync(fp)) {
-        res.sendFile(fp);
+        res.sendFile(path.resolve(fp));
     } else {
         res.json([]);
     }
@@ -164,7 +167,9 @@ app.post('/api/portfolio', demoGuard, (req, res) => {
         if (!id) return res.status(400).json({ error: 'Invalid portfolio ID' });
         if (!Array.isArray(req.body)) return res.status(400).json({ error: 'Portfolio must be an array' });
         if (req.body.length > 500) return res.status(400).json({ error: 'Too many positions (max 500)' });
-        fs.writeFileSync(getUserPortfolioPath(req.user.id, id), JSON.stringify(req.body, null, 2));
+        const fp = getUserPortfolioPath(req.user.id, id);
+        if (!fp) return res.status(400).json({ error: 'Invalid path' });
+        fs.writeFileSync(fp, JSON.stringify(req.body, null, 2));
         res.json({ success: true });
     } catch (e) {
         console.error('Error saving portfolio:', e);
@@ -224,7 +229,7 @@ app.get('/api/historical/:symbol', async (req, res) => {
         const period1 = new Date(now.getTime() - config.days * 86400000);
         const interval = req.query.interval || config.interval;
         const result = await yahooFinance.chart(symbol, { period1: period1.toISOString().split('T')[0], interval });
-        const quotes = (result.quotes || result).map(q => ({
+        const quotes = (result.quotes || result).filter(q => q.close != null).map(q => ({
             date: q.date, open: q.open, high: q.high, low: q.low, close: q.close, volume: q.volume,
         }));
         res.json(quotes);

@@ -372,44 +372,42 @@ input:checked+.toggle-slider::before {
 }
 
 /* ─── Responsive ─── */
-@media (max-width: 900px) {
-    .settings-grid {
-        grid-template-columns: 1fr;
+
+
+
+/* Bloomberg Terminal — Desktop */
+@media (min-width: 769px) {
+    .settings-panel,
+    .settings-card,
+    .insight-card,
+    .settings-panel,
+    .settings-card,
+    .ai-chat-panel,
+    .dividend-panel,
+    .bt-form-panel,
+    .bt-chart-panel,
+    .wl-toolbar,
+    .wl-table-wrap,
+    .scr-toolbar,
+    .scr-table-wrap,
+    .cm-panel {
+        border-radius: 0 !important;
     }
 }
 
+/* ═══ Settings Mobile ═══ */
 @media (max-width: 768px) {
-    .setting-row {
-        flex-direction: column;
-        align-items: flex-start;
+    .settings-panel {
+        padding: 12px !important;
+    }
+    .settings-grid {
+        grid-template-columns: 1fr !important;
         gap: 12px;
     }
-
-    .setting-segmented {
-        flex-wrap: wrap;
-        width: 100%;
-        gap: 4px;
+    .settings-card {
+        padding: 16px !important;
     }
-
-    .setting-segmented button {
-        flex: 1;
-        min-width: 40px;
-    }
-
-    .setting-toggle-pill {
-        width: 100%;
-    }
-
-    .setting-toggle-pill span {
-        flex: 1;
-        text-align: center;
-    }
-
-    .setting-action-btn {
-        width: 100%;
-    }
-
-    .danger-confirm-actions {
-        flex-direction: column;
+    .settings-card h3 {
+        font-size: 0.9rem;
     }
 }

@@ -99,3 +99,60 @@
     font-family: var(--font-mono);
     font-size: 0.85rem;
 }
+
+
+
+/* Bloomberg Terminal — Desktop */
+@media (min-width: 769px) {
+    .heatmap-panel {
+        border-radius: 0;
+        border: 1px solid #1a1a1a;
+        padding: 8px;
+        background: #080808;
+    }
+    .heatmap-panel h2 {
+        font-size: 0.72rem;
+        font-family: var(--font-mono);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #888;
+        margin-bottom: 6px;
+    }
+    .heatmap-grid {
+        gap: 2px;
+    }
+    .heatmap-cell {
+        border-radius: 0;
+        padding: 10px 6px;
+    }
+    .heatmap-cell .ticker {
+        font-size: 0.78rem;
+        font-family: var(--font-mono);
+        font-weight: 700;
+    }
+    .heatmap-cell .change {
+        font-size: 0.68rem;
+        font-family: var(--font-mono);
+    }
+}
+
+/* ═══ Heatmap Mobile ═══ */
+@media (max-width: 768px) {
+    .heatmap-panel {
+        padding: 12px !important;
+    }
+    .heatmap-grid {
+        gap: 4px;
+    }
+    .heatmap-cell {
+        padding: 8px 4px !important;
+        border-radius: 6px;
+        min-height: 50px;
+    }
+    .heatmap-cell .ticker {
+        font-size: 0.7rem !important;
+    }
+    .heatmap-cell .change {
+        font-size: 0.65rem !important;
+    }
+}

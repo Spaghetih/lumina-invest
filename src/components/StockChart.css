@@ -288,62 +288,107 @@
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+
+
+
+/* Bloomberg Terminal — Desktop */
+@media (min-width: 769px) {
     .sc-toolbar {
-        flex-direction: column;
-        align-items: stretch;
+        padding: 6px 10px;
+        gap: 8px;
+        background: #080808;
+        border-radius: 0;
     }
-
     .sc-search {
-        min-width: 100%;
+        border-radius: 0;
+        background: #000;
+        border-color: #1a1a1a;
+        padding: 4px 10px;
     }
-
     .sc-header {
-        flex-direction: column;
-        align-items: flex-start;
+        padding: 8px 12px;
+        border-radius: 0;
+        background: #080808;
     }
-
-    .sc-header-right {
-        flex-wrap: wrap;
+    .sc-chart-panel {
+        border-radius: 0;
+        background: #080808;
+        padding: 8px 12px;
     }
-
-    .sc-chart-container {
-        min-height: 300px;
+    .sc-pick-btn {
+        border-radius: 0;
+        font-size: 0.7rem;
+        padding: 3px 8px;
+    }
+    .sc-compare-btn {
+        border-radius: 0;
+    }
+    .sc-tooltip {
+        border-radius: 0;
+        background: #0a0a0a;
+        border-color: #1e1e1e;
     }
 }
 
-@media (max-width: 480px) {
+/* ═══ StockChart Mobile ═══ */
+@media (max-width: 768px) {
+    .stock-chart-page {
+        gap: 8px;
+    }
     .sc-toolbar {
         flex-direction: column;
         gap: 8px;
+        padding: 12px;
     }
-
+    .sc-search {
+        min-width: 100%;
+    }
+    .sc-compare-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 10px;
+        min-height: 44px;
+    }
     .sc-quick-picks {
-        flex-wrap: wrap;
-        gap: 4px;
+        width: 100%;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-bottom: 4px;
     }
-
+    .sc-quick-picks::-webkit-scrollbar { display: none; }
     .sc-pick-btn {
-        padding: 4px 8px;
-        font-size: 0.68rem;
+        padding: 6px 12px;
+        font-size: 0.72rem;
+        min-height: 32px;
+        flex-shrink: 0;
     }
-
     .sc-header {
         flex-direction: column;
         gap: 8px;
         align-items: flex-start;
+        padding: 12px;
     }
-
     .sc-header-right {
-        align-items: flex-start;
+        width: 100%;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
     }
-
+    .sc-ticker { font-size: 1.1rem; }
+    .sc-price { font-size: 1rem; }
+    .sc-chart-container { min-height: 280px; }
+    .sc-chart-panel { padding: 8px; }
     .sc-timeframes {
-        gap: 2px;
+        width: 100%;
+        display: flex;
     }
-
-    .time-btn {
-        padding: 4px 8px;
-        font-size: 0.68rem;
+    .sc-timeframes .time-btn {
+        flex: 1;
+        text-align: center;
+        padding: 8px 4px;
+        font-size: 0.72rem;
+        min-height: 36px;
     }
 }

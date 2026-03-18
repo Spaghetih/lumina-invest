@@ -12,7 +12,7 @@
     max-width: 520px;
     background: #111;
     border: 1px solid #222;
-    border-radius: 20px;
+    border-radius: 0;
     padding: 32px;
     text-align: center;
     position: relative;
@@ -29,7 +29,7 @@
 .onb-progress-dot {
     width: 8px;
     height: 8px;
-    border-radius: 10px;
+    border-radius: 0;
     background: #333;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -70,7 +70,7 @@
     padding: 16px 8px;
     background: rgba(255, 153, 0, 0.04);
     border: 1px solid #1a1a1a;
-    border-radius: 12px;
+    border-radius: 0;
     color: #888;
     font-size: 0.68rem;
     font-weight: 600;
@@ -103,7 +103,7 @@
     color: #000;
     font-size: 0.78rem;
     font-weight: 700;
-    border-radius: 8px;
+    border-radius: 0;
     margin-bottom: 16px;
 }
 
@@ -121,7 +121,7 @@
     padding: 12px 8px;
     background: #0a0a0a;
     border: 1px solid #222;
-    border-radius: 8px;
+    border-radius: 0;
     color: #ff9900;
     font-size: 0.85rem;
     font-weight: 700;
@@ -145,7 +145,7 @@
     gap: 8px;
     padding: 20px;
     border: 2px dashed #222;
-    border-radius: 12px;
+    border-radius: 0;
     color: #666;
     margin-bottom: 14px;
 }
@@ -165,7 +165,7 @@
 
 .onb-mock-ticker {
     padding: 4px 12px;
-    border-radius: 6px;
+    border-radius: 0;
     font-size: 0.72rem;
     font-weight: 700;
     font-family: 'JetBrains Mono', monospace;
@@ -252,7 +252,7 @@
 
 .onb-ai-bubble {
     padding: 10px 14px;
-    border-radius: 12px;
+    border-radius: 0;
     font-size: 0.78rem;
     line-height: 1.4;
 }
@@ -297,7 +297,7 @@
     height: 44px;
     background: rgba(255, 153, 0, 0.1);
     border: 1px solid rgba(255, 153, 0, 0.15);
-    border-radius: 12px;
+    border-radius: 0;
     color: #ff9900;
     margin-bottom: 14px;
 }
@@ -348,7 +348,7 @@
     padding: 10px 18px;
     background: transparent;
     border: 1px solid #333;
-    border-radius: 10px;
+    border-radius: 0;
     color: #888;
     font-size: 0.8rem;
     font-weight: 600;
@@ -365,7 +365,7 @@
     padding: 10px 18px;
     background: transparent;
     border: 1px solid rgba(255, 153, 0, 0.3);
-    border-radius: 10px;
+    border-radius: 0;
     color: #ff9900;
     font-size: 0.8rem;
     font-weight: 600;
@@ -384,7 +384,7 @@
     padding: 10px 22px;
     background: linear-gradient(135deg, #ff9900, #ffaa22);
     border: none;
-    border-radius: 10px;
+    border-radius: 0;
     color: #000;
     font-size: 0.8rem;
     font-weight: 700;

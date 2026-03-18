@@ -365,58 +365,38 @@
 }
 
 /* Responsive */
-@media (max-width: 1200px) {
-    .insights-top-grid {
-        grid-template-columns: 1fr;
-    }
 
-    .breakdown-row {
-        grid-template-columns: 120px 1fr 70px;
+/* ── Mobile ── */
+
+
+
+/* Bloomberg Terminal — Desktop */
+@media (min-width: 769px) {
+    .insights-panel,
+    .insights-card,
+    .insight-card,
+    .settings-panel,
+    .settings-card,
+    .ai-chat-panel,
+    .dividend-panel,
+    .bt-form-panel,
+    .bt-chart-panel,
+    .wl-toolbar,
+    .wl-table-wrap,
+    .scr-toolbar,
+    .scr-table-wrap,
+    .cm-panel {
+        border-radius: 0 !important;
     }
 }
 
-/* ── Mobile ── */
+/* ═══ Insights Mobile ═══ */
 @media (max-width: 768px) {
-    .insights-page {
-        padding: 0;
-    }
-
-    .insights-top-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .score-ring-container {
-        width: 120px;
-        height: 120px;
-    }
-
-    .score-ring-container svg {
-        width: 120px;
-        height: 120px;
-    }
-
-    .score-details {
+    .insights-grid {
+        grid-template-columns: 1fr !important;
         gap: 8px;
     }
-
-    .alerts-list {
-        max-height: none;
-    }
-
-    .alert-item {
-        padding: 10px;
-    }
-
-    .recs-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .breakdown-row {
-        grid-template-columns: 100px 1fr 60px;
-        gap: 8px;
-    }
-
-    .breakdown-ticker {
-        font-size: 0.72rem;
+    .insight-card {
+        padding: 14px !important;
     }
 }

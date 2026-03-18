@@ -201,16 +201,37 @@
 .text-up { color: #00ff41 !important; }
 .text-down { color: #ff3333 !important; }
 
+/* ═══ TransactionHistory Mobile ═══ */
 @media (max-width: 768px) {
-    .tx-header {
-        flex-direction: column;
-        align-items: flex-start;
+    .th-panel {
+        padding: 12px !important;
+        margin-top: 12px;
     }
-    .tx-summary {
-        flex-direction: column;
+    .th-table thead {
+        display: none;
     }
-    .tx-summary-item {
-        border-right: none;
-        border-bottom: 1px solid #333;
+    .th-table tbody {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+    .th-table tbody tr {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 12px;
+        padding: 12px;
+        background: #0a0a0a;
+        border: 1px solid #1a1a1a;
+        border-radius: 10px;
+        align-items: center;
+    }
+    .th-table tbody td {
+        padding: 0 !important;
+        font-size: 0.78rem;
+        border: none !important;
+    }
+    :root[data-theme="light"] .th-table tbody tr {
+        background: #fff;
+        border-color: #e0e0e0;
     }
 }

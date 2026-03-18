@@ -288,23 +288,38 @@
 }
 
 /* ─── Mobile Responsiveness ─── */
+
+
+
+/* Bloomberg Terminal — Desktop */
+@media (min-width: 769px) {
+    .dividendcalendar-panel,
+    .dividendcalendar-card,
+    .insight-card,
+    .settings-panel,
+    .settings-card,
+    .ai-chat-panel,
+    .dividend-panel,
+    .bt-form-panel,
+    .bt-chart-panel,
+    .wl-toolbar,
+    .wl-table-wrap,
+    .scr-toolbar,
+    .scr-table-wrap,
+    .cm-panel {
+        border-radius: 0 !important;
+    }
+}
+
+/* ═══ DividendCalendar Mobile ═══ */
 @media (max-width: 768px) {
-    .dividend-hero {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 12px 16px;
+    .dividend-panel {
+        padding: 12px !important;
     }
-
-    .hero-stats {
-        padding-left: 0;
-        border-left: none;
-        border-top: 1px solid #333;
-        padding-top: 12px;
-        width: 100%;
-        justify-content: space-between;
+    .dividend-grid {
+        grid-template-columns: 1fr !important;
     }
-
-    .hero-value {
-        font-size: 1.6rem;
+    .dividend-month {
+        padding: 12px !important;
     }
 }

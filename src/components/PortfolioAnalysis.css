@@ -379,23 +379,224 @@
 }
 
 /* Responsive */
-@media (max-width: 1200px) {
-    .pa-stats-row {
-        grid-template-columns: repeat(2, 1fr);
-    }
 
-    .pa-main-grid {
-        grid-template-columns: 1fr;
+
+/* Bloomberg Terminal — Desktop Dense Tables */
+@media (min-width: 769px) {
+    .pa-section-title {
+        font-size: 0.72rem;
+        font-family: var(--font-mono);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #888;
+        margin-bottom: 8px;
+    }
+    .pa-stat-card {
+        border-radius: 0;
+        padding: 10px;
+    }
+    .pa-stat-label {
+        font-size: 0.6rem;
+        font-family: var(--font-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .pa-stat-value {
+        font-size: 0.82rem;
+        font-family: var(--font-mono);
+    }
+    .pa-allocation {
+        border-radius: 0;
+    }
+    .pa-positions {
+        border-radius: 0;
+    }
+    .pa-table thead th {
+        padding: 5px 8px;
+        font-size: 0.62rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #555;
+        background: #060606;
+        border-bottom: 1px solid #1a1a1a;
+        font-family: var(--font-mono);
+    }
+    .pa-table tbody td {
+        padding: 5px 8px;
+        font-size: 0.75rem;
+        font-family: var(--font-mono);
+        border-bottom: 1px solid #111;
+    }
+    .pa-table tbody tr:hover {
+        background: #0d0d0d !important;
+    }
+    .pa-asset-symbol {
+        font-weight: 700;
+        font-size: 0.78rem;
+    }
+    .pa-asset-name {
+        font-size: 0.6rem;
+        color: #444;
+    }
+    .pa-pnl-pct {
+        font-size: 0.62rem;
+        color: #666;
+    }
+    .pa-legend-item {
+        font-size: 0.68rem;
+        font-family: var(--font-mono);
+    }
+    .pa-page-title {
+        font-size: 0.85rem;
+        font-family: var(--font-mono);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: #888;
     }
 }
 
+/* ═══ PortfolioAnalysis Mobile ═══ */
 @media (max-width: 768px) {
-    .pa-stats-row {
-        grid-template-columns: 1fr;
+    .portfolio-analysis {
+        padding: 0 !important;
+    }
+    .pa-header-row {
+        padding: 12px 16px;
+        flex-direction: row !important;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .pa-page-title {
+        font-size: 1rem;
     }
 
-    .pa-allocation,
+    /* Stats: 2x2 grid, compact */
+    .pa-stats-row {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 8px !important;
+        padding: 0 12px 12px;
+    }
+    .pa-stat-card {
+        padding: 12px !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 6px !important;
+    }
+    .pa-stat-icon {
+        width: 32px !important;
+        height: 32px !important;
+    }
+    .pa-stat-label {
+        font-size: 0.62rem !important;
+    }
+    .pa-stat-value {
+        font-size: 0.78rem !important;
+    }
+
+    /* Main grid: stack vertically */
+    .pa-main-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px;
+        padding: 0 12px;
+    }
+
+    /* Pie chart compact */
+    .pa-allocation {
+        padding: 16px !important;
+    }
+    .pa-pie-wrapper .recharts-responsive-container {
+        height: 200px !important;
+    }
+    .pa-legend {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 4px 12px;
+    }
+    .pa-legend-item {
+        font-size: 0.72rem;
+    }
+
+    /* Positions: mobile card layout */
     .pa-positions {
-        padding: 10px;
+        padding: 12px !important;
+    }
+    .pa-table-wrapper {
+        overflow-x: hidden !important;
+    }
+    .pa-table {
+        min-width: 0 !important;
+    }
+    .pa-table thead {
+        display: none !important;
+    }
+    .pa-table tbody {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    .pa-table tbody tr {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 14px;
+        background: #0a0a0a;
+        border: 1px solid #1a1a1a;
+        border-radius: 12px;
+        gap: 4px 16px;
+        align-items: center;
+    }
+    /* Asset cell — full width top */
+    .pa-table tbody td:nth-child(1) {
+        width: 100%;
+        padding: 0 0 8px !important;
+        border-bottom: 1px solid #1a1a1a;
+        margin-bottom: 4px;
+    }
+    .pa-asset-cell {
+        gap: 10px !important;
+    }
+    .pa-asset-symbol {
+        font-size: 0.95rem !important;
+        font-weight: 700 !important;
+    }
+    .pa-asset-name {
+        font-size: 0.7rem !important;
+    }
+
+    /* Key metrics in 2 columns */
+    .pa-table tbody td {
+        padding: 2px 0 !important;
+        font-size: 0.78rem;
+        border: none !important;
+    }
+    .pa-table tbody td:nth-child(2),
+    .pa-table tbody td:nth-child(6) {
+        width: calc(50% - 8px);
+    }
+    .pa-table tbody td:nth-child(3),
+    .pa-table tbody td:nth-child(7) {
+        width: calc(50% - 8px);
+    }
+    .pa-table tbody td:nth-child(4),
+    .pa-table tbody td:nth-child(8) {
+        width: calc(50% - 8px);
+    }
+    /* Hide less critical cols: Target, Purchased */
+    .pa-table tbody td:nth-child(5),
+    .pa-table tbody td:nth-child(9) {
+        display: none !important;
+    }
+    .pa-pnl-pct {
+        font-size: 0.68rem !important;
+    }
+
+    /* Light theme card */
+    :root[data-theme="light"] .pa-table tbody tr {
+        background: #fff;
+        border-color: #e0e0e0;
+    }
+    :root[data-theme="light"] .pa-table tbody td:nth-child(1) {
+        border-bottom-color: #e8e8e8;
     }
 }

@@ -201,20 +201,52 @@
 }
 
 /* Mobile */
+
+
+
+/* Bloomberg Terminal — Desktop */
+@media (min-width: 769px) {
+    .screener-panel,
+    .screener-card,
+    .insight-card,
+    .settings-panel,
+    .settings-card,
+    .ai-chat-panel,
+    .dividend-panel,
+    .bt-form-panel,
+    .bt-chart-panel,
+    .wl-toolbar,
+    .wl-table-wrap,
+    .scr-toolbar,
+    .scr-table-wrap,
+    .cm-panel {
+        border-radius: 0 !important;
+    }
+}
+
+/* ═══ Screener Mobile ═══ */
 @media (max-width: 768px) {
-    .screener-table-wrap {
+    .scr-toolbar {
+        flex-direction: column;
+        gap: 8px;
+    }
+    .scr-presets {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .scr-preset-btn {
+        min-height: 36px;
+        padding: 6px 12px;
+    }
+    .scr-table-wrap {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
     }
-
-    .screener-table {
-        min-width: 650px;
+    .scr-table {
+        min-width: 600px;
     }
-
-    .screener-presets {
-        overflow-x: auto;
-        flex-wrap: nowrap;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: 4px;
+    .scr-table th, .scr-table td {
+        padding: 10px 8px !important;
+        font-size: 0.72rem;
     }
 }

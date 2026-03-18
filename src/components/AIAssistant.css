@@ -614,7 +614,6 @@
     opacity: 0.7;
 }
 
-
 /* Claude button variant */
 .ai-key-submit.claude {
     background: linear-gradient(135deg, #d4a574, #c49664);
@@ -623,4 +622,50 @@
 
 .ai-key-submit.claude:hover {
     background: linear-gradient(135deg, #e0b584, #d4a574);
+}
+
+
+
+/* Bloomberg Terminal — Desktop */
+@media (min-width: 769px) {
+    .ai-panel,
+    .aiassistant-card,
+    .insight-card,
+    .settings-panel,
+    .settings-card,
+    .ai-chat-panel,
+    .dividend-panel,
+    .bt-form-panel,
+    .bt-chart-panel,
+    .wl-toolbar,
+    .wl-table-wrap,
+    .scr-toolbar,
+    .scr-table-wrap,
+    .cm-panel {
+        border-radius: 0 !important;
+    }
+}
+
+/* ═══ AIAssistant Mobile ═══ */
+@media (max-width: 768px) {
+    .ai-chat-panel {
+        height: calc(100dvh - 130px) !important;
+        border-radius: 0 !important;
+        border-left: none !important;
+        border-right: none !important;
+    }
+    .ai-input-bar {
+        padding: 8px 12px !important;
+        gap: 8px;
+    }
+    .ai-input-bar input {
+        font-size: 16px !important; /* prevent iOS zoom */
+    }
+    .ai-input-bar button {
+        min-width: 44px;
+        min-height: 44px;
+    }
+    .ai-messages {
+        padding: 12px !important;
+    }
 }

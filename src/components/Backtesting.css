@@ -168,19 +168,45 @@
 .text-up { color: #00ff41 !important; }
 .text-down { color: #ff3333 !important; }
 
-@media (max-width: 768px) {
-    .bt-form {
-        flex-direction: column;
-        align-items: stretch;
+
+
+/* Bloomberg Terminal — Desktop */
+@media (min-width: 769px) {
+    .backtesting-panel,
+    .backtesting-card,
+    .insight-card,
+    .settings-panel,
+    .settings-card,
+    .ai-chat-panel,
+    .dividend-panel,
+    .bt-form-panel,
+    .bt-chart-panel,
+    .wl-toolbar,
+    .wl-table-wrap,
+    .scr-toolbar,
+    .scr-table-wrap,
+    .cm-panel {
+        border-radius: 0 !important;
     }
-    .bt-field input {
-        width: 100%;
+}
+
+/* ═══ Backtesting Mobile ═══ */
+@media (max-width: 768px) {
+    .bt-layout {
+        grid-template-columns: 1fr !important;
+        gap: 8px;
+    }
+    .bt-form-panel {
+        padding: 12px !important;
+    }
+    .bt-chart-panel {
+        min-height: 280px;
     }
     .bt-stats-row {
-        flex-direction: column;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 6px;
     }
-    .bt-stat {
-        border-right: none;
-        border-bottom: 1px solid #333;
+    .bt-input {
+        font-size: 16px !important; /* prevent iOS zoom */
     }
 }

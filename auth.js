@@ -11,6 +11,12 @@ function sanitizeId(id) {
     return id;
 }
 
+function safeResolvePath(baseDir, ...segments) {
+    const resolved = path.resolve(baseDir, ...segments);
+    if (!resolved.startsWith(path.resolve(baseDir))) return null;
+    return resolved;
+}
+
 const DATA_DIR = path.join(process.cwd(), 'data');
 const AUTH_DIR = path.join(process.cwd(), 'auth');
 const JWT_SECRET_FILE = path.join(AUTH_DIR, '.jwt_secret');
@@ -79,7 +85,8 @@ function clearAttempts(ip) {
 
 // ─── User Data Dir ───
 export function getUserDataDir(userId) {
-    const dir = path.join(DATA_DIR, userId);
+    const dir = safeResolvePath(DATA_DIR, userId);
+    if (!dir) throw new Error('Invalid user ID path');
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     return dir;
 }
@@ -191,8 +198,8 @@ export function setupAuthRoutes(app) {
         if (!user) return res.status(404).json({ error: 'User not found' });
 
         // Delete user data
-        const userDir = path.join(DATA_DIR, delId);
-        if (fs.existsSync(userDir)) fs.rmSync(userDir, { recursive: true, force: true });
+        const userDir = safeResolvePath(DATA_DIR, delId);
+        if (userDir && fs.existsSync(userDir)) fs.rmSync(userDir, { recursive: true, force: true });
 
         db.prepare('DELETE FROM users WHERE id = ?').run(delId);
         res.json({ success: true });

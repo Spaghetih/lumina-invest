@@ -237,7 +237,7 @@ function Dashboard() {
                   <LiveStockList stocks={stocks} onDeleteStock={isDemo ? null : handleDeleteStock} />
                 </div>
               </div>
-              {stocks.length > 0 && <Heatmap stocks={stocks} />}
+              {stocks.length > 0 && <div className="desktop-only-section"><Heatmap stocks={stocks} /></div>}
             </>
           )}
         </div>

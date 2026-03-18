@@ -191,13 +191,17 @@
     cursor: not-allowed;
 }
 
+
+/* ═══ AdminPanel Mobile ═══ */
 @media (max-width: 768px) {
-    .admin-table-header, .admin-table-row {
-        grid-template-columns: 2fr 1fr 80px;
+    .admin-panel {
+        padding: 12px !important;
     }
-    .admin-table-header span:nth-child(3),
-    .admin-table-header span:nth-child(4),
-    .admin-table-row .admin-date {
-        display: none;
+    .admin-table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .admin-table {
+        min-width: 500px;
     }
 }
