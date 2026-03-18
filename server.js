@@ -42,7 +42,7 @@ app.use(express.json({ limit: '1mb' }));
 // --- Security: Rate Limiting ---
 const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 min
-    max: 200, // 200 requests per 15 min per IP
+    max: 1000, // 1000 requests per 15 min per IP
     standardHeaders: true,
     legacyHeaders: false,
     message: { error: 'Too many requests, please try again later.' }
@@ -224,7 +224,7 @@ app.get('/api/historical/:symbol', async (req, res) => {
         const period1 = new Date(now.getTime() - config.days * 86400000);
         const interval = req.query.interval || config.interval;
         const result = await yahooFinance.chart(symbol, { period1: period1.toISOString().split('T')[0], interval });
-        const quotes = (result.quotes || result).map(q => ({
+        const quotes = (result.quotes || result).filter(q => q.close != null).map(q => ({
             date: q.date, open: q.open, high: q.high, low: q.low, close: q.close, volume: q.volume,
         }));
         res.json(quotes);
