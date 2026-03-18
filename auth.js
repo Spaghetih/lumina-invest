@@ -4,6 +4,8 @@ import jwt from 'jsonwebtoken';
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
+import os from 'os';
+import { execSync } from 'child_process';
 import Database from 'better-sqlite3';
 
 function sanitizeId(id) {
@@ -46,6 +48,8 @@ db.exec(`
         locked_until INTEGER
     );
     CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
+    CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT);
+    INSERT OR IGNORE INTO settings (key, value) VALUES ('registrationOpen', 'true');
 `);
 
 // ─── JWT Secret ───
@@ -113,6 +117,8 @@ export function setupAuthRoutes(app) {
 
     // Register (public)
     app.post('/api/auth/register', registerLimiter, async (req, res) => {
+        const regSetting = db.prepare("SELECT value FROM settings WHERE key = 'registrationOpen'").get();
+        if (regSetting?.value !== 'true') return res.status(403).json({ error: 'Registration is currently closed.' });
         const { username, password } = req.body;
         if (!username || !password) return res.status(400).json({ error: 'Username and password required' });
         if (username.trim().length < 3) return res.status(400).json({ error: 'Username must be at least 3 characters' });
@@ -171,15 +177,36 @@ export function setupAuthRoutes(app) {
 
     // Status
     app.get('/api/auth/status', (req, res) => {
-        res.json({ registrationOpen: true });
+        const regSetting = db.prepare("SELECT value FROM settings WHERE key = 'registrationOpen'").get();
+        res.json({ registrationOpen: regSetting?.value === 'true' });
     });
 
     // ─── Admin Routes ───
 
-    // List all users (admin only)
+    // List all users with portfolio data (admin only)
     app.get('/api/admin/users', authMiddleware, adminOnly, (req, res) => {
-        const users = db.prepare('SELECT id, username, role, created_at, last_login FROM users ORDER BY created_at DESC').all();
-        res.json(users);
+        const search = req.query.search || '';
+        let users;
+        if (search) {
+            users = db.prepare("SELECT id, username, role, created_at, last_login FROM users WHERE username LIKE ? ORDER BY created_at DESC").all(`%${search}%`);
+        } else {
+            users = db.prepare('SELECT id, username, role, created_at, last_login FROM users ORDER BY created_at DESC').all();
+        }
+        const enriched = users.map(u => {
+            let portfolioValue = 0, positionCount = 0;
+            try {
+                const fp = path.join(DATA_DIR, u.id, 'portfolios', 'default.json');
+                if (fs.existsSync(fp)) {
+                    const data = JSON.parse(fs.readFileSync(fp, 'utf8'));
+                    if (Array.isArray(data)) {
+                        positionCount = data.length;
+                        portfolioValue = data.reduce((sum, p) => sum + (p.price || 0) * (p.shares || 0), 0);
+                    }
+                }
+            } catch {}
+            return { ...u, portfolioValue: Math.round(portfolioValue * 100) / 100, positionCount };
+        });
+        res.json(enriched);
     });
 
     // Change user role (admin only)
@@ -217,12 +244,60 @@ export function setupAuthRoutes(app) {
         res.json({ success: true });
     });
 
-    // Admin stats
+    // Admin stats (extended)
     app.get('/api/admin/stats', authMiddleware, adminOnly, (req, res) => {
         const totalUsers = db.prepare('SELECT COUNT(*) as count FROM users').get().count;
         const todayLogins = db.prepare("SELECT COUNT(*) as count FROM users WHERE last_login >= datetime('now', '-1 day')").get().count;
         const admins = db.prepare("SELECT COUNT(*) as count FROM users WHERE role = 'admin'").get().count;
-        res.json({ totalUsers, todayLogins, admins });
+        const newThisWeek = db.prepare("SELECT COUNT(*) as count FROM users WHERE created_at >= datetime('now', '-7 days')").get().count;
+        const regSetting = db.prepare("SELECT value FROM settings WHERE key = 'registrationOpen'").get();
+
+        let totalPositions = 0, totalPortfolioValue = 0;
+        const allUsers = db.prepare('SELECT id FROM users').all();
+        for (const u of allUsers) {
+            try {
+                const fp = path.join(DATA_DIR, u.id, 'portfolios', 'default.json');
+                if (fs.existsSync(fp)) {
+                    const data = JSON.parse(fs.readFileSync(fp, 'utf8'));
+                    if (Array.isArray(data)) {
+                        totalPositions += data.length;
+                        totalPortfolioValue += data.reduce((sum, p) => sum + (p.price || 0) * (p.shares || 0), 0);
+                    }
+                }
+            } catch {}
+        }
+        res.json({ totalUsers, todayLogins, admins, newThisWeek, totalPositions, totalPortfolioValue: Math.round(totalPortfolioValue * 100) / 100, registrationOpen: regSetting?.value === 'true' });
+    });
+
+    // Admin: system health
+    app.get('/api/admin/system-health', authMiddleware, adminOnly, (req, res) => {
+        let disk = { used: 0, total: 0, percent: 0 };
+        try {
+            const df = execSync("df / --output=used,size,pcent | tail -1").toString().trim().split(/\s+/);
+            disk = { used: Math.round(parseInt(df[0]) / 1048576 * 10) / 10, total: Math.round(parseInt(df[1]) / 1048576 * 10) / 10, percent: parseInt(df[2]) };
+        } catch {}
+        res.json({
+            uptime: Math.floor(os.uptime()),
+            processUptime: Math.floor(process.uptime()),
+            memUsed: Math.round((os.totalmem() - os.freemem()) / 1048576),
+            memTotal: Math.round(os.totalmem() / 1048576),
+            memPercent: Math.round((1 - os.freemem() / os.totalmem()) * 100),
+            diskUsed: disk.used, diskTotal: disk.total, diskPercent: disk.percent
+        });
+    });
+
+    // Admin: recent activity
+    app.get('/api/admin/activity', authMiddleware, adminOnly, (req, res) => {
+        const activity = db.prepare("SELECT username, last_login FROM users WHERE last_login IS NOT NULL ORDER BY last_login DESC LIMIT 20").all();
+        res.json(activity);
+    });
+
+    // Admin: toggle registration
+    app.post('/api/admin/registration-toggle', authMiddleware, adminOnly, (req, res) => {
+        const current = db.prepare("SELECT value FROM settings WHERE key = 'registrationOpen'").get();
+        const newVal = current?.value === 'true' ? 'false' : 'true';
+        db.prepare("INSERT OR REPLACE INTO settings (key, value) VALUES ('registrationOpen', ?)").run(newVal);
+        res.json({ registrationOpen: newVal === 'true' });
     });
 }
 
